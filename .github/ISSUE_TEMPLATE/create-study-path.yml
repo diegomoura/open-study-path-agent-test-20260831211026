@@ -1,0 +1,249 @@
+name: Criar meu curso
+description: Conte o que você quer aprender e como prefere estudar.
+labels: ["study-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:intake form_id=create-study-path version=4 -->
+
+        # Vamos criar um curso que faça sentido para você
+
+        ## Dê um nome ao seu curso
+
+        No campo **Add a title** acima, escreva o nome do curso. Esse campo é obrigatório e o nome será usado no roadmap, nas aulas e nas ferramentas conectadas.
+
+        Exemplos: **Fundamentos de IA**, **Engenharia com IA Generativa** ou **Preparação para AWS Solutions Architect**.
+
+        Responda apenas o que for útil para o planejamento. Você poderá ajustar o curso depois. Não inclua senhas, documentos sensíveis ou informações pessoais desnecessárias.
+
+        Depois deste formulário, faremos um diagnóstico curto para escolher o melhor ponto de partida.
+
+  - type: textarea
+    id: subject
+    attributes:
+      label: O que você quer aprender?
+      description: Este é o campo principal. Descreva os temas, assuntos ou habilidades que deseja estudar.
+      placeholder: |
+        Exemplo: Quero aprender a desenvolver aplicações com IA generativa,
+        incluindo LLMs, RAG, agentes, avaliações e boas práticas de produção.
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Conte um pouco mais sobre seu objetivo
+      description: Opcional. Informe contexto de uso, prioridades, tecnologias preferidas ou algo que deseja deixar de fora.
+      placeholder: |
+        Exemplo: Quero aplicar esse conhecimento no meu trabalho como desenvolvedor backend.
+        Prefiro exemplos em Python e não preciso estudar treinamento de modelos do zero.
+
+  - type: textarea
+    id: desired_outcome
+    attributes:
+      label: O que você gostaria de conseguir fazer ao final?
+      description: Opcional. Pense em um resultado observável, projeto ou decisão que gostaria de realizar melhor.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Por que isso é importante para você agora?
+      description: Opcional. Essa resposta ajuda a tornar exemplos e prioridades mais relevantes.
+
+  - type: textarea
+    id: time_constraints
+    attributes:
+      label: Existe algum prazo ou limite de tempo importante?
+      description: Opcional. Informe, por exemplo, uma entrevista em 12 dias ou cerca de 3 horas disponíveis por semana. Isso ajuda a priorizar e explicar a viabilidade, mas não reduz silenciosamente o conteúdo essencial do curso.
+
+  - type: dropdown
+    id: current_level
+    attributes:
+      label: Como você descreve seu nível atual?
+      options:
+        - Nenhum conhecimento
+        - Iniciante
+        - Intermediário
+        - Avançado
+    validations:
+      required: true
+
+  - type: textarea
+    id: prior_knowledge
+    attributes:
+      label: O que você já conhece ou já tentou?
+      description: Opcional. Liste somente experiências relacionadas a este curso.
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Existe algum material que você gostaria que fosse considerado?
+      description: Opcional. Cole textos e links ou anexe arquivos não sensíveis. As fontes serão verificadas antes de entrar nas aulas.
+
+  - type: dropdown
+    id: preferred_language
+    attributes:
+      label: Em qual idioma prefere estudar?
+      description: Escolha o idioma principal das explicações e atividades.
+      options:
+        - Português (Brasil)
+        - English
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: learning_formats
+    attributes:
+      label: Quais formas de aprender ajudam mais você?
+      description: Opcional. Se não marcar nenhuma, o curso escolherá os formatos mais adequados ao conteúdo.
+      options:
+        - label: Explicações escritas e documentação
+        - label: Livros e textos longos
+        - label: Vídeos e aulas abertas
+        - label: Cursos estruturados
+        - label: Exercícios práticos
+        - label: Projetos
+        - label: Discussões e perguntas
+
+  - type: dropdown
+    id: theory_practice_balance
+    attributes:
+      label: Como prefere equilibrar explicação e prática?
+      description: O padrão é uma combinação equilibrada.
+      options:
+        - Mais teoria
+        - Equilibrado
+        - Mais prática
+      default: 1
+
+  - type: checkboxes
+    id: assessment_style
+    attributes:
+      label: Como prefere mostrar o que aprendeu?
+      description: Opcional. As atividades escolhidas serão adaptadas ao conteúdo.
+      options:
+        - label: Quizzes
+        - label: Exercícios
+        - label: Explicação escrita
+        - label: Projeto
+        - label: Entrevista simulada
+
+  - type: textarea
+    id: accessibility_needs
+    attributes:
+      label: Existe alguma necessidade de acessibilidade ou restrição que devemos considerar?
+      description: Opcional.
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Ferramentas opcionais
+
+        Algumas ferramentas podem deixar o acompanhamento, a prática ou a organização mais convenientes. Elas só serão sugeridas quando houver um benefício concreto, e o curso continuará funcionando no GitHub quando você não quiser conectá-las.
+
+        <!-- contrato técnico: GitHub é a fonte de verdade; integrações são opcionais -->
+
+  - type: dropdown
+    id: integration_experience
+    attributes:
+      label: Como você prefere organizar a experiência?
+      description: Você poderá mudar de ideia depois.
+      options:
+        - Quero sugestões de ferramentas quando forem úteis
+        - Quero algo simples, principalmente no GitHub
+        - Quero uma experiência mais interativa com ferramentas externas
+        - Não quero sugestões que exijam conectar outras contas
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: already_uses
+    attributes:
+      label: Quais ferramentas você já usa?
+      description: Opcional. Marcar aqui não conecta automaticamente nenhuma conta.
+      options:
+        - label: Trello — quadro visual com etapas e checklists
+        - label: Todoist — tarefas e lembretes simples
+        - label: Google Calendar — horários fixos de estudo
+        - label: Outlook Calendar — agenda Microsoft
+        - label: Reclaim — agenda que reorganiza blocos de foco
+        - label: Consensus — busca de estudos e artigos científicos
+        - label: Habitify — acompanhamento de hábitos
+        - label: Whimsical — mapas e diagramas interativos
+        - label: Google Drive — documentos, planilhas e apresentações
+        - label: Airtable — painéis e organização de dados
+        - label: Notion — notas ou biblioteca auxiliar
+
+  - type: checkboxes
+    id: willing_to_connect
+    attributes:
+      label: O que você aceitaria conectar se houver um bom motivo?
+      description: Opcional. Você verá a sugestão e decidirá antes de qualquer conexão.
+      options:
+        - label: Ferramenta de tarefas, como Trello ou Todoist
+        - label: Agenda, como Reclaim, Google ou Outlook
+        - label: Pesquisa acadêmica, como Consensus
+        - label: Hábitos, como Habitify
+        - label: Diagramas externos, como Whimsical
+        - label: Arquivos e entregáveis, como Google Drive
+        - label: Painel analítico, como Airtable
+        - label: Cursos e aulas externas, como Coursera, edX, Udemy ou Khan Academy
+
+  - type: textarea
+    id: integration_constraints
+    attributes:
+      label: Existe alguma ferramenta, conta ou restrição que devemos evitar?
+      description: Opcional. Informe limitações de privacidade, regras do ambiente de trabalho ou serviços que não deseja usar.
+
+  - type: dropdown
+    id: task_manager
+    attributes:
+      label: Onde gostaria de acompanhar suas etapas?
+      description: O padrão é GitHub Issues. Trello e Todoist ficam disponíveis como upgrade opcional caso você prefira uma visão em cards ou lembretes separados.
+      options:
+        - Deixar o agente recomendar
+        - Trello
+        - GitHub Issues
+        - Todoist
+      default: 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: study_routine_mode
+    attributes:
+      label: Como você prefere encaixar os estudos na sua rotina?
+      description: Essa escolha define se faz sentido reservar horários na agenda ou usar lembretes flexíveis. Nenhum evento ou lembrete será criado sem informações suficientes.
+      options:
+        - Sem lembretes por enquanto
+        - Blocos com horário fixo na agenda
+        - Tarefas recorrentes com horário flexível
+        - Quero descrever minha própria rotina
+        - Deixar para decidir depois
+      default: 4
+    validations:
+      required: true
+
+  - type: textarea
+    id: study_routine_details
+    attributes:
+      label: Quando você gostaria de estudar?
+      description: Opcional. Informe dias, horários, duração, antecedência do aviso e fuso horário quando isso for importante.
+      placeholder: "Exemplo: segunda, quarta e sexta, das 19h às 19h45, com aviso 15 minutos antes, horário de Brasília."
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Há mais alguma coisa que devemos considerar?
+      description: Opcional.
+
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Entendo que apenas informações necessárias ao planejamento poderão ser organizadas no meu repositório, sem salvar a submissão bruta, credenciais ou dados pessoais desnecessários.
+          required: true

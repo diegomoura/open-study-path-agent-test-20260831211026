@@ -1,0 +1,62 @@
+name: Validate usable generation
+
+on:
+  pull_request:
+    paths:
+      - 'instructions/38-complete-usable-generation.md'
+      - 'scripts/refresh_review_fingerprints.py'
+      - 'tests/test_refresh_review_fingerprints.py'
+      - 'state/reviews/**'
+      - 'study/modules/**'
+      - 'study/assessments/**'
+      - 'study/flashcards/**'
+      - 'state/content-reviews/**'
+  push:
+    branches: [main]
+    paths:
+      - 'instructions/38-complete-usable-generation.md'
+      - 'scripts/refresh_review_fingerprints.py'
+      - 'tests/test_refresh_review_fingerprints.py'
+      - 'state/reviews/**'
+      - 'study/modules/**'
+      - 'study/assessments/**'
+      - 'study/flashcards/**'
+      - 'state/content-reviews/**'
+  workflow_dispatch:
+  workflow_call:
+    # See validate-template.yml's workflow_call comment.
+    inputs:
+      ref:
+        description: Branch or SHA to validate (defaults to the calling workflow's own ref)
+        required: false
+        type: string
+
+concurrency:
+  group: usable-generation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pedagogical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install lightweight validation dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml
+      - name: Verify review fingerprints
+        run: python scripts/refresh_review_fingerprints.py
+      - name: Test batched fingerprint repair
+        run: |
+          set -o pipefail
+          python -m unittest tests/test_refresh_review_fingerprints.py 2>&1 | tee usable-generation-tests.log
+
+# This job intentionally does not install Playwright or Chromium and
+# represents the durable learning_window_usable gate.

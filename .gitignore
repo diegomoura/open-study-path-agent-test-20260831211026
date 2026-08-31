@@ -1,0 +1,22 @@
+# Secrets and local integration settings
+.env
+.env.*
+!.env.example
+*.local.yml
+*.local.yaml
+.open-study-path/secrets*
+
+# Raw intake data and downloaded uploads
+state/raw-submissions/
+intake/uploads/
+*.submission.json
+
+# Local tooling
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+npm-debug.log*
+.open-study-path/rendered-slides/
+__pycache__/
+*.pyc

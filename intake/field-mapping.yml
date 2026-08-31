@@ -1,0 +1,152 @@
+version: 4
+spec_id: open-study-path-intake
+
+github_issue:
+  current_form_version: 4
+  current_mappings:
+    issue_title: path.name
+
+mappings:
+  path_name: path.name
+  subject: path.learning_request
+  objective: path.objective
+  desired_outcome: path.desired_outcome
+  motivation: path.motivation
+  time_constraints: path.time_constraints
+  current_level: learner.current_level
+  prior_knowledge: learner.prior_knowledge
+  preferred_language: learner.preferred_language
+  learning_formats: preferences.formats
+  theory_practice_balance: preferences.theory_practice_balance
+  assessment_style: preferences.assessment_style
+  accessibility_needs: learner.accessibility_needs
+  reference_text_or_urls: references.text_or_urls
+  reference_attachments: references.attachments
+  integration_experience: integration_preferences.experience
+  already_uses: integration_preferences.already_uses
+  willing_to_connect: integration_preferences.willing_to_connect
+  integration_constraints: integration_preferences.notes
+  task_manager: integrations.task_manager.provider
+  study_routine_mode: integration_preferences.routine.mode
+  study_routine_details: integration_preferences.routine.details
+  additional_notes: preferences.notes
+
+derived_fields:
+  path.subject:
+    from: path.learning_request
+    strategy: concise_topic_label
+    max_length: 120
+
+provider_rules:
+  preferred_language:
+    pt-br:
+      learner.preferred_language: pt-BR
+    "português (brasil)":
+      learner.preferred_language: pt-BR
+    en:
+      learner.preferred_language: en
+    english:
+      learner.preferred_language: en
+
+  integration_experience:
+    guided_recommendations:
+      integration_preferences.experience: guided_recommendations
+      integration_preferences.account_connections: ask_per_provider
+    "quero sugestões de ferramentas quando forem úteis":
+      integration_preferences.experience: guided_recommendations
+      integration_preferences.account_connections: ask_per_provider
+    minimal:
+      integration_preferences.experience: minimal
+      integration_preferences.account_connections: ask_per_provider
+    "quero algo simples, principalmente no github":
+      integration_preferences.experience: minimal
+      integration_preferences.account_connections: ask_per_provider
+    enriched:
+      integration_preferences.experience: enriched
+      integration_preferences.account_connections: ask_per_provider
+    "quero uma experiência mais interativa com ferramentas externas":
+      integration_preferences.experience: enriched
+      integration_preferences.account_connections: ask_per_provider
+    no_external_accounts:
+      integration_preferences.experience: minimal
+      integration_preferences.account_connections: no_external_accounts
+    "não quero sugestões que exijam conectar outras contas":
+      integration_preferences.experience: minimal
+      integration_preferences.account_connections: no_external_accounts
+
+  study_routine_mode:
+    "sem lembretes por enquanto":
+      integration_preferences.routine.mode: none
+      integrations.reminders.provider: none
+      integrations.reminders.enabled: disabled
+      integrations.calendar.provider: none
+      integrations.calendar.enabled: disabled
+    "blocos com horário fixo na agenda":
+      integration_preferences.routine.mode: fixed_calendar
+      integrations.reminders.provider: calendar
+      integrations.reminders.enabled: enabled
+      integrations.calendar.provider: google_calendar
+      integrations.calendar.enabled: enabled
+    "tarefas recorrentes com horário flexível":
+      integration_preferences.routine.mode: flexible_reminders
+      integrations.reminders.provider: todoist
+      integrations.reminders.enabled: enabled
+      integrations.calendar.provider: none
+      integrations.calendar.enabled: disabled
+    "quero descrever minha própria rotina":
+      integration_preferences.routine.mode: custom
+      integrations.reminders.provider: auto
+      integrations.reminders.enabled: auto
+      integrations.calendar.provider: auto
+      integrations.calendar.enabled: auto
+    "deixar para decidir depois":
+      integration_preferences.routine.mode: decide_later
+      integrations.reminders.provider: none
+      integrations.reminders.enabled: disabled
+      integrations.calendar.provider: none
+      integrations.calendar.enabled: disabled
+
+  current_level:
+    # study-config.schema.json's learner.current_level enum is exactly
+    # ["none", "beginner", "intermediate", "advanced"] -- a real dispatch
+    # (Etapa 9 item 2) normalized the dropdown's first option to the
+    # plausible-looking but schema-invalid "no_knowledge" because this
+    # provider_rules table had no entry for current_level at all, unlike
+    # every other dropdown field here. CI's schema validator caught it
+    # (as designed -- this is exactly what it's for), but it cost a real
+    # dispatch to surface a gap that was fixable in this file the whole time.
+    nenhum_conhecimento:
+      learner.current_level: none
+    "nenhum conhecimento":
+      learner.current_level: none
+    iniciante:
+      learner.current_level: beginner
+    intermediario:
+      learner.current_level: intermediate
+    "intermediário":
+      learner.current_level: intermediate
+    avancado:
+      learner.current_level: advanced
+    "avançado":
+      learner.current_level: advanced
+    none:
+      learner.current_level: none
+    beginner:
+      learner.current_level: beginner
+    intermediate:
+      learner.current_level: intermediate
+    advanced:
+      learner.current_level: advanced
+
+normalization:
+  trim_strings: true
+  discard_empty_optional_fields: true
+  split_multiline_prior_knowledge: true
+  preserve_auto_provider_choices: true
+  attachments:
+    persist_original_files: false
+    persist_safe_metadata_only: true
+  personal_data:
+    discard_unnecessary_identifiers: true
+  assumptions:
+    record_in: state/intake-summary.json

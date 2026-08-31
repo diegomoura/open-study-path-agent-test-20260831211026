@@ -1,0 +1,51 @@
+name: Validate diagnostic completion
+
+on:
+  pull_request:
+    paths:
+      - ".open-study-path/instance.yml"
+      - "state/diagnostic-summary.json"
+      - "instructions/20-diagnostic.md"
+      - "instructions/21-diagnostic-completion-recovery.md"
+      - "instructions/manifest.yml"
+      - "instructions/phase-completion.md"
+      - "scripts/test_diagnostic_completion_recovery.py"
+      - ".github/workflows/validate-diagnostic-completion.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".open-study-path/instance.yml"
+      - "state/diagnostic-summary.json"
+      - "instructions/20-diagnostic.md"
+      - "instructions/21-diagnostic-completion-recovery.md"
+      - "instructions/manifest.yml"
+      - "instructions/phase-completion.md"
+      - "scripts/test_diagnostic_completion_recovery.py"
+      - ".github/workflows/validate-diagnostic-completion.yml"
+  workflow_call:
+    # See validate-template.yml's workflow_call comment.
+    inputs:
+      ref:
+        description: Branch or SHA to validate (defaults to the calling workflow's own ref)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diagnostic-completion-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet --disable-pip-version-check pyyaml
+      - run: python scripts/test_diagnostic_completion_recovery.py

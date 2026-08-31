@@ -1,0 +1,76 @@
+name: Avaliação — TOPIC-000 — Replace me
+description: Mostre como você compreendeu e aplicou esta etapa.
+title: "[Avaliação] TOPIC-000 — Replace me"
+labels:
+  - assessment
+  - assessment:submitted
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:assessment topic_id=TOPIC-000 version=1 -->
+        ## Mostre o que você aprendeu
+
+        Responda com suas próprias palavras e use exemplos sempre que puder. Não buscamos respostas decoradas: queremos entender como você está pensando e aplicando o conteúdo.
+
+        Depois de enviar, volte ao chat e escreva:
+
+        `Terminei Replace me. Avalie minhas respostas.`
+
+  - type: input
+    id: evidence
+    attributes:
+      label: Sua evidência, quando houver
+      description: Inclua o link ou uma referência curta para o arquivo, documento, comentário ou projeto relacionado.
+      placeholder: https://...
+    validations:
+      required: false
+
+  - type: textarea
+    id: q1
+    attributes:
+      label: Questão 1 — explique a ideia principal
+      description: Substitua por uma pergunta específica que exija compreensão, não apenas definição decorada.
+      placeholder: Explique com suas palavras e use um exemplo.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q2
+    attributes:
+      label: Questão 2 — compare ou analise
+      description: Substitua por uma tarefa específica de comparação, classificação, diagnóstico ou interpretação.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q3
+    attributes:
+      label: Questão 3 — aplique em uma situação nova
+      description: Substitua por um cenário novo que exija decisão, solução ou transferência.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q4
+    attributes:
+      label: Questão 4 — encontre e corrija o erro
+      description: Substitua por um equívoco plausível que a pessoa deve analisar e reformular.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q5
+    attributes:
+      label: Questão 5 — mostre sua evidência e reflita
+      description: Peça uma evidência concreta e uma autoavaliação breve usando os critérios da etapa.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Revisei minhas respostas e estou pronto para receber feedback.
+          required: true

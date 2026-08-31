@@ -1,0 +1,109 @@
+name: Agent pilot - diagnostic answer bridge
+
+# Etapa 9d (docs/claude-agent-pilot-etapa9d-diagnostic-answer-form.md):
+# .github/ISSUE_TEMPLATE/diagnostic-answer.yml lets a learner answer a
+# diagnostic session's question batch (Etapa 9c) with real text-field form
+# inputs instead of typing a raw comment. GitHub Issue Forms always create a
+# *new* issue -- they cannot post into an existing one -- so the `bridge`
+# job below resolves that new issue back to the session it answers and
+# reposts its content as an ordinary comment there.
+#
+# Entirely deterministic: scripts/diagnostic_answer_resolution.py (pure,
+# offline-testable) decides identity and extracts answers; the `bridge`
+# job's only script, scripts/bridge_diagnostic_answer.py, does the I/O. No
+# Anthropic API call, no LLM judgment, no cost -- same "deterministic code
+# decides identity, the model only ever sees already-verified content" split
+# scripts/intake_resolution.py established for intake's GitHub Issue Form.
+#
+# A rejected submission (wrong/missing session number, session not
+# in-progress, already imported) is not a workflow failure: the script posts
+# an explanatory comment on the answer issue and leaves it open, the same
+# "return the form link, do not silently guess" posture intake_resolution.py
+# takes for an ambiguous or absent candidate.
+#
+# Getting the evaluation turn to actually run after a successful import took
+# two real, wrong attempts before this one, both documented in
+# docs/claude-agent-pilot-etapa9d-diagnostic-answer-form.md:
+# 1. Relying on the comment the bridge posts to trigger
+#    agent-pilot-diagnostic.yml via issue_comment does not work: GitHub does
+#    not fire event-triggered workflows for events caused by a workflow's
+#    own GITHUB_TOKEN.
+# 2. Calling agent-pilot-diagnostic.yml's workflow_dispatch trigger
+#    explicitly via the Actions API does not work either: GitHub
+#    structurally blocks GITHUB_TOKEN from firing
+#    workflow_dispatch/repository_dispatch at all, confirmed by a real 403
+#    ("Resource not accessible by integration") -- this needs a PAT, no way
+#    around it, if you actually want a separate triggered run.
+# The `evaluate` job below avoids needing a separate triggered run in the
+# first place: it calls agent-pilot-diagnostic.yml directly as a reusable
+# workflow (`uses: ./...`, `workflow_call`), which is part of the *same* run
+# graph, not a new one -- unaffected by either restriction above, and needs
+# no PAT or extra secret. `secrets: inherit` passes ANTHROPIC_API_KEY
+# through automatically.
+#
+# One more real finding getting `evaluate` itself to actually run: a
+# reusable workflow can only ever be granted a subset of its caller's own
+# `permissions:`, never more. This workflow's top-level `permissions:` used
+# to declare only `issues: write` (all the `bridge` job needs), which made
+# every real run of `evaluate` fail with `startup_failure` -- no job list,
+# no error message, nothing actionable in the UI or the API. The fix is
+# simply matching agent-pilot-diagnostic.yml's own permissions block below.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  # Must be at least as broad as agent-pilot-diagnostic.yml's own
+  # permissions block (contents: write, pull-requests: write, issues:
+  # write): a reusable workflow (workflow_call, the `evaluate` job below)
+  # can only ever be granted a subset of the calling workflow's own
+  # permissions, never more -- GitHub enforces this silently as a
+  # startup_failure with no job list and no clear error message if
+  # violated, which is exactly what a real run of this workflow hit before
+  # this was fixed.
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  # Scoped per answer issue, not per repo -- two different learners
+  # submitting at the same time must not block each other.
+  group: agent-pilot-diagnostic-answer-bridge-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  bridge:
+    name: Resolve and import a diagnostic-answer form submission
+    runs-on: ubuntu-latest
+    if: >
+      github.event.issue.pull_request == null &&
+      contains(github.event.issue.labels.*.name, 'diagnostic:answer')
+    outputs:
+      session_issue_number: ${{ steps.bridge.outputs.session_issue_number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bridge the submission
+        id: bridge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/bridge_diagnostic_answer.py \
+            --repository "${{ github.repository }}" \
+            --answer-issue-number "${{ github.event.issue.number }}"
+
+  evaluate:
+    name: Evaluate the imported answer (calls agent-pilot-diagnostic.yml)
+    needs: bridge
+    if: needs.bridge.outputs.session_issue_number != ''
+    uses: ./.github/workflows/agent-pilot-diagnostic.yml
+    with:
+      issue_number: ${{ needs.bridge.outputs.session_issue_number }}
+    secrets: inherit

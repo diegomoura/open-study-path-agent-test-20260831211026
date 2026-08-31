@@ -1,0 +1,75 @@
+name: Responder diagnóstico
+description: Responda as perguntas da sua sessão de diagnóstico usando campos de texto, em vez de escrever um comentário.
+labels: ["diagnostic:answer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:diagnostic-answer form_id=diagnostic-answer version=1 -->
+
+        # Respostas do diagnóstico
+
+        Preencha apenas os campos correspondentes às perguntas que você realmente recebeu no comentário da sua sessão -- deixe o resto em branco. Não é preciso repetir as perguntas, só suas respostas.
+
+        Se você chegou aqui por um link que já veio preenchido com o número da sessão, não precisa mudar esse campo.
+
+  - type: input
+    id: session_issue_number
+    attributes:
+      label: Número da issue da sua sessão de diagnóstico
+      description: O número (ex. 7) da issue onde as perguntas foram feitas -- está no link que te trouxe aqui, ou no título/URL daquela issue.
+      placeholder: "7"
+    validations:
+      required: true
+
+  - type: textarea
+    id: answer_1
+    attributes:
+      label: Resposta à Pergunta 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: answer_2
+    attributes:
+      label: Resposta à Pergunta 2
+
+  - type: textarea
+    id: answer_3
+    attributes:
+      label: Resposta à Pergunta 3
+
+  - type: textarea
+    id: answer_4
+    attributes:
+      label: Resposta à Pergunta 4
+
+  - type: textarea
+    id: answer_5
+    attributes:
+      label: Resposta à Pergunta 5
+
+  - type: textarea
+    id: answer_6
+    attributes:
+      label: Resposta à Pergunta 6
+
+  - type: textarea
+    id: answer_7
+    attributes:
+      label: Resposta à Pergunta 7
+
+  - type: textarea
+    id: answer_8
+    attributes:
+      label: Resposta à Pergunta 8
+
+  - type: textarea
+    id: answer_9
+    attributes:
+      label: Resposta à Pergunta 9
+
+  - type: textarea
+    id: answer_10
+    attributes:
+      label: Resposta à Pergunta 10

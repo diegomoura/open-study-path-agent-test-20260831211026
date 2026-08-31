@@ -1,0 +1,558 @@
+name: Agent pilot
+
+# Stage 2 of the multi-agent work proposal (see docs/claude-agent-pilot.md):
+# the first workflow that calls the real Anthropic API. Etapa 3 (proposal,
+# section 7, step 3) validated bootstrap_instance and configure_intake with
+# real dispatches; Etapa 4 (step 4) adds `intake` and, restricted to the
+# github_issues task-manager backend only, `publish` -- still author +
+# reviewer as two separate API calls that never share context.
+#
+# Manual trigger only for the pilot. It always opens a pull request and
+# posts the independent review as a comment; since Etapa 12
+# (docs/claude-agent-pilot-etapa12-auto-merge.md, "Opcao C") it also
+# auto-merges (squash + delete branch) when, and only when, the reviewer
+# approved AND every completion check the phase requires
+# (instructions/manifest.yml's automatic_completion.check_sets) succeeded --
+# run inline as reusable workflows against this run's own branch, in the
+# `resolve-checks`/`ci-*`/`auto-merge` jobs below. Otherwise the pull request
+# is left open exactly as before, for a human to make the final call. For
+# `intake`, the author
+# also applies the `intake:imported` label directly to the source GitHub
+# issue as a real, immediate write -- independent of whether the pull request
+# itself is later merged (see docs/claude-agent-pilot.md, "Known limitation:
+# label write is not covered by PR merge"). `publish` similarly creates or
+# updates GitHub Issues as real, immediate writes during the author step,
+# independent of the pull request that records state/integrations.json.
+#
+# `track` (Etapa 6a, docs/claude-agent-pilot-etapa6-design.md) reuses this
+# same generic workflow rather than a dedicated one, since it is a single
+# workflow_dispatch operation like intake/publish, not multi-turn like
+# `diagnostic` -- it only ever reads a GitHub issue
+# (read_github_issue), never writes one.
+#
+# `replan` (Etapa 6b) also reuses this workflow -- also single-shot, and
+# unlike `track` it never touches GitHub Issues at all: it only reads and
+# writes repository files (roadmap, instance marker, study.config.yml,
+# progress, study/**, assessment-topic issue templates).
+#
+# `evaluate` (Etapa 6c, grading only -- no auto-materialization or task-state
+# move yet, see docs/claude-agent-pilot-etapa6-design.md section 5.3) also
+# reuses this workflow. Unlike every other phase here, its `extra_context`
+# input carries the learner's literal command
+# ("Finalizei o TOPIC-000. Avalie minhas respostas." or "...Avalie a issue
+# #<número>.") rather than free-form notes -- instructions/55-evaluate-topic.md
+# already specifies parsing that exact natural-language command, so no new
+# structured workflow_dispatch input (topic_id/issue_number) was added; the
+# author extracts both from extra_context itself.
+#
+# Untrusted workflow_dispatch inputs (target_repo, extra_context) are only
+# ever passed through step `env:` and read back as shell variables, never
+# interpolated directly into a `run:` script body -- that's what keeps a
+# crafted input from being executed as shell/python instead of treated as
+# data. The repository the `intake`/`publish` phases' GitHub Issues tools
+# operate against is never taken from target_repo or any other input -- it
+# is always GITHUB_REPOSITORY, which Actions sets to this workflow's own
+# repository. See scripts/agent_runtime.py's module docstring for why that
+# boundary matters.
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: Manifest phase to run
+        required: true
+        type: choice
+        options:
+          - bootstrap_instance
+          - configure_intake
+          - intake
+          - publish
+          - generate_proposal
+          - generate_detailed
+          - track
+          - replan
+          - evaluate
+      target_repo:
+        description: Target instance repository, as OWNER/REPOSITORY
+        required: true
+        type: string
+      extra_context:
+        description: Optional extra context for the author agent (course name, notes, etc.)
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  # Needed by the `intake` phase's label_github_issue tool (applies
+  # `intake:imported` to the source issue) and by `publish`'s
+  # run_publish_projection tool (creates/updates GitHub Issues via
+  # GitHubIssuesBackend). `track` (Etapa 6a) only ever reads an issue
+  # (read_github_issue) through this same scope -- it has no write-side
+  # GitHub tool at all. `evaluate` (Etapa 6c) uses the fullest slice of this
+  # scope so far: reads (resolve_assessment_candidates/read_github_issue),
+  # posts a comment (post_issue_comment), and both applies and removes
+  # specific labels (label_github_issue/unlabel_github_issue) -- `issues:
+  # write` already covers label deletion and comment creation, no separate
+  # permission needed. Harmless no-op permission for
+  # bootstrap_instance/configure_intake/generate_proposal/generate_detailed,
+  # which never call any GitHub Issues tool -- RepoTools._require_github
+  # rejects GitHub Issues access outside PHASES_WITH_GITHUB_ISSUES regardless
+  # of what this token can technically do.
+  issues: write
+
+concurrency:
+  group: agent-pilot-setup-${{ inputs.target_repo }}-${{ inputs.phase }}
+  cancel-in-progress: false
+
+env:
+  PHASE: ${{ inputs.phase }}
+  TARGET_REPO: ${{ inputs.target_repo }}
+  EXTRA_CONTEXT: ${{ inputs.extra_context }}
+
+jobs:
+  author:
+    name: Author agent (isolated call)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    outputs:
+      branch: ${{ steps.branch.outputs.name }}
+      base_sha: ${{ steps.base.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml jsonschema
+
+      - name: Record base SHA
+        id: base
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Create feature branch
+        id: branch
+        run: |
+          name="agent-pilot/${PHASE}-$(date -u +%Y%m%d%H%M%S)"
+          git checkout -b "$name"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Build author prompt
+        run: |
+          python scripts/build_agent_prompt.py author \
+            --phase "$PHASE" \
+            --target-repo "$TARGET_REPO" \
+            --extra-context "$EXTRA_CONTEXT" \
+            --out-system /tmp/author-system.txt \
+            --out-user /tmp/author-user.txt
+
+      - name: Run author agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Only consulted by agent_runtime.py when PHASE is in
+          # PHASES_WITH_GITHUB_ISSUES (currently just intake). GITHUB_TOKEN
+          # here is the workflow's own default token, scoped by the
+          # `permissions:` block above -- never a separate provider secret.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/agent_runtime.py author \
+            --phase "$PHASE" \
+            --system-prompt-file /tmp/author-system.txt \
+            --user-prompt-file /tmp/author-user.txt \
+            > /tmp/author-result.json
+
+      - name: Extract author summary for the reviewer
+        run: |
+          python -c "import json; open('/tmp/author-summary.txt', 'w', encoding='utf-8').write(json.load(open('/tmp/author-result.json', encoding='utf-8'))['summary'])"
+
+      - name: Publish author result to the job summary
+        # Runs unconditionally, before the no-diff check below. An
+        # ambiguous/none intake classification correctly writes nothing and
+        # makes the next step fail on purpose -- this step is what keeps the
+        # author's explanation (which candidates, what to do next) visible
+        # on the run's summary page instead of being discarded along with
+        # everything else in /tmp when the job ends. See
+        # docs/claude-agent-pilot-etapa4.md, section 5.4.
+        run: |
+          python scripts/publish_author_summary.py \
+            --author-result /tmp/author-result.json \
+            --phase "$PHASE"
+
+      - name: Fail if the author produced no diff
+        run: |
+          # git diff alone misses brand-new files (bootstrap's whole point is
+          # creating files that don't exist yet), so check the working tree
+          # status instead of the tracked-file diff.
+          #
+          # Exception (Etapa 9 item 2, real dispatch finding): when the author
+          # explicitly called finish_phase(no_changes_needed=true) -- only ever
+          # accepted for phases in agent_runtime.py's
+          # PHASES_ALLOWING_NO_CHANGES_NEEDED -- an empty working tree is a
+          # legitimate outcome (e.g. configure_intake against an instance
+          # bootstrap_instance already configured correctly), not a failure.
+          # It still goes through the reviewer job below exactly like any
+          # other run: the reviewer independently re-checks the repository and
+          # can reject this claim, it is never taken on the author's word.
+          no_changes_needed=$(python -c "import json; print(json.load(open('/tmp/author-result.json', encoding='utf-8')).get('no_changes_needed', False))")
+          if [ -z "$(git status --porcelain)" ]; then
+            if [ "$no_changes_needed" = "True" ]; then
+              echo "Author reported no_changes_needed=true (see the job summary for its reason). Proceeding to independent review with an empty diff."
+            else
+              echo "::error::author agent finished without writing any allowed file"
+              exit 1
+            fi
+          fi
+
+      - name: Commit author output
+        run: |
+          git config user.name "open-study-path-agent"
+          git config user.email "agent@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "agent(${PHASE}): author pass via ${TARGET_REPO}"
+          else
+            echo "Nothing to commit (no_changes_needed=true) -- pushing the branch unchanged so the reviewer job can still check it out."
+          fi
+          git push origin "${{ steps.branch.outputs.name }}"
+
+      - name: Upload author artifacts
+        # if: always() so the raw JSON stays downloadable even when "Fail if
+        # the author produced no diff" failed the job on purpose (ambiguous/
+        # none intake classification) -- the job summary step above already
+        # covers the human-readable case, this covers anyone who wants the
+        # exact tool-call transcript.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: author-result
+          path: |
+            /tmp/author-result.json
+            /tmp/author-summary.txt
+
+  reviewer:
+    name: Reviewer agent (isolated call, no author context)
+    needs: author
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ needs.author.outputs.branch }}
+      base_sha: ${{ needs.author.outputs.base_sha }}
+      pr_number: ${{ steps.open_pr.outputs.pr_number }}
+      review_status: ${{ steps.reviewer_status.outputs.status }}
+    env:
+      BRANCH: ${{ needs.author.outputs.branch }}
+      BASE_SHA: ${{ needs.author.outputs.base_sha }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.author.outputs.branch }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml jsonschema
+
+      - name: Download author artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: author-result
+          path: /tmp
+
+      - name: Build reviewer prompt
+        run: |
+          python scripts/build_agent_prompt.py reviewer \
+            --phase "$PHASE" \
+            --target-repo "$TARGET_REPO" \
+            --base-sha "$BASE_SHA" \
+            --author-summary-file /tmp/author-summary.txt \
+            --out-system /tmp/reviewer-system.txt \
+            --out-user /tmp/reviewer-user.txt
+
+      - name: Run reviewer agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/agent_runtime.py reviewer \
+            --phase "$PHASE" \
+            --system-prompt-file /tmp/reviewer-system.txt \
+            --user-prompt-file /tmp/reviewer-user.txt \
+            > /tmp/reviewer-result.json
+
+      - name: Write review artifact
+        run: |
+          mkdir -p state/reviews
+          python -c "import json, os; open('state/reviews/agent-pilot-' + os.environ['PHASE'] + '.yml', 'w', encoding='utf-8').write(json.load(open('/tmp/reviewer-result.json', encoding='utf-8'))['review_yaml'])"
+
+      - name: Persist structural model-tier warnings, if any
+        # Non-blocking by design (docs/agent-model-configuration.md): resolves
+        # whichever config this dispatch actually used (instance
+        # .open-study-path/models.yml if the instance has one, otherwise the
+        # all-recommended template) and writes a note only when a structural
+        # agent is configured below its recommended tier. Idempotent: removes
+        # a stale note from an earlier dispatch once warnings clear.
+        run: |
+          python scripts/model_config_review_note.py --phase "$PHASE"
+
+      - name: Summarize combined token usage and cost
+        run: |
+          python scripts/summarize_agent_pilot_usage.py \
+            --author-result /tmp/author-result.json \
+            --reviewer-result /tmp/reviewer-result.json \
+            --phase "$PHASE" \
+            --target-repo "$TARGET_REPO" \
+            --out-summary-json /tmp/usage-summary.json \
+            --append-log state/agent-pilot-usage.jsonl
+          cat /tmp/usage-summary.json
+
+      - name: Commit review artifact and usage log
+        run: |
+          git config user.name "open-study-path-agent"
+          git config user.email "agent@users.noreply.github.com"
+          git add state/reviews/ state/agent-pilot-usage.jsonl
+          git commit -m "agent(${PHASE}): independent review + usage record" || echo "nothing to commit"
+          git push origin "$BRANCH"
+
+      - name: Open pull request
+        id: open_pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/format_pr_body.py \
+            --reviewer-result /tmp/reviewer-result.json \
+            --usage-summary /tmp/usage-summary.json \
+            > /tmp/pr-body.md
+          gh pr create \
+            --repo "${{ github.repository }}" \
+            --head "$BRANCH" \
+            --base "${{ github.ref_name }}" \
+            --title "agent pilot: ${PHASE} for ${TARGET_REPO}" \
+            --body-file /tmp/pr-body.md
+          pr_number=$(gh pr view "$BRANCH" --repo "${{ github.repository }}" --json number -q .number)
+          echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+
+      - name: Fail the job if the reviewer did not approve
+        id: reviewer_status
+        run: |
+          status=$(python -c "import json;print(json.load(open('/tmp/reviewer-result.json'))['status'])")
+          echo "reviewer status: $status"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" != "approved" ]; then
+            echo "::warning::reviewer returned action_required -- see the opened PR and state/reviews/ for blocking findings"
+          fi
+
+  resolve-checks:
+    name: Resolve required completion checks
+    needs: reviewer
+    runs-on: ubuntu-latest
+    outputs:
+      needs_intake: ${{ steps.resolve.outputs.needs_intake }}
+      needs_diagnostic: ${{ steps.resolve.outputs.needs_diagnostic }}
+      needs_proposal: ${{ steps.resolve.outputs.needs_proposal }}
+      needs_usable_generation: ${{ steps.resolve.outputs.needs_usable_generation }}
+      needs_task_projection: ${{ steps.resolve.outputs.needs_task_projection }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.reviewer.outputs.branch }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml
+
+      - name: Resolve which named checks this phase requires
+        id: resolve
+        run: python scripts/resolve_completion_check_sets.py --phase "$PHASE" >> "$GITHUB_OUTPUT"
+
+  # Auto-merge (Opcao C, docs/claude-agent-pilot.md): the six workflows below
+  # are the same ones instructions/manifest.yml's automatic_completion.check_sets
+  # already names as required per phase for the older instructions-driven
+  # pipeline. A GITHUB_TOKEN-authored pull request (this workflow always uses
+  # the default GITHUB_TOKEN, never a PAT) never gets its own `pull_request`-
+  # triggered run of those workflows -- GitHub does not cascade events caused
+  # by the default token -- so they are called here inline as reusable
+  # workflows (`workflow_call`), against the exact branch this run pushed,
+  # instead of waited for as separate external check runs. See each
+  # workflow's own workflow_call comment for the same rationale.
+  #
+  # The two "baseline" checks are required by every phase (verified by
+  # scripts/test_resolve_completion_check_sets.py), so they run
+  # unconditionally. The other five only run when resolve-checks determined
+  # this phase's manifest entry actually requires them -- running e.g. the
+  # curriculum-content checks for a `bootstrap_instance` dispatch would not
+  # just be wasted compute, it would silently validate the wrong thing.
+  ci-baseline-template:
+    name: "CI: Validate Open Study Path"
+    needs: reviewer
+    uses: ./.github/workflows/validate-template.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+      review_base_sha: ${{ needs.reviewer.outputs.base_sha }}
+
+  ci-baseline-curriculum:
+    name: "CI: Validate curriculum state"
+    needs: reviewer
+    uses: ./.github/workflows/validate-curriculum-state.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  ci-intake:
+    name: "CI: Validate intake completion"
+    needs: [reviewer, resolve-checks]
+    if: needs.resolve-checks.result == 'success' && needs.resolve-checks.outputs.needs_intake == 'true'
+    uses: ./.github/workflows/validate-intake-completion.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  ci-diagnostic:
+    name: "CI: Validate diagnostic completion"
+    needs: [reviewer, resolve-checks]
+    if: needs.resolve-checks.result == 'success' && needs.resolve-checks.outputs.needs_diagnostic == 'true'
+    uses: ./.github/workflows/validate-diagnostic-completion.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  ci-proposal:
+    name: "CI: Validate proposal completion"
+    needs: [reviewer, resolve-checks]
+    if: needs.resolve-checks.result == 'success' && needs.resolve-checks.outputs.needs_proposal == 'true'
+    uses: ./.github/workflows/validate-proposal-completion.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  ci-usable-generation:
+    name: "CI: Validate usable generation"
+    needs: [reviewer, resolve-checks]
+    if: needs.resolve-checks.result == 'success' && needs.resolve-checks.outputs.needs_usable_generation == 'true'
+    uses: ./.github/workflows/validate-usable-generation.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  ci-task-projection:
+    name: "CI: Validate task projection"
+    needs: [reviewer, resolve-checks]
+    if: needs.resolve-checks.result == 'success' && needs.resolve-checks.outputs.needs_task_projection == 'true'
+    uses: ./.github/workflows/validate-task-projection.yml
+    with:
+      ref: ${{ needs.reviewer.outputs.branch }}
+
+  auto-merge:
+    name: Auto-merge when approved and CI is green (Opcao C)
+    needs:
+      - reviewer
+      - resolve-checks
+      - ci-baseline-template
+      - ci-baseline-curriculum
+      - ci-intake
+      - ci-diagnostic
+      - ci-proposal
+      - ci-usable-generation
+      - ci-task-projection
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: ${{ needs.reviewer.outputs.branch }}
+      BASE_SHA: ${{ needs.reviewer.outputs.base_sha }}
+      PR_NUMBER: ${{ needs.reviewer.outputs.pr_number }}
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.reviewer.outputs.branch }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml jsonschema
+
+      - name: Decide whether to merge
+        id: decide
+        run: |
+          job_results=$(python -c "
+          import json
+          print(json.dumps({
+              'ci-baseline-template': '${{ needs.ci-baseline-template.result }}',
+              'ci-baseline-curriculum': '${{ needs.ci-baseline-curriculum.result }}',
+              'ci-intake': '${{ needs.ci-intake.result }}',
+              'ci-diagnostic': '${{ needs.ci-diagnostic.result }}',
+              'ci-proposal': '${{ needs.ci-proposal.result }}',
+              'ci-usable-generation': '${{ needs.ci-usable-generation.result }}',
+              'ci-task-projection': '${{ needs.ci-task-projection.result }}',
+          }))
+          ")
+          echo "job results: $job_results"
+          output=$(python scripts/agent_pilot_merge_decision.py \
+            --phase "$PHASE" \
+            --review-artifact "state/reviews/agent-pilot-${PHASE}.yml" \
+            --base-sha "$BASE_SHA" \
+            --job-results-json "$job_results")
+          echo "$output"
+          should_merge=$(echo "$output" | grep '^should_merge=' | cut -d= -f2)
+          echo "should_merge=$should_merge" >> "$GITHUB_OUTPUT"
+
+      - name: Merge the pull request (squash) and delete the branch
+        if: steps.decide.outputs.should_merge == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "$PR_NUMBER" \
+            --repo "${{ github.repository }}" \
+            --squash \
+            --delete-branch
+
+      - name: Build the post-merge digest (no API call)
+        if: steps.decide.outputs.should_merge == 'true'
+        run: |
+          python scripts/agent_pilot_merge_digest.py \
+            --phase "$PHASE" \
+            --target-repo "${{ github.repository }}" \
+            --pr-number "$PR_NUMBER" \
+            --review-artifact "state/reviews/agent-pilot-${PHASE}.yml" \
+            --usage-log state/agent-pilot-usage.jsonl \
+            --intake-summary state/intake-summary.json \
+            --out-digest /tmp/merge-digest.md > /tmp/digest-cli.out
+          cat /tmp/digest-cli.out
+          cat /tmp/merge-digest.md
+
+      - name: Post the digest to the originating issue, if known
+        if: steps.decide.outputs.should_merge == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          source_issue_number=$(grep '^source_issue_number=' /tmp/digest-cli.out | cut -d= -f2)
+          if [ -n "$source_issue_number" ]; then
+            gh issue comment "$source_issue_number" \
+              --repo "${{ github.repository }}" \
+              --body-file /tmp/merge-digest.md
+          else
+            echo "No originating issue resolved from state/intake-summary.json.source_reference for ${TARGET_REPO} -- digest not posted anywhere, see the job log above."
+          fi
+
+      - name: Report why the merge was skipped, if it was
+        if: steps.decide.outputs.should_merge != 'true'
+        run: |
+          echo "::notice::PR #${PR_NUMBER} was left open -- reviewer approval and/or required checks are not both green yet. See the job log above for the exact reasons."

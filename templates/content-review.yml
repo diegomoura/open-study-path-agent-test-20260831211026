@@ -1,0 +1,32 @@
+version: 1
+topic_id: TOPIC-000
+content_version: 1
+reviewed_at: null
+reviewer_role: course_content_reviewer
+review_mode: independent_pass
+status: pending
+
+checks:
+  scope_alignment: pending
+  prerequisite_integrity: pending
+  outcome_coverage: pending
+  lesson_assessment_alignment: pending
+  deliverable_alignment: pending
+  learner_navigation: pending
+  level_progression: pending
+  source_quality: pending
+  practice_consistency: pending
+
+prerequisites_reviewed: []
+
+navigation:
+  direct_prerequisites_only: false
+  does_not_assume_linear_order: false
+
+outcome_coverage:
+  - outcome_id: LO-1
+    status: pending
+    assessment_questions: []
+
+blocking_findings: []
+non_blocking_findings: []

@@ -1,0 +1,140 @@
+name: Validate Open Study Path
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      review_base_sha:
+        description: Base commit used for operation-scope and review validation
+        required: false
+        type: string
+  workflow_call:
+    # Lets another workflow in this same repository (agent-pilot-setup.yml's
+    # auto-merge gate) run this validation inline, against a branch the
+    # calling workflow itself pushed. A GITHUB_TOKEN-authored pull request
+    # never gets its own `pull_request`-triggered run (GitHub does not cascade
+    # events caused by the default token), so this is the reusable-workflow
+    # ("workflow_call") escape hatch already used elsewhere in this repo for
+    # the same reason -- see .github/workflows/agent-pilot-diagnostic-answer-bridge.yml
+    # and docs/claude-agent-pilot-etapa9d-diagnostic-answer-form.md.
+    inputs:
+      ref:
+        description: Branch or SHA to validate (defaults to the calling workflow's own ref)
+        required: false
+        type: string
+      review_base_sha:
+        description: Base commit used for operation-scope and review validation
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  review-generated-artifacts:
+    name: Review generated artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install review dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml
+      - name: Test generated-artifact review framework
+        run: python scripts/test_review_framework.py
+      - name: Validate generated-artifact review framework
+        env:
+          REVIEW_BASE_SHA: ${{ inputs.review_base_sha || github.event.pull_request.base.sha || github.event.before }}
+        run: python scripts/validate_review_framework.py
+
+  validate:
+    needs: review-generated-artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml jsonschema pypdf
+      - name: Test instance operation scope guard
+        run: python scripts/test_instance_operation_scope.py
+      - name: Validate instance operation scope and commit budget
+        env:
+          REVIEW_BASE_SHA: ${{ inputs.review_base_sha || github.event.pull_request.base.sha || github.event.before }}
+        run: python scripts/validate_instance_operation_scope.py
+      - name: Parse repository YAML contracts
+        run: python scripts/validate_template.py yaml
+      - name: Validate repository mode guard
+        run: python scripts/validate_template.py guard
+      - name: Validate safe instance setup
+        run: python scripts/validate_setup_safety.py
+      - name: Validate intake contract
+        run: python scripts/validate_template.py intake
+      - name: Validate deterministic intake resolution
+        run: python scripts/validate_intake_resolution.py
+      - name: Test deterministic intake resolution
+        run: python scripts/test_intake_resolution.py
+      - name: Test repository label provisioning
+        run: python scripts/test_repository_labels.py
+      - name: Test diagnostic-answer form resolution
+        run: python scripts/test_diagnostic_answer_resolution.py
+      - name: Test diagnostic-answer bridge orchestration
+        run: python scripts/test_bridge_diagnostic_answer.py
+      - name: Validate configuration schema
+        run: python scripts/validate_template.py schema
+      - name: Validate guided lifecycle
+        run: python scripts/validate_guided_lifecycle.py 2>&1 | tee guided-validation.log
+      - name: Test lifecycle next-action routing
+        run: python scripts/test_lifecycle_next_action.py
+      - name: Test independent course-content review
+        run: python scripts/test_course_content_review.py
+      - name: Validate independent course-content review
+        run: python scripts/validate_course_content_review.py
+      - name: Test selected integration resolution
+        run: python scripts/test_integration_resolution.py
+      - name: Validate selected integration resolution
+        run: python scripts/validate_integration_resolution.py
+      - name: Test agent model resolution
+        run: python scripts/test_agent_model_resolution.py
+      - name: Validate agent model configuration
+        run: python scripts/validate_model_config.py
+      - name: Test model config review note persistence
+        run: python scripts/test_model_config_review_note.py
+      - name: Validate topic-first planning and publication safety
+        run: python scripts/validate_planning_publication_safety.py
+      - name: Test topic-first planning and publication safety
+        run: python scripts/test_planning_publication_safety.py
+      - name: Test beginner-first pedagogy
+        run: python scripts/test_beginner_pedagogy.py
+      - name: Test generation terminal-state resolution
+        run: python scripts/test_generation_terminal_state.py
+      - name: Validate efficient generation contract
+        run: python scripts/validate_generation_efficiency.py
+      - name: Validate learner-facing study experience
+        run: python scripts/validate_learning_experience.py
+      - name: Test curriculum placeholder detection
+        run: python scripts/test_curriculum_placeholder_detection.py
+      - name: Upload guided validation diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: guided-validation-diagnostics
+          path: guided-validation.log
+          if-no-files-found: ignore
+      - name: Validate curriculum contract
+        run: python scripts/validate_curriculum_safe.py

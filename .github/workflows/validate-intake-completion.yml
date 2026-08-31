@@ -1,0 +1,61 @@
+name: Validate intake completion
+
+on:
+  pull_request:
+    paths:
+      - ".open-study-path/instance.yml"
+      - "study.config.yml"
+      - "state/intake-summary.json"
+      - "instructions/10-intake.md"
+      - "instructions/11-intake-completion-recovery.md"
+      - "instructions/manifest.yml"
+      - "scripts/review_framework.py"
+      - "scripts/test_intake_completion_recovery.py"
+      - ".github/workflows/validate-intake-completion.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".open-study-path/instance.yml"
+      - "study.config.yml"
+      - "state/intake-summary.json"
+      - "instructions/10-intake.md"
+      - "instructions/11-intake-completion-recovery.md"
+      - "instructions/manifest.yml"
+      - "scripts/review_framework.py"
+      - "scripts/test_intake_completion_recovery.py"
+      - ".github/workflows/validate-intake-completion.yml"
+  workflow_call:
+    # See validate-template.yml's workflow_call comment.
+    inputs:
+      ref:
+        description: Branch or SHA to validate (defaults to the calling workflow's own ref)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: intake-completion-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml
+
+      - name: Test intake completion recovery
+        run: python scripts/test_intake_completion_recovery.py

@@ -1,0 +1,56 @@
+name: Validate proposal completion
+
+on:
+  pull_request:
+    paths:
+      - ".open-study-path/instance.yml"
+      - "study/roadmap.md"
+      - "instructions/03-await-ci-and-merge.md"
+      - "instructions/28-propose-path.md"
+      - "instructions/phase-completion.md"
+      - "instructions/manifest.yml"
+      - "scripts/ci_completion_state.py"
+      - "scripts/test_ci_completion_state.py"
+      - "scripts/test_proposal_completion_wait.py"
+      - ".github/workflows/validate-proposal-completion.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".open-study-path/instance.yml"
+      - "study/roadmap.md"
+      - "instructions/03-await-ci-and-merge.md"
+      - "instructions/28-propose-path.md"
+      - "instructions/phase-completion.md"
+      - "instructions/manifest.yml"
+      - "scripts/ci_completion_state.py"
+      - "scripts/test_ci_completion_state.py"
+      - "scripts/test_proposal_completion_wait.py"
+      - ".github/workflows/validate-proposal-completion.yml"
+  workflow_call:
+    # See validate-template.yml's workflow_call comment.
+    inputs:
+      ref:
+        description: Branch or SHA to validate (defaults to the calling workflow's own ref)
+        required: false
+        type: string
+
+concurrency:
+  group: validate-proposal-completion-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet --disable-pip-version-check pyyaml
+      - run: python scripts/test_ci_completion_state.py
+      - run: python scripts/test_proposal_completion_wait.py

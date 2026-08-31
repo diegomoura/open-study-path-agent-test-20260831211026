@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "status": "not_started",
+  "subject": null,
+  "completed_at": null,
+  "method": null,
+  "question_count": 0,
+  "question_budget": {
+    "target_min": 3,
+    "target_max": 5,
+    "hard_max": 7,
+    "exception": null
+  },
+  "evidence_sufficiency": "not_assessed",
+  "learner_context": {},
+  "confirmed_competencies": [],
+  "knowledge_gaps": [],
+  "misconceptions": [],
+  "required_prerequisites": [],
+  "recommended_starting_depth": null,
+  "material_caveats": [],
+  "curriculum_generated": false
+}

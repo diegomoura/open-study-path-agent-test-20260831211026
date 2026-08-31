@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Study Path agent model configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "reasoning_tier", "model_overrides"],
+  "properties": {
+    "version": {"const": 1},
+    "reasoning_tier": {
+      "enum": ["economy", "recommended", "maximum"]
+    },
+    "model_overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bootstrap": {"$ref": "#/$defs/tier_or_null"},
+        "configure_intake": {"$ref": "#/$defs/tier_or_null"},
+        "intake_resolution": {"$ref": "#/$defs/tier_or_null"},
+        "diagnostic": {"$ref": "#/$defs/tier_or_null"},
+        "curriculum_architect": {"$ref": "#/$defs/tier_or_null"},
+        "curriculum_reviewer": {"$ref": "#/$defs/tier_or_null"},
+        "content_author": {"$ref": "#/$defs/tier_or_null"},
+        "content_reviewer": {"$ref": "#/$defs/tier_or_null"},
+        "publish": {"$ref": "#/$defs/tier_or_null"},
+        "integration_preflight": {"$ref": "#/$defs/tier_or_null"},
+        "evaluate": {"$ref": "#/$defs/tier_or_null"},
+        "track": {"$ref": "#/$defs/tier_or_null"},
+        "replan": {"$ref": "#/$defs/tier_or_null"}
+      }
+    }
+  },
+  "$defs": {
+    "tier_or_null": {
+      "type": ["string", "null"],
+      "enum": [null, "haiku", "sonnet", "opus"]
+    }
+  }
+}

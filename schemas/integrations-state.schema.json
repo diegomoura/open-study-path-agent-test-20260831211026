@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-study-path.dev/schemas/integrations-state.schema.json",
+  "title": "Open Study Path integration state v3",
+  "type": "object",
+  "required": ["version", "source_of_truth", "selected_capabilities", "resources", "operations", "resolution", "sync"],
+  "properties": {
+    "version": {"const": 3},
+    "source_of_truth": {"type": "object"},
+    "selected_capabilities": {"type": "object"},
+    "resources": {"type": "array"},
+    "projection": {"type": ["object", "null"]},
+    "operations": {"type": "object"},
+    "resolution": {"type": "object"},
+    "sync": {"type": "object"}
+  },
+  "additionalProperties": true
+}

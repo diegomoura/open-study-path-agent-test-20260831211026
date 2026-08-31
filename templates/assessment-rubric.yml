@@ -1,0 +1,49 @@
+version: 1
+topic_id: TOPIC-000
+title: Replace me
+passing_score: 80
+critical_misconceptions: []
+questions:
+  - id: q1
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: conceptual understanding
+    full_credit: Defines the concept accurately, explains the reasoning and uses a relevant example.
+    partial_credit: Shows partial understanding but omits a key distinction or gives a weak example.
+    no_credit: Repeats terms without meaning or demonstrates a critical misconception.
+  - id: q2
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: classification or analysis
+    full_credit: Applies the correct criteria consistently and justifies each decision.
+    partial_credit: Most classifications are correct but reasoning is incomplete or inconsistent.
+    no_credit: Uses an incorrect criterion or provides unsupported answers.
+  - id: q3
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: application to a new situation
+    full_credit: Transfers the concept to a novel case and proposes a coherent action.
+    partial_credit: Application is plausible but misses an important constraint or tradeoff.
+    no_credit: Does not apply the concept or proposes an action that contradicts it.
+  - id: q4
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: misconception detection
+    full_credit: Identifies the misconception, explains why it fails and provides a corrected formulation.
+    partial_credit: Detects the problem but cannot fully explain or correct it.
+    no_credit: Accepts the misconception or introduces another critical error.
+  - id: q5
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: independent evidence and reflection
+    full_credit: Provides specific evidence, evaluates it against the criteria and identifies a next action.
+    partial_credit: Evidence exists but reflection is generic or weakly tied to criteria.
+    no_credit: No usable evidence or reflection is provided.
+mastery_rules:
+  require_total_score: true
+  require_no_critical_misconception: true
+  recovery_when_not_mastered: true
+recovery:
+  create_focused_github_issue: true
+  create_trello_card: true
+  reassessment_required: true

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Study Path diagnostic summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "status",
+    "subject",
+    "completed_at",
+    "method",
+    "question_count",
+    "question_budget",
+    "evidence_sufficiency",
+    "learner_context",
+    "confirmed_competencies",
+    "knowledge_gaps",
+    "misconceptions",
+    "required_prerequisites",
+    "recommended_starting_depth",
+    "material_caveats",
+    "curriculum_generated"
+  ],
+  "properties": {
+    "version": {"const": 1},
+    "status": {"enum": ["not_started", "complete"]},
+    "subject": {"type": ["string", "null"]},
+    "completed_at": {"type": ["string", "null"], "format": "date"},
+    "method": {"type": ["string", "null"]},
+    "question_count": {"type": "integer", "minimum": 0},
+    "question_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_min", "target_max", "hard_max", "exception"],
+      "properties": {
+        "target_min": {"type": "integer", "minimum": 1, "maximum": 10},
+        "target_max": {"type": "integer", "minimum": 1, "maximum": 10},
+        "hard_max": {"type": "integer", "minimum": 1, "maximum": 10},
+        "exception": {
+          "enum": [null, "owner_requested_comprehensive", "legacy_before_policy"]
+        }
+      }
+    },
+    "evidence_sufficiency": {
+      "enum": ["not_assessed", "sufficient", "limited"]
+    },
+    "learner_context": {"type": "object"},
+    "confirmed_competencies": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "knowledge_gaps": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "misconceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["belief", "status", "correction"],
+        "properties": {
+          "belief": {"type": "string"},
+          "status": {"type": "string"},
+          "correction": {"type": "string"}
+        }
+      }
+    },
+    "required_prerequisites": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "recommended_starting_depth": {"type": ["object", "null"]},
+    "material_caveats": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "curriculum_generated": {"const": false}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "complete"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "subject": {"type": "string", "minLength": 1},
+          "completed_at": {"type": "string", "format": "date"},
+          "method": {"type": "string", "minLength": 1},
+          "question_count": {"type": "integer", "minimum": 1},
+          "evidence_sufficiency": {"enum": ["sufficient", "limited"]},
+          "recommended_starting_depth": {"type": "object"}
+        }
+      }
+    }
+  ]
+}

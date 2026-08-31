@@ -1,0 +1,207 @@
+version: 1
+
+completion_contract: instructions/phase-completion.md
+
+automatic_completion:
+  execution_contract: instructions/03-await-ci-and-merge.md
+  state_machine: scripts/ci_completion_state.py
+  automatic_merge_policies:
+    - auto_when_unambiguous
+    - agent_review_then_merge
+  required_check_resolution:
+    branch_protection: additive_when_available
+    operation_manifest: authoritative
+  check_sets:
+    baseline:
+      - Validate Open Study Path
+      - Validate curriculum state
+    intake:
+      - Validate intake completion
+    diagnostic:
+      - Validate diagnostic completion
+    proposal:
+      - Validate proposal completion
+    usable_generation:
+      - Validate usable generation
+    task_projection:
+      - Validate task projection
+
+template_guard:
+  template_marker: .open-study-path/template.yml
+  instance_marker: .open-study-path/instance.yml
+  generation_allowed_in_template: false
+
+phases:
+  - id: bootstrap_instance
+    instruction: instructions/00-bootstrap.md
+    execution_contract: instructions/02-setup-execution.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: setup
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline]
+    allowed_modes: [fork_unconfigured, instance]
+    next_phase: configure_intake
+    outputs:
+      - .open-study-path/instance.yml
+      - study.config.yml
+      - state/intake-summary.json
+      - state/progress.json
+      - state/integrations.json
+      - study/roadmap.md
+
+  - id: configure_intake
+    instruction: instructions/05-configure-intake.md
+    execution_contract: instructions/02-setup-execution.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: setup
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline]
+    allowed_modes: [instance]
+    depends_on: [bootstrap_instance]
+    next_phase: intake
+    outputs:
+      - .open-study-path/instance.yml
+      - study.config.yml
+    stop_after_phase: true
+
+  - id: intake
+    instruction: instructions/10-intake.md
+    execution_contract: instructions/11-intake-completion-recovery.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: intake
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, intake]
+    allowed_modes: [instance]
+    depends_on: [configure_intake]
+    next_phase: diagnostic
+    allow_explicit_chain_to: diagnostic
+    merge_policy_path: workflow.intake_merge_policy
+    outputs:
+      - .open-study-path/instance.yml
+      - study.config.yml
+      - state/intake-summary.json
+    stop_after_phase: true
+
+  - id: diagnostic
+    instruction: instructions/20-diagnostic.md
+    execution_contract: instructions/21-diagnostic-completion-recovery.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: diagnostic
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, diagnostic]
+    allowed_modes: [instance]
+    depends_on: [intake]
+    next_phase: generate
+    merge_policy_path: workflow.diagnostic_merge_policy
+    outputs:
+      - .open-study-path/instance.yml
+      - state/diagnostic-summary.json
+    stop_after_phase: true
+
+  - id: generate
+    instruction: instructions/30-generate-path.md
+    proposal_instruction: instructions/28-propose-path.md
+    execution_contract: instructions/32-generation-execution.md
+    finalization_contract: instructions/38-finalize-generated-bundle.md
+    internal_review: instructions/35-review-curriculum.md
+    internal_content_review: instructions/36-review-course-content.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: curriculum
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline]
+    suboperations:
+      proposal:
+        completion_check_sets: [baseline, proposal]
+      detailed_generation:
+        completion_check_sets: [baseline, usable_generation]
+    allowed_modes: [instance]
+    depends_on: [diagnostic]
+    next_phase: publish
+    merge_policy_path: workflow.curriculum_merge_policy
+    outputs:
+      - .open-study-path/instance.yml
+      - study.config.yml
+      - study/roadmap.md
+      - study/integrations.md
+      - study/topics/
+      - study/modules/
+      - study/assessments/
+      - state/content-reviews/
+      - .github/ISSUE_TEMPLATE/assessment-topic-*.yml
+    stop_after_phase: true
+
+  - id: publish
+    instruction: instructions/40-publish-tasks.md
+    internal_preflight: instructions/42-integration-preflight.md
+    internal_task_projection: instructions/41-task-backend-projection.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: publication
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, task_projection]
+    allowed_modes: [instance]
+    depends_on: [generate]
+    next_phase: evaluate
+    outputs:
+      - study.config.yml
+      - state/integrations.json
+      - state/operations/
+    stop_after_phase: true
+
+  - id: evaluate
+    instruction: instructions/55-evaluate-topic.md
+    internal_materialization: instructions/57-materialize-next-content.md
+    internal_bundle_finalization: instructions/38-finalize-generated-bundle.md
+    internal_task_projection: instructions/41-task-backend-projection.md
+    internal_content_review: instructions/36-review-course-content.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: assessment
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, usable_generation, task_projection]
+    allowed_modes: [instance]
+    depends_on: [publish]
+    next_phase: track
+    outputs:
+      - state/assessments/
+      - state/progress.json
+      - state/integrations.json
+      - state/operations/
+      - state/content-reviews/
+      - study/roadmap.md
+      - study/integrations.md
+      - study/topics/
+      - study/modules/
+      - study/assessments/
+      - .github/ISSUE_TEMPLATE/assessment-topic-*.yml
+    stop_after_phase: true
+
+  - id: track
+    instruction: instructions/50-track-progress.md
+    internal_task_projection: instructions/41-task-backend-projection.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: progress
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, task_projection]
+    allowed_modes: [instance]
+    depends_on: [publish]
+    next_phase: replan
+    outputs:
+      - state/progress.json
+      - state/integrations.json
+      - state/operations/
+
+  - id: replan
+    instruction: instructions/60-replan.md
+    phase_review: instructions/04-review-generated-artifacts.md
+    review_profile: replan
+    review_outputs: [state/reviews/]
+    completion_check_sets: [baseline, task_projection]
+    allowed_modes: [instance]
+    depends_on: [track]
+    next_phase: track
+    outputs:
+      - .open-study-path/instance.yml
+      - study.config.yml
+      - study/roadmap.md
+      - study/integrations.md
+      - study/topics/
+      - state/progress.json

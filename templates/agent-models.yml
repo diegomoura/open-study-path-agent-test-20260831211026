@@ -1,0 +1,32 @@
+version: 1
+
+# Dial simples: aplica um deslocamento de tier sobre a tabela recomendada
+# (ver docs/agent-model-configuration.md e scripts/agent_model_resolution.py).
+#
+# economy      -> um degrau abaixo do recomendado onde possível (nunca abaixo de haiku)
+# recommended  -> usa exatamente o tier recomendado para cada agente (padrão)
+# maximum      -> um degrau acima do recomendado onde possível (nunca acima de opus)
+reasoning_tier: recommended
+
+# Ajuste fino, opcional: sobrescreve um agente específico, ignorando o dial acima.
+# Valores válidos: null (herda do dial), "haiku", "sonnet", "opus".
+#
+# Atenção: bootstrap, configure_intake, curriculum_architect, curriculum_reviewer,
+# content_author, content_reviewer e evaluate são classificados como agentes de
+# decisão "estrutural". Reduzir o tier deles abaixo do recomendado gera um aviso
+# não-bloqueante (scripts/validate_model_config.py) porque tende a reduzir a
+# densidade e a qualidade do que é gerado ou revisado.
+model_overrides:
+  bootstrap: null
+  configure_intake: null
+  intake_resolution: null
+  diagnostic: null
+  curriculum_architect: null
+  curriculum_reviewer: null
+  content_author: null
+  content_reviewer: null
+  publish: null
+  integration_preflight: null
+  evaluate: null
+  track: null
+  replan: null

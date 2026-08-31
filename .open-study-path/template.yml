@@ -1,0 +1,27 @@
+kind: open-study-path-template
+version: 1
+
+canonical_repository: diegomoura/open-study-path
+generation_allowed: false
+
+instance_setup:
+  agent_pilot_setup_guide: docs/claude-agent-setup.md
+  label_provisioning_workflow: .github/workflows/ensure-repository-labels.yml
+  instance_marker: .open-study-path/instance.yml
+  configuration_template: study.config.example.yml
+  state_templates:
+    intake_summary: templates/state/intake-summary.json
+    progress: templates/state/progress.json
+  roadmap_template: templates/roadmap.md
+  agent_model_config_template: templates/agent-models.yml
+  agent_model_config_marker: .open-study-path/models.yml
+  agent_model_config_schema: schemas/agent-model-config.schema.json
+  agent_model_config_guide: docs/agent-model-configuration.md
+
+rules:
+  - Never generate learner-specific content in the canonical template repository.
+  - A fork or derived repository becomes an instance only after the instance marker is created.
+  - Provision intake repository labels automatically after template creation.
+  - Resolve the exact OWNER/REPOSITORY from the explicit "Target repository" line every agent-pilot dispatch supplies, or an explicit user message, before bootstrap.
+  - Persist the exact repository identity in the instance marker during bootstrap.
+  - Instance setup and curriculum generation are separate explicit operations.

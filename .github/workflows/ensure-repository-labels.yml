@@ -1,0 +1,43 @@
+name: Ensure repository labels
+
+# Replaces the old "Prepare ChatGPT Project Instructions" workflow (Etapa 8,
+# proposal section 7 step 8 -- the manual ChatGPT Project chat path was
+# removed, not just demoted, per the owner's explicit decision). That
+# workflow did two things: provision the intake labels and fill
+# templates/chatgpt-project-instructions.md's OWNER/REPOSITORY placeholder.
+# Only the label provisioning still has a reason to exist -- the automated
+# agent-pilot flow (docs/claude-agent-pilot.md) gets its repository identity
+# straight from the workflow_dispatch `target_repo` input, never from a
+# rendered instructions file, so there is nothing left to render.
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ensure-repository-labels-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  labels:
+    if: >-
+      github.repository != 'diegomoura/open-study-path' &&
+      (github.event_name == 'workflow_dispatch' ||
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Ensure intake labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          python scripts/ensure_repository_labels.py
+          --repository "$GITHUB_REPOSITORY"

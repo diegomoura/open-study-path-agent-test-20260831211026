@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "source": null,
+  "source_reference": null,
+  "normalized_at": null,
+  "subject": null,
+  "objective": null,
+  "desired_outcome": null,
+  "motivation": null,
+  "current_level": null,
+  "weekly_hours": null,
+  "deadline": null,
+  "references": {
+    "text_or_urls": [],
+    "attachments": []
+  },
+  "preferences": {},
+  "assumptions": []
+}

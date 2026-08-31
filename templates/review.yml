@@ -1,0 +1,42 @@
+contract_version: 1
+
+# Stable lowercase identifier for the reviewed operation.
+operation_id: replace-me
+
+# One of: setup, intake, diagnostic, curriculum, publication,
+# assessment, progress, replan, migration.
+phase: setup
+
+# Must match the selected profile in scripts/review_framework.py.
+reviewer_role: setup_reviewer
+
+# True only after a distinct review pass reconstructed evidence from outputs.
+independent_pass: false
+
+# Use action_required while blocking findings remain.
+status: action_required
+reviewed_at: null
+
+# List every generated artifact changed by the operation.
+# Current files use sha256 of their exact current bytes.
+# Reviewed deletions use change: deleted and previous_sha256 from the PR base.
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: replace-with-64-hex-characters
+  # - path: study/obsolete-artifact.md
+  #   change: deleted
+  #   previous_sha256: replace-with-base-file-sha256
+
+# Replace with every required check for the selected profile.
+checks:
+  repository_identity: pending
+  reusable_assets_preserved: pending
+  intake_entrypoint_ready: pending
+  safety_and_secrets: pending
+  next_phase_consistency: pending
+
+blocking_findings:
+  - Replace with a concrete blocking finding, or use [] only after correction.
+
+non_blocking_findings: []

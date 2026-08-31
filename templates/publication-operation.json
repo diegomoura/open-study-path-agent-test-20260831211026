@@ -1,0 +1,21 @@
+{
+  "operation_id": "publication-v1",
+  "operation_type": "publication",
+  "provider": "trello",
+  "mode": "full_curriculum",
+  "status": "not_started",
+  "topics": [],
+  "attempt": 1,
+  "checkpoints": [],
+  "external_read_count": 0,
+  "external_write_count": 0,
+  "roadmap_fingerprint": null,
+  "branch": null,
+  "pull_request": null,
+  "commit_budget": 1,
+  "warnings": [],
+  "errors": [],
+  "started_at": null,
+  "updated_at": null,
+  "completed_at": null
+}
