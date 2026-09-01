@@ -1,25 +1,29 @@
 version: 1
-configured: false
+configured: true
 
 path:
-  name: null
-  subject: ""
-  learning_request: ""
-  objective: null
-  desired_outcome: null
-  motivation: null
+  name: Fundamentos de Git e GitHub
+  subject: Git e GitHub — Controle de Versão Colaborativo
+  learning_request: Quero aprender os fundamentos de Git e GitHub: controle de versão, branches, merge, rebase, pull requests, resolução de conflitos e um fluxo de trabalho colaborativo básico.
+  objective: Uso comandos básicos de git no dia a dia mas nunca entendi de verdade como branches e merge funcionam por baixo dos panos, e quero parar de ter medo de rebase e conflitos.
+  desired_outcome: Conseguir resolver um conflito de merge complexo sem entrar em pânico, e revisar/abrir pull requests com confiança em um repositório colaborativo.
+  motivation: Estou entrando em um time maior no trabalho e o fluxo de Git deles usa rebase e branches de feature, algo que nunca usei de verdade.
   time_constraints: null
 
 learner:
   preferred_language: pt-BR
   current_level: beginner
-  prior_knowledge: []
+  prior_knowledge:
+    - git add, git commit, git push, git pull (uso no dia a dia)
   accessibility_needs: []
 
 preferences:
-  formats: []
-  theory_practice_balance: balanced
-  assessment_style: []
+  formats:
+    - Exercícios práticos
+    - Projetos
+  theory_practice_balance: more_practice
+  assessment_style:
+    - Exercícios
   notes: null
 
 references:

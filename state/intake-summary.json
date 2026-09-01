@@ -1,19 +1,60 @@
 {
   "version": 1,
-  "source": null,
-  "source_reference": null,
-  "normalized_at": null,
-  "subject": null,
-  "objective": null,
-  "desired_outcome": null,
-  "motivation": null,
-  "current_level": null,
-  "weekly_hours": null,
-  "deadline": null,
-  "references": {
-    "text_or_urls": [],
-    "attachments": []
+  "import_date": "2025-08-31T21:15:00Z",
+  "source_reference": {
+    "provider": "github_issue",
+    "issue_number": 3,
+    "issue_title": "Fundamentos de Git e GitHub",
+    "issue_url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/3",
+    "created_at": "2026-09-01T20:03:27Z"
   },
-  "preferences": {},
-  "assumptions": []
+  "learner_facts": {
+    "name_provided": false,
+    "identifier": "issue-3-diegomoura"
+  },
+  "planning_facts": {
+    "course_name": "Fundamentos de Git e GitHub",
+    "complete_learning_request": "Quero aprender os fundamentos de Git e GitHub: controle de versão, branches, merge, rebase, pull requests, resolução de conflitos e um fluxo de trabalho colaborativo básico.",
+    "concise_subject": "Git e GitHub — Controle de Versão Colaborativo",
+    "current_level": "beginner",
+    "preferred_language": "pt-BR"
+  },
+  "optional_context": {
+    "objective": "Uso comandos básicos de git no dia a dia mas nunca entendi de verdade como branches e merge funcionam por baixo dos panos, e quero parar de ter medo de rebase e conflitos.",
+    "desired_outcome": "Conseguir resolver um conflito de merge complexo sem entrar em pânico, e revisar/abrir pull requests com confiança em um repositório colaborativo.",
+    "motivation": "Estou entrando em um time maior no trabalho e o fluxo de Git deles usa rebase e branches de feature, algo que nunca usei de verdade.",
+    "prior_knowledge": ["git add", "git commit", "git push", "git pull (no dia a dia)"],
+    "time_constraints": null,
+    "accessibility_needs": []
+  },
+  "learning_preferences": {
+    "formats": ["Exercícios práticos", "Projetos"],
+    "theory_practice_balance": "more_practice",
+    "assessment_style": ["Exercícios"]
+  },
+  "integration_facts": {
+    "experience_preference": "minimal",
+    "account_connections": "ask_per_provider",
+    "task_manager": "github_issues",
+    "routine_mode": "decide_later",
+    "already_uses": [],
+    "willing_to_connect": [],
+    "constraints": null
+  },
+  "normalization_notes": {
+    "source_format": "github_issue_form_v4",
+    "empty_optional_fields_discarded": ["references", "accessibility_needs", "additional_notes"],
+    "provider_rules_applied": ["preferred_language", "current_level", "integration_experience", "task_manager", "study_routine_mode"],
+    "personal_data_handling": "only_planning_facts_retained",
+    "assumptions_recorded": [
+      "GitHub Issues is the default task backend; Trello and Todoist remain optional upgrades",
+      "Mermaid is the canonical visual learning format",
+      "One primary task backend only; Markdown as fallback",
+      "Integration activation is conditional on value, not proactive suggestion"
+    ]
+  },
+  "consent": {
+    "checked": true,
+    "text": "Entendo que apenas informações necessárias ao planejamento poderão ser organizadas no meu repositório, sem salvar a submissão bruta, credenciais ou dados pessoais desnecessários."
+  }
 }
