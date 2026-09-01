@@ -43,10 +43,11 @@ Enable it once per instance, before the first dispatch: **Settings ->
 Actions -> General -> Workflow permissions -> "Allow GitHub Actions to create
 and approve pull requests"**. This is a repository security setting, not a
 Secret -- it does not need to be kept confidential, but it is worth knowing
-what it grants: the workflow's token can open (not merge) pull requests. This
-pilot still never auto-merges (see "What this pilot deliberately does not do
-yet" below); this setting only unblocks the PR-opening step every phase
-already depends on.
+what it grants: the workflow's token can open pull requests, and -- since
+Etapa 12 -- can also squash-merge one itself when the independent reviewer
+approves and every required check succeeds (see "Auto-merge (Opcao C, Etapa
+12)" in `docs/claude-agent-pilot.md`). If either condition is not met, the
+pull request is left open for a human, exactly as before Etapa 12.
 
 ## Setup steps
 
@@ -115,13 +116,14 @@ phase to them -- they are not deprecated, just not reachable yet.
 
 ## What this pilot deliberately does not do yet
 
-- **No auto-merge.** Every run opens a pull request; a human merges it.
 - **No fork trigger.** `workflow_dispatch` and `issue_comment` both require
   repository access to invoke -- there is no automated response to an
   external contributor's fork or PR.
 
-See `docs/claude-agent-pilot.md`, "What this pilot deliberately does not do
-yet," for the reasoning behind both.
+Auto-merge exists (see above), but only under the specific approved+CI-green
+condition; see `docs/claude-agent-pilot.md`, "Auto-merge (Opcao C, Etapa
+12)," for exactly what that requires and what happens when it does not
+hold.
 
 ## Cost visibility
 

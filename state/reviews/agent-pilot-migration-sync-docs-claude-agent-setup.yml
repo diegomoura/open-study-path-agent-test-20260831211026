@@ -1,0 +1,24 @@
+contract_version: 1
+operation_id: sync-docs-claude-agent-setup-stale-auto-merge
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T19:46:26Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced docs/claude-agent-setup.md fix from template PR #124 (main@ec084d2): corrected
+  stale ''pilot never auto-merges'' claims (two spots) left over from before Etapa
+  12, and fixed a broken cross-reference to a docs/claude-agent-pilot.md section that
+  no longer exists there. Pure docs sync -- no scripts/, workflows/, instructions/,
+  templates/, or schemas/ touched; no instance state or content touched.'
