@@ -35,8 +35,10 @@ def load_yaml(path: Path) -> dict:
     return value if isinstance(value, dict) else {}
 
 
-def active_config_path() -> Path:
-    return INSTANCE_PATH if INSTANCE_PATH.is_file() else TEMPLATE_PATH
+def active_config_path(root: Path = ROOT) -> Path:
+    instance_path = root / ".open-study-path" / "models.yml"
+    template_path = root / "templates" / "agent-models.yml"
+    return instance_path if instance_path.is_file() else template_path
 
 
 def _display_path(path: Path) -> str:

@@ -1,0 +1,28 @@
+contract_version: 1
+operation_id: sync-model-config-review-note-test-ambient-state
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T22:11:30Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/model_config_review_note.py + scripts/test_model_config_review_note.py
+  fix from template PR #130 (main@f835027): fixed a test that asserted backwards from
+  its own name (active_config_path() == TEMPLATE_PATH under a name claiming to test
+  the instance-file-preferred branch), relying on ambient repo state that broke once
+  this instance legitimately had .open-study-path/models.yml (created by the operator,
+  then also now creatable by bootstrap_instance per PR #129). Root cause surfaced
+  by this instance''s own real generate_proposal dispatch failing CI. No workflows,
+  instructions, templates, or schemas touched; no instance state or content touched
+  by this sync.'

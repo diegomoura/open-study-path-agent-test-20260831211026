@@ -78,11 +78,29 @@ def test_render_note_lists_every_warning() -> None:
     assert "evaluate" in text
 
 
+def test_active_config_path_falls_back_to_template_without_an_instance_file() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        assert active_config_path(root=root) == root / "templates" / "agent-models.yml"
+
+
 def test_active_config_path_prefers_instance_file_when_present() -> None:
-    # Uses the real repository paths: in this checkout .open-study-path/models.yml
-    # does not exist (it is instance-only state), so this must resolve to the
-    # template. This also guards against the template file itself disappearing.
-    assert active_config_path() == TEMPLATE_PATH
+    # Regression for a real dispatch finding (Etapa 12/14 validation session):
+    # this test previously asserted against the real repository this script
+    # lives in, relying on the assumption that '.open-study-path/models.yml
+    # does not exist' there -- true for the template repo and for every
+    # instance until bootstrap_instance could actually create the file (see
+    # the fix that added it to SETUP_ALLOWED_EXACT_PATHS). Once a real
+    # instance legitimately had that file, syncing this test file there broke
+    # the assumption silently. Using a controlled temp root instead actually
+    # exercises the "prefers instance file" branch the test's name claims to
+    # cover, regardless of what any particular checkout's real state is.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        instance_config = root / ".open-study-path" / "models.yml"
+        instance_config.parent.mkdir(parents=True)
+        instance_config.write_text("version: 1\nreasoning_tier: economy\n", encoding="utf-8")
+        assert active_config_path(root=root) == instance_config
 
 
 def main() -> None:
@@ -92,6 +110,7 @@ def main() -> None:
         test_mechanical_override_below_recommended_writes_no_note,
         test_stale_note_is_removed_once_warnings_clear,
         test_render_note_lists_every_warning,
+        test_active_config_path_falls_back_to_template_without_an_instance_file,
         test_active_config_path_prefers_instance_file_when_present,
     ]
     for test in tests:
