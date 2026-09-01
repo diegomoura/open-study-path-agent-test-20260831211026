@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "status": "complete",
+  "subject": "Fundamentos de Git e GitHub",
+  "completed_at": "2026-08-31",
+  "method": "single_form_batch",
+  "question_count": 5,
+  "question_budget": {
+    "target_min": 3,
+    "target_max": 5,
+    "hard_max": 7,
+    "exception": null
+  },
+  "evidence_sufficiency": "sufficient",
+  "learner_context": {
+    "declared_level": "iniciante",
+    "language": "pt-BR",
+    "learning_style_preferences": ["exercícios práticos", "projetos"],
+    "practice_explanation_balance": "mais prática",
+    "assessment_preferences": ["exercícios"],
+    "organization_preference": "GitHub Issues, experiência simples",
+    "goal": "Resolver conflitos de merge complexos com confiança e revisar/abrir pull requests em um repositório colaborativo com fluxo de rebase e branches de feature"
+  },
+  "confirmed_competencies": [
+    "Uso diário confortável de git add, git commit, git push e git pull",
+    "Entende commit como um snapshot dos arquivos staged, com mensagem e hash, permitindo voltar a esse ponto",
+    "Intuição correta de que uma branch é algo leve, mais próximo de um ponteiro para um commit do que uma cópia dos arquivos",
+    "Já resolveu na prática um merge conflict simples (um arquivo, linhas diferentes) usando os marcadores <<<< ==== >>>>",
+    "Intuição correta sobre a diferença conceitual entre merge (cria commit de merge) e rebase (reescreve histórico para parecer linear)",
+    "Já abriu pull requests pequenos em branch própria no trabalho"
+  ],
+  "knowledge_gaps": [
+    "Modelo interno de armazenamento do Git (blobs, trees, objetos) por trás do commit",
+    "Mecânica formal de branches como referências/ponteiros e como isso se relaciona com HEAD e commits",
+    "Estratégia para resolver conflitos de merge complexos envolvendo múltiplos arquivos simultaneamente",
+    "Uso prático de git rebase (nunca utilizado, só palpite conceitual)",
+    "Revisão formal de pull requests de outras pessoas e como responder a mudanças solicitadas",
+    "Fluxo de trabalho colaborativo com branches de feature em equipe (não apenas branch própria isolada)"
+  ],
+  "misconceptions": [],
+  "required_prerequisites": [
+    "Uso básico de linha de comando do git (add, commit, push, pull) — já confirmado, não precisa ser reensinado do zero"
+  ],
+  "recommended_starting_depth": {
+    "level": "iniciante_com_base_pratica",
+    "skip": [
+      "Comandos básicos de git (add, commit, push, pull) — já dominados no dia a dia"
+    ],
+    "start_at": [
+      "Modelo interno do Git: objetos, blobs, trees e commits como snapshots",
+      "Branches e HEAD como ponteiros, e o que muda tecnicamente ao criar/trocar de branch",
+      "Merge vs rebase na prática, incluindo quando cada um é apropriado",
+      "Resolução de conflitos de merge, progredindo de casos simples para conflitos multi-arquivo",
+      "Fluxo colaborativo de pull request: abrir, revisar, responder a comentários e branches de feature em equipe"
+    ],
+    "emphasis": "prática guiada e projetos, com pouca explicação teórica isolada, alinhado à preferência do aprendiz por exercícios e projetos"
+  },
+  "material_caveats": [
+    "Nenhuma experiência prática real com rebase foi relatada; o palpite conceitual está correto mas precisa de prática guiada desde o início",
+    "Nenhuma experiência com revisão formal de pull requests de terceiros; a trilha deve introduzir esse fluxo de forma guiada antes de esperar autonomia"
+  ],
+  "curriculum_generated": false
+}
