@@ -1,0 +1,65 @@
+kind: open-study-path-instance
+version: 1
+
+source_template: diegomoura/open-study-path
+repository: diegomoura/open-study-path-agent-test-20260831211026
+initialized_at: 2025-08-31T21:10:26Z
+
+workflow:
+  guided: true
+  intake_merge_policy: auto_when_unambiguous
+  diagnostic_merge_policy: auto_when_unambiguous
+  curriculum_merge_policy: agent_review_then_merge
+
+review_framework:
+  contract_version: 1
+  enabled: true
+  independent_pass: true
+  require_generated_diff_coverage: true
+  required_profiles:
+    - setup
+    - intake
+    - diagnostic
+    - curriculum
+    - publication
+    - assessment
+    - progress
+    - replan
+    - migration
+
+content_review:
+  contract_version: 1
+  required_for_materialized_topics: true
+  independent_pass: true
+  require_outcome_traceability: true
+
+content_generation:
+  strategy: adaptive_rolling_window
+  lookahead_topics: 2
+  full_upfront_max_topics: 4
+  full_upfront_max_hours: 4
+  adapt_future_modules_from_assessments: true
+  granularity:
+    activity_minutes_min: 10
+    activity_minutes_max: 25
+    activities_per_topic_min: 3
+    activities_per_topic_max: 7
+    topic_minutes_target_min: 45
+    topic_minutes_target_max: 90
+    split_topic_above_minutes: 120
+  visual_learning:
+    mermaid_enabled: true
+    roadmap_dependency_diagram_required: true
+    minimum_diagrams_per_materialized_module: 1
+    diagrams_must_be_explained: true
+    prefer_multiple_diagrams_for_complex_topics: true
+
+status:
+  setup_complete: false
+  intake_configured: false
+  intake_provider: unset
+  intake_imported: false
+  diagnostic_complete: false
+  curriculum_proposed: false
+  curriculum_approved: false
+  curriculum_generated: false

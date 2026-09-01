@@ -1,0 +1,152 @@
+version: 1
+configured: false
+
+path:
+  name: null
+  subject: ""
+  learning_request: ""
+  objective: null
+  desired_outcome: null
+  motivation: null
+  time_constraints: null
+
+learner:
+  preferred_language: pt-BR
+  current_level: beginner
+  prior_knowledge: []
+  accessibility_needs: []
+
+preferences:
+  formats: []
+  theory_practice_balance: balanced
+  assessment_style: []
+  notes: null
+
+references:
+  text_or_urls: []
+  attachments: []
+
+intake:
+  provider: unset
+  setup_status: unconfigured
+  form_id: null
+  form_url: null
+  form_spec_id: open-study-path-intake
+  form_spec_version: 4
+  created_by: null
+  issue_template: .github/ISSUE_TEMPLATE/create-study-path.yml
+  submission_strategy: not_applicable
+  attachments_optional: true
+  persist_raw_submission: false
+
+integration_preferences:
+  experience: minimal
+  account_connections: ask_per_provider
+  already_uses: []
+  willing_to_connect: []
+  routine:
+    mode: decide_later
+    details: null
+  notes: null
+
+integrations:
+  source_of_truth:
+    provider: github
+    required: true
+    authority:
+      - curriculum
+      - content
+      - assessment
+      - mastery
+      - progress
+
+  research:
+    provider: auto
+    preferred: consensus
+    enabled: auto
+    required: false
+    activation: topic_relevance
+    fallback:
+      - primary_sources
+      - official_documentation
+      - web_research
+
+  task_manager:
+    provider: github_issues
+    preferred: trello
+    alternatives:
+      - github_issues
+      - todoist
+      - markdown
+    board_or_project: null
+    single_authoritative_backend: true
+
+  reminders:
+    provider: none
+    preferred: todoist
+    enabled: disabled
+    required: false
+    affects_task_state: false
+
+  calendar:
+    provider: none
+    preferred: google_calendar
+    alternatives:
+      - outlook_calendar
+      - none
+    enabled: disabled
+    required: false
+
+  habit_tracking:
+    provider: none
+    preferred: habitify
+    enabled: disabled
+    required: false
+    affects_mastery: false
+    max_default_habits: 3
+
+  visual_workspace:
+    canonical: mermaid
+    external_provider: none
+    preferred_external: whimsical
+    enabled: disabled
+    required: false
+
+  artifact_workspace:
+    provider: none
+    preferred: google_drive
+    alternatives:
+      - notion
+      - sharepoint
+      - dropbox
+      - none
+    enabled: disabled
+    required: false
+
+  analytics_projection:
+    provider: none
+    preferred: airtable
+    enabled: disabled
+    required: false
+    direction: github_to_airtable
+    affects_mastery: false
+
+  course_discovery:
+    enabled: auto
+    providers:
+      - coursera
+      - edx
+      - udemy
+      - khan_academy
+    resource_only: true
+    require_free_alternative_for_paid_resources: true
+
+  notifications:
+    provider: chat
+    email_enabled: false
+    required: false
+
+planning:
+  unit: topic
+  require_evidence: true
+  allow_replanning: true
