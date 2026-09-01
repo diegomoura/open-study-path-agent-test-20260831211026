@@ -1,0 +1,26 @@
+contract_version: 1
+operation_id: intake-issue-3-v1
+phase: intake
+reviewer_role: intake_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2025-08-31T21:10:26Z'
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 9952a093f8654d161add3e3b22be6d9702b3a55d732ea5b060665b69a73584eb
+  - path: study.config.yml
+    change: current
+    sha256: e9fad03c78ee9bd1cdce3ccc797c0f40831f8b13a4f9efacc7b904038cf45332
+  - path: state/intake-summary.json
+    change: current
+    sha256: eea5c2dac3ae0904ebc432b3dd632994364035afe5b804bb92430c4d81917cad
+checks:
+  request_fidelity: passed
+  preference_preservation: passed
+  ambiguity_resolution: passed
+  data_minimization: passed
+  next_phase_consistency: passed
+blocking_findings: []
+non_blocking_findings:
+  - Note: Subject derivation is concise and distinct from the full learning request, following the specification. "Git e GitHub — controle de versão, branches e fluxo colaborativo" appropriately summarizes the domain without truncating essential concepts.
