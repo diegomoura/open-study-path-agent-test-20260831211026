@@ -27,15 +27,15 @@ references:
   attachments: []
 
 intake:
-  provider: unset
-  setup_status: unconfigured
-  form_id: null
-  form_url: null
+  provider: github_issue
+  setup_status: ready
+  form_id: create-study-path
+  form_url: https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/new?template=create-study-path.yml
   form_spec_id: open-study-path-intake
   form_spec_version: 4
-  created_by: null
+  created_by: reused_existing
   issue_template: .github/ISSUE_TEMPLATE/create-study-path.yml
-  submission_strategy: not_applicable
+  submission_strategy: unique_verified_candidate
   attachments_optional: true
   persist_raw_submission: false
 

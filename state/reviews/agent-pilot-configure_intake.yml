@@ -1,0 +1,32 @@
+contract_version: 1
+
+operation_id: configure-intake-v1
+
+phase: setup
+
+reviewer_role: setup_reviewer
+
+independent_pass: true
+
+status: approved
+
+reviewed_at: 2025-08-31T21:15:00Z
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 23cbc078f0ca2b0384999db98ca6d19320bace1d9dfe8fb6b281ff7c1488be80
+  - path: study.config.yml
+    change: current
+    sha256: edebaa3cede1757a845934c17929757251ae81a578c6824ceae5ff0d2ea2857e
+
+checks:
+  repository_identity: passed
+  reusable_assets_preserved: passed
+  intake_entrypoint_ready: passed
+  safety_and_secrets: passed
+  next_phase_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings: []
