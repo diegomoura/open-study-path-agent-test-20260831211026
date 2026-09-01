@@ -1,19 +1,53 @@
 {
   "version": 1,
-  "source": null,
-  "source_reference": null,
-  "normalized_at": null,
-  "subject": null,
-  "objective": null,
-  "desired_outcome": null,
-  "motivation": null,
-  "current_level": null,
+  "source": "github_issue",
+  "source_reference": {
+    "issue_number": 3,
+    "title": "Fundamentos de Git e GitHub",
+    "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/3",
+    "author": "diegomoura",
+    "created_at": "2026-09-01T20:03:27Z",
+    "labels": ["study-request"]
+  },
+  "normalized_at": "2025-08-31T21:15:00Z",
+  "course_name": "Fundamentos de Git e GitHub",
+  "subject": "Controle de versão, Git e GitHub colaborativo",
+  "learning_request": "Quero aprender os fundamentos de Git e GitHub: controle de versão, branches, merge, rebase, pull requests, resolução de conflitos e um fluxo de trabalho colaborativo básico.",
+  "objective": "Uso comandos básicos de git no dia a dia mas nunca entendi de verdade como branches e merge funcionam por baixo dos panos, e quero parar de ter medo de rebase e conflitos.",
+  "desired_outcome": "Conseguir resolver um conflito de merge complexo sem entrar em pânico, e revisar/abrir pull requests com confiança em um repositório colaborativo.",
+  "motivation": "Estou entrando em um time maior no trabalho e o fluxo de Git deles usa rebase e branches de feature, algo que nunca usei de verdade.",
+  "current_level": "beginner",
+  "prior_knowledge": [
+    "Usa `git add`, `git commit`, `git push` e `git pull` no dia a dia",
+    "Nunca usou rebase",
+    "Tem medo de merge conflicts"
+  ],
   "weekly_hours": null,
   "deadline": null,
+  "preferred_language": "pt-BR",
+  "learning_formats": [
+    "Exercícios práticos",
+    "Projetos"
+  ],
+  "theory_practice_balance": "more_practice",
+  "assessment_style": [
+    "Exercícios"
+  ],
   "references": {
     "text_or_urls": [],
     "attachments": []
   },
-  "preferences": {},
-  "assumptions": []
+  "preferences": {
+    "integration_experience": "minimal",
+    "integration_account_connections": "ask_per_provider",
+    "task_manager": "github_issues",
+    "study_routine_mode": "decide_later"
+  },
+  "assumptions": [
+    "Time constraints not provided; course assumes flexible scheduling",
+    "No specific references provided; will use official Git/GitHub documentation and community best practices",
+    "No accessibility needs specified",
+    "No external tool constraints mentioned",
+    "Minimal external integrations preferred; primary workflow will use GitHub Issues"
+  ]
 }
