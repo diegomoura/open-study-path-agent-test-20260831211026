@@ -55,9 +55,9 @@ content_generation:
     prefer_multiple_diagrams_for_complex_topics: true
 
 status:
-  setup_complete: false
-  intake_configured: false
-  intake_provider: unset
+  setup_complete: true
+  intake_configured: true
+  intake_provider: github_issue
   intake_imported: false
   diagnostic_complete: false
   curriculum_proposed: false
