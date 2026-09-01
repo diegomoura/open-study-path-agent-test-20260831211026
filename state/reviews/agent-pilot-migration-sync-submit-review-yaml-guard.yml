@@ -1,0 +1,27 @@
+contract_version: 1
+operation_id: sync-submit-review-yaml-syntax-guard
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T20:22:11Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/agent_runtime.py + scripts/test_agent_runtime.py fix from template
+  PR #126 (main@a088af4): submit_review now rejects invalid YAML in review_yaml (same
+  guard shape as write_file''s from PR #125/sync-write-file-yaml-syntax-guard), and
+  the test-registration gap (test_write_file_rejects_invalid_yaml_for_yml_paths was
+  never in this file''s explicit tests list) is fixed. Root cause of the reviewer-side
+  break already visible on this repo''s now-abandoned agent-pilot/intake-20260901201455
+  branch/PR #5. No workflow, instructions, templates, or schemas touched; no instance
+  state or content touched by this sync.'

@@ -1313,6 +1313,23 @@ class RepoTools:
             raise AllowlistViolation(f"invalid review status: {status!r}")
         if status == "approved" and blocking_findings:
             raise AllowlistViolation("cannot submit status=approved with non-empty blocking_findings")
+        # Same real dispatch finding as write_file's YAML guard, a separate
+        # code path with the identical exposure: review_yaml is free text
+        # the model composes (findings, rationale) and here becomes the
+        # entire content of state/reviews/agent-pilot-<phase>.yml. An
+        # unquoted colon in a finding sentence breaks YAML the same way an
+        # unquoted colon in a learner's intake text did for write_file --
+        # catching it here, before finish, keeps the correction in-turn and
+        # free instead of a CI-stage surprise after the reviewer already
+        # finished.
+        try:
+            yaml.safe_load(review_yaml)
+        except yaml.YAMLError as exc:
+            raise AllowlistViolation(
+                f"review_yaml is not valid YAML ({exc}). Quote any scalar value "
+                "that contains a colon, or use a YAML block scalar (e.g. '|' or "
+                "'>'), and try submit_review again."
+            ) from exc
         self.finished = True
         self.finish_payload = {
             "review_yaml": review_yaml,

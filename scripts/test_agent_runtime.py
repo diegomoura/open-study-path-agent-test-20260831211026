@@ -657,6 +657,30 @@ def test_write_file_rejects_invalid_yaml_for_yml_paths() -> None:
         )
 
 
+def test_submit_review_rejects_invalid_yaml() -> None:
+    # Same real dispatch finding as test_write_file_rejects_invalid_yaml_for_yml_paths,
+    # a separate code path with the identical exposure: the reviewer composes
+    # review_yaml as free text (including finding sentences), and an
+    # unquoted colon there broke state/reviews/agent-pilot-<phase>.yml the
+    # same way it broke study.config.yml for the author.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        tools = RepoTools(root=root, phase="intake", role="reviewer")
+
+        broken = "status: approved\nnon_blocking_findings:\n  - text: rationale: extra\n"
+        try:
+            tools.submit_review(broken, "approved", [])
+            assert False, "expected AllowlistViolation for invalid review_yaml"
+        except AllowlistViolation as exc:
+            assert "not valid YAML" in str(exc)
+        assert not tools.finished
+
+        fixed = 'status: approved\nnon_blocking_findings:\n  - "Minor note: something happened"\n'
+        assert tools.submit_review(fixed, "approved", []) == "review recorded"
+        assert tools.finished
+        assert tools.finish_payload["review_yaml"] == fixed
+
+
 def test_publish_summary_write_blocked_without_success() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -1343,6 +1367,8 @@ def main() -> None:
         test_label_github_issue_refuses_any_label_other_than_imported,
         test_reviewer_cannot_label_github_issues,
         test_intake_summary_write_blocked_without_a_unique_resolution,
+        test_write_file_rejects_invalid_yaml_for_yml_paths,
+        test_submit_review_rejects_invalid_yaml,
         test_publish_summary_write_blocked_without_success,
         test_publish_tools_are_distinct_from_intake_tools,
         test_run_publish_projection_routes_through_dispatch_and_reports_success,
