@@ -1,0 +1,88 @@
+contract_version: 1
+operation_id: diagnostic-issue-3-v1
+phase: diagnostic
+reviewer_role: diagnostic_reviewer
+independent_pass: true
+status: approved
+reviewed_at: "2026-09-01T21:00:00Z"
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: cb2fd9396ff0245c2f465fe76a356df0fe865304c851c63504b7f3c2fcbe920c
+  - path: state/diagnostic-summary.json
+    change: current
+    sha256: 8c17529facb468bb3eabb67a538ea43f83263a9b3f9f15d1010a4dc6a12a7d96
+
+checks:
+  evidence_basis: passed
+  bounded_questioning: passed
+  adjacent_experience_separation: passed
+  placement_consistency: passed
+  privacy_and_minimization: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - "state/diagnostic-summary.json records completed_at: 2026-08-31, which is chronologically before the intake issue's created_at (2026-09-01T20:03:27Z) recorded in state/intake-summary.json. The diagnostic necessarily happens after intake, so this date is almost certainly a copy/generation slip. It does not change the placement conclusion, evidence used, or persisted-data scope, so it is not blocking, but it should be corrected in a follow-up so state timestamps stay internally coherent."
+  - "confirmed_competencies includes \"Já abriu pull requests pequenos em branch própria no trabalho\", which is not mentioned in the author's own turn-2 self-report summary text. It is consistent with intake context (objective/desired_outcome mention PR workflows) and does not appear to be fabricated evidence of mastery beyond what was tested, but future diagnostic summaries should keep the self-report and the persisted artifact in closer sync to make independent review easier."
+
+notes: |
+  Reconstructed evidence solely from state/diagnostic-summary.json, state/intake-summary.json,
+  .open-study-path/instance.yml and instructions/20-diagnostic.md, per the diagnostic-session
+  addendum (no access to the underlying issue thread or transcript).
+
+  evidence_basis: confirmed_competencies cover practical CLI usage, the commit-as-snapshot
+  model, branch-as-pointer intuition, one resolved simple single-file conflict, and correct
+  but unpracticed merge-vs-rebase conceptual understanding. knowledge_gaps (internals,
+  branches/HEAD as refs, multi-file conflict resolution, hands-on rebase, formal PR review,
+  team feature-branch workflow) are a direct, non-overlapping complement of the confirmed
+  competencies rather than an arbitrary or padded list. recommended_starting_depth.skip
+  matches exactly the confirmed CLI-basics competency, and start_at maps one-to-one onto the
+  recorded knowledge_gaps and onto the intake's desired_outcome (resolve complex merge
+  conflicts confidently, review/open PRs in a collaborative rebase+feature-branch workflow).
+  evidence_sufficiency: sufficient is supported: both conceptual and practical signals are
+  present across the dimensions instructions/20-diagnostic.md requires (prior exposure,
+  conceptual understanding, practical application, one misconception/boundary case via the
+  resolved conflict). Stopping-rule case 1 applies.
+
+  bounded_questioning: question_count is 5, inside the beginner target band (3-5, hard_max 7)
+  declared in question_budget, matching state/intake-summary.json normalized_facts.current_level:
+  "beginner" / learner_context.declared_level: "iniciante". No comprehensive-assessment
+  exception was needed or claimed. This review only has access to the terminal (evaluation)
+  turn; the question-posting turn itself is outside this diff and this addendum's scope, so
+  compliance is checked against the recorded budget object and question_count rather than the
+  original comment thread.
+
+  adjacent_experience_separation: intake's "motivation" field (joining a larger team whose
+  workflow uses rebase and feature branches) is professional/organizational context used only
+  to justify the goal, not treated anywhere in confirmed_competencies as evidence of git
+  mastery. All confirmed competencies are stated in git-specific, directly-tested terms
+  (add/commit/push/pull, commit model, branch model, one resolved conflict, merge vs rebase
+  concept, small own-branch PRs) -- no adjacent-domain (e.g. general software engineering
+  seniority) experience was substituted for subject-specific mastery.
+
+  placement_consistency: recommended_starting_depth.skip / start_at is fully traceable to
+  confirmed_competencies and knowledge_gaps with no unsupported jump (e.g. it does not assume
+  advanced CI/CD or code-review-tooling skills never mentioned). misconceptions: [] is
+  consistent with the self-report's claim that guesses were accurate but simply unpracticed --
+  no fabricated misconception was invented, and none actually stated in the summary was
+  dropped.
+
+  privacy_and_minimization: learner_context and the competency/gap lists are distilled,
+  paraphrased facts (learning style, practice/theory balance, assessment preference, goal) that
+  match state/intake-summary.json's already-minimized normalized_facts/optional_facts, not a
+  raw transcript dump. No unnecessary personal data, verbatim quotes, or conversational filler
+  is present.
+
+  Domain diff is limited to exactly the two files instructions/20-diagnostic.md allows for this
+  phase (.open-study-path/instance.yml flipping status.diagnostic_complete to true, and the new
+  state/diagnostic-summary.json), matching phase_allows_artifact("diagnostic", ...) in
+  scripts/review_framework.py. state/diagnostic-summary.json validates against
+  schemas/diagnostic-summary.schema.json's status:"complete" branch (subject, completed_at,
+  method, question_count>=1, evidence_sufficiency in {sufficient,limited},
+  recommended_starting_depth is an object, curriculum_generated:false all satisfied).
+
+  Per instructions/21-diagnostic-completion-recovery.md, learner-facing completion language
+  must remain provisional ("A conclusão provisória é...") until this PR is merged and CI is
+  green; that governs the chat response accompanying this operation, not this review artifact.
