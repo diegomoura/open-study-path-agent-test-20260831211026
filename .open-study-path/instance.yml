@@ -58,7 +58,7 @@ status:
   setup_complete: true
   intake_configured: true
   intake_provider: github_issue
-  intake_imported: false
+  intake_imported: true
   diagnostic_complete: false
   curriculum_proposed: false
   curriculum_approved: false

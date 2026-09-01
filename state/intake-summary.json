@@ -1,19 +1,57 @@
 {
   "version": 1,
-  "source": null,
-  "source_reference": null,
-  "normalized_at": null,
-  "subject": null,
-  "objective": null,
-  "desired_outcome": null,
-  "motivation": null,
-  "current_level": null,
-  "weekly_hours": null,
-  "deadline": null,
-  "references": {
-    "text_or_urls": [],
-    "attachments": []
+  "intake_id": "github_issue_3_20260901T200327Z",
+  "source_reference": {
+    "provider": "github_issue",
+    "repository": "diegomoura/open-study-path-agent-test-20260831211026",
+    "issue_number": 3,
+    "issue_title": "Fundamentos de Git e GitHub",
+    "author_login": "diegomoura",
+    "created_at": "2026-09-01T20:03:27Z",
+    "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/3"
   },
-  "preferences": {},
-  "assumptions": []
+  "normalized_data": {
+    "path_name": "Fundamentos de Git e GitHub",
+    "learning_request": "Quero aprender os fundamentos de Git e GitHub: controle de versão, branches, merge, rebase, pull requests, resolução de conflitos e um fluxo de trabalho colaborativo básico.",
+    "subject": "Controle de versão, branches, merge, rebase e fluxo colaborativo com Git e GitHub",
+    "objective": "Uso comandos básicos de git no dia a dia mas nunca entendi de verdade como branches e merge funcionam por baixo dos panos, e quero parar de ter medo de rebase e conflitos.",
+    "desired_outcome": "Conseguir resolver um conflito de merge complexo sem entrar em pânico, e revisar/abrir pull requests com confiança em um repositório colaborativo.",
+    "motivation": "Estou entrando em um time maior no trabalho e o fluxo de Git deles usa rebase e branches de feature, algo que nunca usei de verdade.",
+    "time_constraints": null,
+    "current_level": "beginner",
+    "prior_knowledge": "Já uso `git add`, `git commit`, `git push` e `git pull` no dia a dia, mas nunca usei rebase e tenho medo de merge conflicts.",
+    "preferred_language": "pt-BR",
+    "learning_formats": ["Exercícios práticos", "Projetos"],
+    "theory_practice_balance": "Mais prática",
+    "assessment_style": ["Exercícios"],
+    "accessibility_needs": null,
+    "integration_experience": "Quero algo simples, principalmente no GitHub",
+    "already_uses": null,
+    "willing_to_connect": null,
+    "task_manager": "GitHub Issues",
+    "study_routine_mode": "Deixar para decidir depois",
+    "study_routine_details": null,
+    "additional_notes": null
+  },
+  "assumptions": [
+    "Theory/practice balance normalized to 'practice_focused' from 'Mais prática' per provider rules",
+    "Current level normalized to 'beginner' from 'Iniciante' per provider rules",
+    "Preferred language normalized to 'pt-BR' from 'Português (Brasil)' per provider rules",
+    "Integration experience normalized to 'minimal' from learner's stated preference for simple GitHub-based approach per provider rules",
+    "Task manager provider normalized to 'github_issues' from 'GitHub Issues' per provider rules",
+    "Study routine mode normalized to 'decide_later' from learner's explicit choice per provider rules",
+    "No external account connections required; learner prefers minimal integration (ask_per_provider policy)"
+  ],
+  "consent": {
+    "data_minimization": true,
+    "collected_at": "2026-09-01T20:03:27Z",
+    "consent_text": "Entendo que apenas informações necessárias ao planejamento poderão ser organizadas no meu repositório, sem salvar a submissão bruta, credenciais ou dados pessoais desnecessários."
+  },
+  "status": {
+    "imported": false,
+    "form_validation": "passed",
+    "required_fields_complete": true,
+    "consent_verified": true,
+    "normalized": true
+  }
 }
