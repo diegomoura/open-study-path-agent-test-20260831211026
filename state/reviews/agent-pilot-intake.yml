@@ -1,0 +1,35 @@
+contract_version: 1
+
+operation_id: intake-issue-3-v1
+
+phase: intake
+
+reviewer_role: intake_reviewer
+
+independent_pass: true
+
+status: approved
+
+reviewed_at: 2025-08-31T21:20:00Z
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 9952a093f8654d161add3e3b22be6d9702b3a55d732ea5b060665b69a73584eb
+  - path: study.config.yml
+    change: current
+    sha256: b4d2507cad9d6511be3898761e96b603b2422dfccba4411a4b1e404cff2302b0
+  - path: state/intake-summary.json
+    change: current
+    sha256: e6f51c83b9b0a61ac321472bf464b7b34319bf2cc3e072361c7bfee0a9f44cb3
+
+checks:
+  request_fidelity: passed
+  preference_preservation: passed
+  ambiguity_resolution: passed
+  data_minimization: passed
+  next_phase_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings: []
