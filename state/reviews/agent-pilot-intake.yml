@@ -1,0 +1,37 @@
+contract_version: 1
+
+operation_id: intake-issue-3-v1
+
+phase: intake
+
+reviewer_role: intake_reviewer
+
+independent_pass: true
+
+status: approved
+
+reviewed_at: "2026-09-01T20:35:00Z"
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 9952a093f8654d161add3e3b22be6d9702b3a55d732ea5b060665b69a73584eb
+  - path: study.config.yml
+    change: current
+    sha256: 5125f73de27afdfa04ed2c0bb77ee1f41d147f28d3f7f8515f18a35157cb9ebf
+  - path: state/intake-summary.json
+    change: current
+    sha256: 35294295c97a5b2028c525e3103caa08b6e82f17c92c3aa56286bc64a4471bf4
+
+checks:
+  request_fidelity: passed
+  preference_preservation: passed
+  ambiguity_resolution: passed
+  data_minimization: passed
+  next_phase_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - Minor semantic expansion in prior_knowledge normalization: "Experiência com repositórios pessoais" is inferred from context rather than explicitly stated in the issue, though reasonable and consistent with the original text. Original is preserved in intake-summary.json.
+  - Internal state field tracking: intake-summary.json records status.imported: false while instance.yml correctly shows intake_imported: true. This appears to be a separate internal tracking field and does not affect operation correctness; the canonical flag is authoritative and correct.
