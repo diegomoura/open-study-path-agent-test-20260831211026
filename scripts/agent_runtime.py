@@ -55,6 +55,8 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+import yaml
+
 from agent_model_resolution import AGENT_CATALOG, resolve_effective_models
 from ensure_repository_labels import github_request_factory
 from github_issues_backend import GitHubIssuesBackend
@@ -1230,6 +1232,25 @@ class RepoTools:
                 "state/operations/<operation-id>.json and report the outcome through "
                 "finish_phase."
             )
+        if path.replace(os.sep, "/").endswith((".yml", ".yaml")):
+            # A real dispatch finding (intake, Etapa 12/14 validation run):
+            # free-text learner input can itself contain a colon (e.g.
+            # "Git e GitHub: controle de versão..."), and an author that
+            # writes that text into a YAML scalar without quoting it
+            # produces a file that fails to parse -- silently, since
+            # write_file has no reason on its own to know the content was
+            # meant to be YAML. Catching that here, before the write lands,
+            # turns a CI-stage failure discovered only after the (paid)
+            # reviewer already approved it into an immediate, in-turn
+            # correction at zero extra dispatch cost.
+            try:
+                yaml.safe_load(content)
+            except yaml.YAMLError as exc:
+                raise AllowlistViolation(
+                    f"refusing to write {path!r}: content is not valid YAML ({exc}). "
+                    "Quote any scalar value that contains a colon, or use a YAML "
+                    "block scalar (e.g. '|' or '>'), and try the write again."
+                ) from exc
         target = normalize_relative_path(self.root, path)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")

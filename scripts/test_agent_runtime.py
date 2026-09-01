@@ -623,6 +623,40 @@ def test_intake_summary_write_blocked_without_a_unique_resolution() -> None:
         assert tools.write_file("study.config.yml", "version: 2") == "wrote 10 bytes to study.config.yml"
 
 
+def test_write_file_rejects_invalid_yaml_for_yml_paths() -> None:
+    # Regression for a real dispatch finding (intake, Etapa 12/14 validation
+    # run): the submitted learner text contained a colon
+    # ("Git e GitHub: controle de versão..."), and the author wrote it into
+    # study.config.yml's learning_request scalar unquoted, producing a file
+    # that failed to parse -- caught only later, in a separate CI job,
+    # after the reviewer had already approved it. This guard makes that an
+    # immediate, in-turn, zero-extra-cost correction instead.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        tools = RepoTools(root=root, phase="configure_intake", role="author")
+
+        broken = "path:\n  learning_request: Quero aprender Git: controle de versão.\n"
+        try:
+            tools.write_file("study.config.yml", broken)
+            assert False, "expected AllowlistViolation for invalid YAML"
+        except AllowlistViolation as exc:
+            assert "not valid YAML" in str(exc)
+        assert not (root / "study.config.yml").exists()
+
+        # The same content, properly quoted, is accepted.
+        fixed = 'path:\n  learning_request: "Quero aprender Git: controle de versão."\n'
+        result = tools.write_file("study.config.yml", fixed)
+        assert "wrote" in result
+        assert (root / "study.config.yml").is_file()
+
+        # Non-YAML paths are never subject to this check, even with content
+        # that would fail as YAML (a colon-heavy Markdown sentence is normal
+        # prose there, not a syntax error).
+        assert "wrote" in tools.write_file(
+            "study/roadmap.md", "Note: this sentence has a colon: right here.",
+        )
+
+
 def test_publish_summary_write_blocked_without_success() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
