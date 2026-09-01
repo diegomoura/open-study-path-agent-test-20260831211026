@@ -1,0 +1,44 @@
+contract_version: 1
+
+operation_id: bootstrap-instance-v1
+
+phase: setup
+
+reviewer_role: setup_reviewer
+
+independent_pass: true
+
+status: approved
+reviewed_at: 2025-08-31T21:10:26Z
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 9a5c63cbddd63fc2cb3769777a514978fd26308fc74a1120c0ccf6fbb2c8f798
+  - path: study.config.yml
+    change: current
+    sha256: 4dd4529edc9d87972655a40c0defcf229ff6b5f3588cfd10c35ab08445dfdb2d
+  - path: state/intake-summary.json
+    change: current
+    sha256: b103ffd9b35d98b236b5b55fbb761039f0f1b7056ff95b96ef64b971c4d19733
+  - path: state/progress.json
+    change: current
+    sha256: 38da5074224a78fa19c36b2249c8c712a9ac077236eceae48d1c0098481687a6
+  - path: state/integrations.json
+    change: current
+    sha256: 8a3fac983634e0cbca5b9c364be15a04d3714c049510e874611f7cba365501f4
+  - path: study/roadmap.md
+    change: current
+    sha256: bfd3e781e4bdae4a096480f0c88327374a915bdf3ee9d993c45494d6441556e4
+
+checks:
+  repository_identity: passed
+  reusable_assets_preserved: passed
+  intake_entrypoint_ready: passed
+  safety_and_secrets: passed
+  next_phase_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - Note: Label provisioning (.github/workflows/ensure-repository-labels.yml) was not triggered by this bootstrap. Labels "study-request" and "intake:imported" may be provisioned in the first intake operation or separately if needed. This is consistent with template.yml rules.
