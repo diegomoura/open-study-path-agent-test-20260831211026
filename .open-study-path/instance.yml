@@ -54,12 +54,30 @@ content_generation:
     diagrams_must_be_explained: true
     prefer_multiple_diagrams_for_complex_topics: true
 
+curriculum_proposal:
+  proposed_at: 2026-09-01T20:03:27Z
+  roadmap_path: study/roadmap.md
+  planning_unit: topic
+  topic_count: 8
+  estimated_total_hours_min: 8.5
+  estimated_total_hours_max: 10.5
+  root_topics:
+    - TOPIC-001
+  parallel_branches:
+    - [TOPIC-003, TOPIC-004]
+  convergence_points:
+    - TOPIC-005
+    - TOPIC-006
+    - TOPIC-008
+  scope: focused_practical_fundamentals
+  materialized_topics: []
+
 status:
   setup_complete: true
   intake_configured: true
   intake_provider: github_issue
   intake_imported: true
   diagnostic_complete: true
-  curriculum_proposed: false
-  curriculum_approved: false
+  curriculum_proposed: true
+  curriculum_approved: true
   curriculum_generated: false

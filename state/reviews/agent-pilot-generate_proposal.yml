@@ -1,0 +1,36 @@
+contract_version: 1
+operation_id: curriculum-proposal-v1
+phase: curriculum
+reviewer_role: curriculum_reviewer
+independent_pass: true
+status: approved
+reviewed_at: 2026-09-01T20:15:00Z
+
+artifacts:
+  - path: study/roadmap.md
+    change: current
+    sha256: 22231935b5751af41102044f9e4a5a09bb480d08a6cef0419d95078ff1980714
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: d4b362bc7fc32fde8b0bc8ba88472f0764bdd6b5c241cd41667e43a7279cd317
+
+checks:
+  scope_alignment: passed
+  dependency_integrity: passed
+  effort_feasibility: passed
+  learner_language: passed
+  content_review_complete: passed
+  assessment_alignment: passed
+  source_and_integration_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - "scope_alignment: The 8-topic architecture covers every element of the intake request (version control internals, branches, merge, rebase, conflict resolution, PRs, collaborative workflow) and both declared diagnostic goals (resolve complex multi-file conflicts without panic; review/open PRs in a team rebase/feature-branch flow). add/commit/push/pull are correctly skipped as confirmed-mastered competencies, and the Escopo/limites section honestly frames this as focused practical fundamentals with excluded advanced topics (submodules, bisect, GitFlow, CI/CD) available as later extensions."
+  - "dependency_integrity: Verified the Mermaid graph edges (T1->T2, T2->T3, T2->T4, T3->T5, T4->T5, T3->T6, T4->T6, T6->T7, T5->T8, T7->T8) exactly match the per-topic direct-prerequisite lists in every topic contract. Graph is acyclic (1..8 is a valid topological order), single root (T1), and the parallel T3/T4 branch plus convergence at T5/T6/T8 matches the curriculum_proposal metadata in instance.yml. Each topic is coherent and independently assessable."
+  - "effort_feasibility: Per-topic estimates (45-90 min; final project ~90 min splittable) fall within the configured 45-90 min target and 3-7 activity granularity; total 8.5-10.5h matches instance.yml metadata. planning.unit remains topic; no fixed weeks or calendar projection were introduced (time_constraints is null in intake), consistent with the topic-first contract."
+  - "learner_language: Roadmap is entirely pt-BR, uses 'aula pronta'/'aula futura' rather than materialized/planned/topological jargon, applies the 'Aula NN' navigation format while keeping TOPIC-00N internal, and personalizes each 'Por que importa para voce' from concrete diagnostic evidence (guessed-at rebase, fear of conflicts, no formal PR review). No PR/CI/hash/branch mechanics leak into learner copy; numbering is explicitly framed as navigation aid, not a prerequisite rule."
+  - "content_review_complete: Not applicable to this proposal suboperation. instance.yml records materialized_topics: [] and the diff creates no study/topics, study/modules, study/assessments, rubrics or assessment Issue Forms, so there is no materialized teaching content for a content review to be missing against. The materialization + instructions/36 content-review gate applies at the later detailed_generation suboperation."
+  - "assessment_alignment: Not applicable to this proposal suboperation. No rubrics or assessment prompts exist yet; each topic contract only declares expected evidence (practical exercises/labs) consistent with the learner's stated exercise/project preference. Rubric-to-outcome alignment will be verifiable only once assessments are materialized."
+  - "source_and_integration_consistency: Correct for a proposal. No external resource, task board, calendar, or integration write was performed; task backend remains the default GitHub Issues per intake (experience_preference minimal, routine_mode decide_later). No sources are cited yet because no lessons are materialized, so there are no uninspected links or citation-quality risks in scope."
+  - "State transition: status advanced to curriculum_proposed:true / curriculum_approved:true / curriculum_generated:false under the configured agent_review_then_merge policy, which is consistent with proposal auto-approval; curriculum_generated remains false so detailed generation is still the next action. No secrets, raw submissions, or unnecessary personal data were written."
