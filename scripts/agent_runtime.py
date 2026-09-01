@@ -232,6 +232,7 @@ def max_tool_iterations_for(phase: str) -> int:
 # review) if the instruction file's prose ever changes shape.
 SETUP_ALLOWED_EXACT_PATHS: tuple[str, ...] = (
     ".open-study-path/instance.yml",
+    ".open-study-path/models.yml",
     "study.config.yml",
     "state/intake-summary.json",
     "state/progress.json",

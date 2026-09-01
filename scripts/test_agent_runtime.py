@@ -67,6 +67,14 @@ def make_scripted_transport(responses: list[list[dict]]):
 def test_write_allowlist_matches_setup_execution_contract() -> None:
     assert is_write_allowed("bootstrap_instance", ".open-study-path/instance.yml")
     assert is_write_allowed("bootstrap_instance", "study.config.yml")
+    # Regression for a real dispatch finding (Etapa 12/14 validation session):
+    # instructions/00-bootstrap.md step 12 tells the author to copy
+    # templates/agent-models.yml to .open-study-path/models.yml when absent,
+    # but this path was missing from SETUP_ALLOWED_EXACT_PATHS, so write_file
+    # would have rejected that exact write every time -- confirmed by a real
+    # bootstrap_instance dispatch whose instance never ended up with this file.
+    assert is_write_allowed("bootstrap_instance", ".open-study-path/models.yml")
+    assert is_write_allowed("configure_intake", ".open-study-path/models.yml")
     assert not is_write_allowed("bootstrap_instance", "instructions/manifest.yml")
     assert not is_write_allowed("bootstrap_instance", "scripts/agent_runtime.py")
     assert not is_write_allowed("unknown_phase", "study.config.yml")

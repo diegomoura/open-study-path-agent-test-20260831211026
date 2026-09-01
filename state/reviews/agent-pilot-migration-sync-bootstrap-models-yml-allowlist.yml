@@ -1,0 +1,27 @@
+contract_version: 1
+operation_id: sync-bootstrap-models-yml-allowlist
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T21:56:46Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/agent_runtime.py + scripts/test_agent_runtime.py fix from template
+  PR #129 (main@33937e4): bootstrap_instance/configure_intake can now write .open-study-path/models.yml
+  (was missing from SETUP_ALLOWED_EXACT_PATHS despite instructions/00-bootstrap.md
+  telling the author to create it). This instance''s own .open-study-path/models.yml
+  (economy tier, committed directly ac46812) was created manually by the operator
+  to work around the gap before this fix existed -- unaffected by this sync, still
+  present. No workflows, instructions, templates, or schemas touched; no instance
+  state or content touched by this sync.'
