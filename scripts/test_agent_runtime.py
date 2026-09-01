@@ -681,6 +681,66 @@ def test_submit_review_rejects_invalid_yaml() -> None:
         assert tools.finish_payload["review_yaml"] == fixed
 
 
+def test_write_file_rejects_study_config_schema_violations() -> None:
+    # Regression for two real dispatch findings in the same session
+    # (Etapa 12/14 validation): an enum mismatch
+    # (theory_practice_balance: "more_practice" is not a valid enum value)
+    # and an additionalProperties violation (intake:
+    # imported_from_issue/imported_at) both reached CI before this guard
+    # existed, after the reviewer had already approved the run.
+    repo_root = Path(__file__).resolve().parents[1]
+    real_schema = repo_root / "schemas" / "study-config.schema.json"
+    base_config = (repo_root / "study.config.example.yml").read_text(encoding="utf-8")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "schemas").mkdir()
+        (root / "schemas" / "study-config.schema.json").write_text(
+            real_schema.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+        tools = RepoTools(root=root, phase="configure_intake", role="author")
+
+        bad_enum = base_config.replace(
+            "theory_practice_balance: balanced", "theory_practice_balance: more_practice"
+        )
+        assert "more_practice" in bad_enum  # fixture sanity check
+        try:
+            tools.write_file("study.config.yml", bad_enum)
+            assert False, "expected AllowlistViolation for invalid enum value"
+        except AllowlistViolation as exc:
+            assert "does not match schemas/study-config.schema.json" in str(exc)
+            assert "theory_practice_balance" in str(exc)
+
+        extra_property = base_config.replace(
+            "  persist_raw_submission: false\n",
+            "  persist_raw_submission: false\n"
+            "  imported_from_issue: 3\n"
+            "  imported_at: '2026-09-01T00:00:00Z'\n",
+        )
+        assert "imported_from_issue" in extra_property  # fixture sanity check
+        try:
+            tools.write_file("study.config.yml", extra_property)
+            assert False, "expected AllowlistViolation for additionalProperties"
+        except AllowlistViolation as exc:
+            assert "does not match schemas/study-config.schema.json" in str(exc)
+
+        assert not (root / "study.config.yml").exists()
+
+        result = tools.write_file("study.config.yml", base_config)
+        assert "wrote" in result
+        assert (root / "study.config.yml").is_file()
+
+
+def test_write_file_skips_schema_check_without_schema_file() -> None:
+    # The guard must be a no-op, not a crash, when schemas/study-config.schema.json
+    # doesn't exist -- true for every other test in this file, which use a
+    # bare temp root with no schemas/ directory at all.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        tools = RepoTools(root=root, phase="configure_intake", role="author")
+        result = tools.write_file("study.config.yml", "preferences:\n  theory_practice_balance: not_a_real_value\n")
+        assert "wrote" in result
+
+
 def test_publish_summary_write_blocked_without_success() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -1368,6 +1428,8 @@ def main() -> None:
         test_reviewer_cannot_label_github_issues,
         test_intake_summary_write_blocked_without_a_unique_resolution,
         test_write_file_rejects_invalid_yaml_for_yml_paths,
+        test_write_file_rejects_study_config_schema_violations,
+        test_write_file_skips_schema_check_without_schema_file,
         test_submit_review_rejects_invalid_yaml,
         test_publish_summary_write_blocked_without_success,
         test_publish_tools_are_distinct_from_intake_tools,

@@ -106,6 +106,31 @@ provider_rules:
       integrations.calendar.provider: none
       integrations.calendar.enabled: disabled
 
+  theory_practice_balance:
+    # study-config.schema.json's preferences.theory_practice_balance enum is
+    # exactly ["theory", "balanced", "practical"] -- a real dispatch (Etapa
+    # 12/14 validation session) normalized the dropdown's third option to
+    # the plausible-looking but schema-invalid "more_practice" because this
+    # provider_rules table had no entry for theory_practice_balance at all,
+    # the same gap class current_level had before the fix documented just
+    # below it. CI's schema validator caught it (as designed), but it cost
+    # a real dispatch to surface a gap that was fixable in this file the
+    # whole time.
+    "mais teoria":
+      preferences.theory_practice_balance: theory
+    theory:
+      preferences.theory_practice_balance: theory
+    equilibrado:
+      preferences.theory_practice_balance: balanced
+    balanced:
+      preferences.theory_practice_balance: balanced
+    "mais prática":
+      preferences.theory_practice_balance: practical
+    "mais pratica":
+      preferences.theory_practice_balance: practical
+    practical:
+      preferences.theory_practice_balance: practical
+
   current_level:
     # study-config.schema.json's learner.current_level enum is exactly
     # ["none", "beginner", "intermediate", "advanced"] -- a real dispatch

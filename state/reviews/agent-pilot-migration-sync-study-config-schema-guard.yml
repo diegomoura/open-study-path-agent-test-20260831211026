@@ -1,0 +1,29 @@
+contract_version: 1
+operation_id: sync-study-config-schema-guard-and-theory-practice-mapping
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T20:30:35Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/agent_runtime.py, scripts/test_agent_runtime.py, intake/field-mapping.yml
+  fix from template PR #127 (main@35ade9e): added the missing theory_practice_balance
+  provider_rules entry (same gap class as the current_level fix from Etapa 9), and
+  added a study.config.yml schema-validation guard to write_file (Draft202012Validator
+  against schemas/study-config.schema.json), closing both the enum-mismatch and additionalProperties
+  bugs the real intake run on this instance hit. Root cause already visible on this
+  repo''s now-abandoned agent-pilot/intake-20260901201455 branch/PR #5 (submit_review
+  case, closed) and the current open intake PR (write_file schema case). No workflow,
+  instructions, templates, or other schemas touched; no instance state or content
+  touched by this sync.'

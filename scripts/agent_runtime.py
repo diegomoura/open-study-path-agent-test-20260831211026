@@ -56,6 +56,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 import yaml
+from jsonschema import Draft202012Validator, FormatChecker
 
 from agent_model_resolution import AGENT_CATALOG, resolve_effective_models
 from ensure_repository_labels import github_request_factory
@@ -1244,13 +1245,44 @@ class RepoTools:
             # reviewer already approved it into an immediate, in-turn
             # correction at zero extra dispatch cost.
             try:
-                yaml.safe_load(content)
+                parsed_yaml = yaml.safe_load(content)
             except yaml.YAMLError as exc:
                 raise AllowlistViolation(
                     f"refusing to write {path!r}: content is not valid YAML ({exc}). "
                     "Quote any scalar value that contains a colon, or use a YAML "
                     "block scalar (e.g. '|' or '>'), and try the write again."
                 ) from exc
+            if path.replace(os.sep, "/") == "study.config.yml":
+                # Same principle, one layer deeper: syntactically valid YAML
+                # can still violate study-config.schema.json. Two real
+                # dispatch findings hit this independently -- an enum
+                # mismatch (theory_practice_balance normalized to the
+                # plausible-looking "more_practice" instead of "practical")
+                # and an additionalProperties violation (intake:
+                # imported_from_issue/imported_at, already called out in
+                # instructions/10-intake.md as a prior real-dispatch finding
+                # that recurred anyway). Validating with the same
+                # Draft202012Validator scripts/validate_template.py uses
+                # closes the gap for both, and any future schema drift,
+                # instead of patching one field at a time as CI catches
+                # each one after the reviewer has already spent tokens on
+                # it. Schema file presence is checked first so tests using
+                # a bare temp root (no schemas/ dir) are unaffected.
+                schema_path = self.root / "schemas" / "study-config.schema.json"
+                if schema_path.is_file():
+                    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+                    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+                    errors = sorted(validator.iter_errors(parsed_yaml), key=lambda e: list(e.path))
+                    if errors:
+                        details = "; ".join(
+                            f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
+                            for error in errors
+                        )
+                        raise AllowlistViolation(
+                            f"refusing to write {path!r}: content does not match "
+                            f"schemas/study-config.schema.json ({details}). Fix the "
+                            "listed field(s) and try the write again."
+                        )
         target = normalize_relative_path(self.root, path)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
