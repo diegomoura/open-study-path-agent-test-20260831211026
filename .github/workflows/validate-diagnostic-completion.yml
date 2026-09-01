@@ -39,6 +39,17 @@ concurrency:
 
 jobs:
   validate:
+    # Real dispatch finding (Etapa 12/14 validation session): a
+    # GITHUB_TOKEN-authored PR's pull_request event does fire this trigger
+    # despite the assumption in this repo's workflow_call comments -- it
+    # just loses a race against agent-pilot-setup.yml's auto-merge job,
+    # which runs the identical check inline (via workflow_call)
+    # synchronously before merging and then deletes the branch. Skipping
+    # here avoids the duplicate-or-noisy-failure outcome; a human-opened
+    # PR is unaffected.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.user.login != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

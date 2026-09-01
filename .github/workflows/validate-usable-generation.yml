@@ -40,6 +40,11 @@ permissions:
 
 jobs:
   pedagogical:
+    # See validate-diagnostic-completion.yml's comment for the real
+    # dispatch finding this guards against (Etapa 12/14 validation session).
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.user.login != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

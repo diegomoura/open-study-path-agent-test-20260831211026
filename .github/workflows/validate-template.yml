@@ -36,6 +36,22 @@ permissions:
 jobs:
   review-generated-artifacts:
     name: Review generated artifacts
+    # Real dispatch finding (Etapa 12/14 validation session): a
+    # GITHUB_TOKEN-authored PR's pull_request event does fire this trigger
+    # despite the assumption in this file's workflow_call comment above --
+    # it just loses a race against agent-pilot-setup.yml's auto-merge job,
+    # which runs this same check inline (via workflow_call) synchronously
+    # before merging and then deletes the branch. Skipping here avoids the
+    # duplicate-or-noisy-failure outcome. Unaffected: workflow_dispatch
+    # (this repo's own manual pre-merge CI run, see docs/claude-agent-
+    # pilot*.md's PR workflow) and workflow_call both have a different
+    # event_name, and a human-opened PR is unaffected since this condition
+    # is only false for github-actions[bot]. The downstream `validate` job
+    # (needs: review-generated-artifacts) skips automatically when this one
+    # does, since its default condition is success().
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.user.login != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

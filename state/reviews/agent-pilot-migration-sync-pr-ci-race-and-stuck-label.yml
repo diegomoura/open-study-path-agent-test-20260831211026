@@ -1,0 +1,27 @@
+contract_version: 1
+operation_id: sync-pull-request-ci-race-and-stuck-intake-label
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-01T20:45:20Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced 7 workflow files + instructions/10-intake.md + new scripts/release_stuck_intake_import.py
+  + its test from template PR #128 (main@0d7f662): guards the 7 pull_request-triggered
+  CI workflows against racing agent-pilot-setup.yml''s auto-merge (skips only for
+  PRs opened by github-actions[bot]), and adds a recovery script for the stuck intake:imported
+  label pattern hit three times manually on this instance during Etapa 12/14 validation
+  (PRs #5, #6, and the abandoned pre-fix intake attempts). No instructions execution-contract
+  changes beyond the one added paragraph in 10-intake.md; no templates or schemas
+  touched; no instance state or content touched by this sync.'

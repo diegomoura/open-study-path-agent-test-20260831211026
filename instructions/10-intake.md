@@ -60,6 +60,8 @@ When the form was reported as submitted:
 
 After import, persist the exact source reference, apply `intake:imported` and retain `study-request` for auditability. Treat attachments as optional and do not copy them into the repository by default. The source reference and every other import-audit fact (issue number, title, timestamp) belong only in `state/intake-summary.json.source_reference` -- `study.config.yml`'s `intake:` block is a closed schema (`additionalProperties: false`) describing the provider's setup, not the specific submission, and does not accept audit fields. A real dispatch added `imported_from_issue`/`imported_at` there and failed CI's schema validation for exactly this reason.
 
+If an intake pull request is closed without merging (a broken diff abandoned rather than repaired in the same PR, see below), its source issue is left labeled `intake:imported` with no corresponding merged state, and the next `intake` dispatch will silently skip it as already handled. Use `scripts/release_stuck_intake_import.py --repository OWNER/REPO --pr N --token ...` to safely reverse that label -- it only acts on a closed-and-unmerged agent-pilot intake PR, and never touches an issue whose import is genuinely current on the target branch.
+
 ## Manual YAML
 
 Read only learner-approved values in `study.config.yml`. Do not interpret placeholders as confirmed facts.
