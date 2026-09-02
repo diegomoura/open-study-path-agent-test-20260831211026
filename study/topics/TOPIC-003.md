@@ -2,9 +2,9 @@
 id: TOPIC-003
 title: "Merge: unindo histórias de trabalho"
 status: eligible_after_prerequisites
-content_status: planned
-content_version: 0
-materialized_at: null
+content_status: materialized
+content_version: 1
+materialized_at: "2026-09-02T23:18:53Z"
 difficulty: beginner
 estimated_hours: 1.1
 prerequisites:
@@ -21,7 +21,7 @@ learning_outcomes:
     required_concepts:
       - "ancestral comum (merge base)"
       - "git log --graph"
-module: study/modules/TOPIC-003.md
+module: study/modules/merge-unindo-historias-de-trabalho.md
 assessment: study/assessments/TOPIC-003.yml
 assessment_form: .github/ISSUE_TEMPLATE/assessment-topic-003.yml
 ---
@@ -49,19 +49,19 @@ Merge é a base do trabalho em equipe e o primeiro passo para entender conflitos
 
 ## Aula
 
-Esta aula será preparada automaticamente quando você concluir os pré-requisitos desta etapa. Você não precisa pedir a geração manualmente.
+A aula completa está pronta: [Merge: unindo histórias de trabalho](../modules/merge-unindo-historias-de-trabalho.md). Ela ensina a diferença entre fast-forward e merge commit, o papel do ancestral comum, e como ler o histórico resultante de um merge.
 
 ## Prática
 
-A prática guiada e a prática independente vão ficar dentro da aula, cobrindo cenários de merge fast-forward e merge com commit de merge, sem necessidade de laboratório externo.
+A prática guiada e a prática independente ficam dentro da aula — não há laboratório externo separado para esta etapa.
 
 ## O que você vai produzir
 
-Um cenário de merge (fast-forward e não fast-forward) que você mesmo cria, com uma explicação de por que cada um se comportou daquele jeito a partir do grafo de commits.
+Dois cenários de merge que você mesmo cria (um fast-forward, um com merge commit), com a saída de `git log --oneline --graph --all` de cada um e uma explicação de por que cada um se comportou daquele jeito, a partir do ancestral comum.
 
 ## Como mostrar o que aprendeu
 
-A evidência esperada é a saída de `git log --graph` de cada cenário, acompanhada da sua explicação escrita.
+Envie os dois cenários, a saída de terminal de cada um e sua explicação no formulário de avaliação. A saída de terminal colada como texto (ou um link para um gist) já é suficiente como evidência.
 
 ## Para concluir esta etapa
 
@@ -71,9 +71,11 @@ A evidência esperada é a saída de `git log --graph` de cada cenário, acompan
 - [ ] Reconhecer o papel do ancestral comum na decisão do Git.
 - [ ] Alcançar a pontuação mínima da avaliação sem um equívoco crítico.
 
+> Marcar as atividades acima ajuda a acompanhar o avanço; a etapa é concluída depois da avaliação enviada e corrigida.
+
 ## Avaliação
 
-Quando esta aula estiver pronta, o link direto da avaliação aparecerá aqui, e você poderá escrever:
+Quando terminar a aula, abra a avaliação (link direto disponível dentro da aula) e, depois de enviar, escreva no chat:
 
 `Terminei Merge: unindo histórias de trabalho. Avalie minhas respostas.`
 
@@ -86,3 +88,5 @@ Quando esta aula estiver pronta, o link direto da avaliação aparecerá aqui, e
 ### Para aprofundar
 
 - Documentação oficial `git-merge` — https://git-scm.com/docs/git-merge
+- GitHub Docs, "About pull request merges" — https://docs.github.com/en/pull-requests/collaborating-on-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges
+- Learn Git Branching (visualização interativa) — https://learngitbranching.js.org/

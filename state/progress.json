@@ -1,10 +1,134 @@
 {
   "version": 1,
-  "status": "not_started",
-  "started_at": null,
-  "updated_at": null,
-  "total_estimated_hours": 0,
-  "completed_hours": 0,
-  "topics": [],
-  "achievements": []
+  "status": "in_progress",
+  "started_at": "2026-09-02T20:24:41.577687Z",
+  "updated_at": "2026-09-02T23:25:35.502000Z",
+  "total_estimated_hours": 9.5,
+  "completed_hours": 1.1,
+  "topics": [
+    {
+      "topic_id": "TOPIC-001",
+      "title": "Modelo interno do Git: objetos, snapshots e o .git",
+      "lesson_number": 1,
+      "content_status": "materialized",
+      "content_version": 1,
+      "status": "mastered",
+      "mastered_at": "2026-09-02T23:18:53Z",
+      "attempts": 1,
+      "best_score": 100,
+      "latest_attempt_ref": "state/assessments/TOPIC-001/attempt-001.json",
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "12",
+        "last_synced_at": "2026-09-02T23:25:35.502000Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-002",
+      "title": "Branches e HEAD como ponteiros",
+      "lesson_number": 2,
+      "content_status": "materialized",
+      "content_version": 1,
+      "status": "available",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "13",
+        "last_synced_at": "2026-09-02T23:25:35.502000Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-003",
+      "title": "Merge: unindo histórias de trabalho",
+      "lesson_number": 3,
+      "content_status": "materialized",
+      "content_version": 1,
+      "status": "available",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "17",
+        "last_synced_at": "2026-09-02T23:25:35.502000Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-004",
+      "title": "Rebase: reescrevendo o histórico com segurança",
+      "lesson_number": 4,
+      "content_status": "planned",
+      "content_version": 0,
+      "status": "locked",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-005",
+      "title": "Conflitos de merge: do simples ao multi-arquivo",
+      "lesson_number": 5,
+      "content_status": "planned",
+      "content_version": 0,
+      "status": "locked",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-006",
+      "title": "Fluxo de feature branch e pull requests",
+      "lesson_number": 6,
+      "content_status": "planned",
+      "content_version": 0,
+      "status": "locked",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-007",
+      "title": "Revisar pull requests e responder a mudanças",
+      "lesson_number": 7,
+      "content_status": "planned",
+      "content_version": 0,
+      "status": "locked",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-008",
+      "title": "Projeto final: fluxo colaborativo com rebase",
+      "lesson_number": 8,
+      "content_status": "planned",
+      "content_version": 0,
+      "status": "locked",
+      "mastered_at": null,
+      "attempts": 0,
+      "best_score": null,
+      "latest_attempt_ref": null,
+      "external_task": null
+    }
+  ],
+  "achievements": [
+    {
+      "id": "TOPIC-001-mastered",
+      "topic_id": "TOPIC-001",
+      "achieved_at": "2026-09-02T23:18:53Z",
+      "description": "Dominou o modelo interno do Git (blobs, trees, commits) com pontuação 100/100 na primeira tentativa."
+    }
+  ]
 }

@@ -17,18 +17,19 @@ O curso é fortemente **prático**, do jeito que você pediu: cada aula tem exer
 
 ## Onde você está agora
 
-As duas primeiras aulas já estão **prontas** para estudo — lição completa, prática e avaliação. As demais são **aulas futuras**: a arquitetura e os critérios de cada uma já estão aprovados abaixo, e o conteúdo completo é preparado automaticamente conforme você avança pelos pré-requisitos.
+Você já concluiu a Aula 01 com avaliação corrigida. As Aulas 02 e 03 já estão **prontas** para estudo — lição completa, prática e avaliação. As demais são **aulas futuras**: a arquitetura e os critérios de cada uma já estão aprovados abaixo, e o conteúdo completo é preparado automaticamente conforme você avança pelos pré-requisitos.
 
-- **Aula 01 — Modelo interno do Git** → aula pronta.
+- **Aula 01 — Modelo interno do Git** → concluída (avaliação corrigida).
 - **Aula 02 — Branches e HEAD como ponteiros** → aula pronta.
-- **Aulas 03 a 08** → aulas futuras, liberadas conforme os pré-requisitos diretos de cada uma forem concluídos.
+- **Aula 03 — Merge: unindo histórias de trabalho** → aula pronta.
+- **Aulas 04 a 08** → aulas futuras, liberadas conforme os pré-requisitos diretos de cada uma forem concluídos.
 
 ## Grafo de dependências das aulas
 
 Este é o grafo real da trilha. Cada seta significa "esta aula assume que a anterior já foi dominada".
 
 ```mermaid
-flowchart TD
+flowchart LR
     T1["Aula 01 · TOPIC-001<br/>Modelo interno do Git:<br/>objetos, snapshots e o .git"]
     T2["Aula 02 · TOPIC-002<br/>Branches e HEAD<br/>como ponteiros"]
     T3["Aula 03 · TOPIC-003<br/>Merge: unindo<br/>histórias de trabalho"]
@@ -65,7 +66,7 @@ Observação sobre paralelismo: assim que a Aula 02 estiver concluída, as Aulas
 
 Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso importa para o seu objetivo, os pré-requisitos diretos, a evidência esperada e o esforço estimado.
 
-### Aula 01 · TOPIC-001 — Modelo interno do Git: objetos, snapshots e o `.git` (aula pronta)
+### Aula 01 · TOPIC-001 — Modelo interno do Git: objetos, snapshots e o `.git` (concluída)
 
 - **Pré-requisitos diretos:** nenhum (raiz da trilha).
 - **O que você vai conseguir fazer:** explicar o que o Git guarda quando você faz um commit (objetos: *blob* = conteúdo de um arquivo, *tree* = uma pasta, *commit* = um snapshot com metadados), e inspecionar esses objetos dentro da pasta `.git`.
@@ -85,15 +86,15 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Esforço estimado:** ~45–60 min (3–4 atividades).
 - **Aula:** [study/modules/TOPIC-002.md](modules/TOPIC-002.md).
 
-### Aula 03 · TOPIC-003 — Merge: unindo histórias de trabalho (aula futura)
+### Aula 03 · TOPIC-003 — Merge: unindo histórias de trabalho (aula pronta)
 
 - **Pré-requisitos diretos:** Aula 02.
-- **O que você vai conseguir fazer:** executar um merge, distinguir *fast-forward* de *merge com commit de merge*, e ler o histórico resultante para entender o que aconteceu.
+- **O que você vai conseguir fazer:** executar um merge, distinguir *fast-forward* de *merge com commit de merge*, e ler o histórico resultante para entender o que aconteceu, incluindo o papel do ancestral comum.
 - **Por que importa para você:** merge é a base do trabalho em equipe e o ponto de partida para entender conflitos. Você já teve intuição correta sobre "merge cria um commit de merge"; aqui isso vira prática segura.
 - **Vocabulário novo apresentado aqui:** *merge*, *merge commit*, *fast-forward merge*, *ancestral comum (merge base)*.
 - **Evidência esperada:** exercícios criando cenários de merge (fast-forward e não-fast-forward) e explicando, a partir do grafo de commits, por que cada um se comportou daquele jeito.
 - **Esforço estimado:** ~60–75 min (3–4 atividades).
-- **Aula:** será preparada automaticamente quando a Aula 02 estiver concluída.
+- **Aula:** [study/modules/merge-unindo-historias-de-trabalho.md](modules/merge-unindo-historias-de-trabalho.md).
 
 ### Aula 04 · TOPIC-004 — Rebase: reescrevendo o histórico com segurança (aula futura)
 
@@ -157,4 +158,4 @@ Somando as aulas, a trilha leva aproximadamente **8h30 a 10h30 de estudo ativo**
 
 ## Status atual
 
-As Aulas 01 e 02 estão prontas: lição completa, prática e avaliação disponíveis agora em `study/modules/`. As Aulas 03 a 08 têm a arquitetura da trilha aprovada (contrato, pré-requisitos, evidência e critérios de conclusão), e cada uma será preparada automaticamente assim que você concluir os pré-requisitos diretos listados acima — você não precisa pedir a geração manualmente. A organização das aulas em uma ferramenta de tarefas ainda não foi feita; isso acontece na próxima etapa.
+A Aula 01 está concluída (avaliação corrigida e dominada). As Aulas 02 e 03 estão prontas: lição completa, prática e avaliação disponíveis agora em `study/modules/`. As Aulas 04 a 08 têm a arquitetura da trilha aprovada (contrato, pré-requisitos, evidência e critérios de conclusão), e cada uma será preparada automaticamente assim que você concluir os pré-requisitos diretos listados acima — você não precisa pedir a geração manualmente. A trilha está organizada no GitHub Issues.

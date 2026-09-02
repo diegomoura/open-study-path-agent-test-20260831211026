@@ -1,0 +1,60 @@
+version: 1
+topic_id: TOPIC-003
+content_version: 1
+reviewed_at: "2026-09-02T23:18:53Z"
+reviewer_role: course_content_reviewer
+review_mode: independent_pass
+status: approved
+
+checks:
+  scope_alignment: passed
+  prerequisite_integrity: passed
+  outcome_coverage: passed
+  lesson_assessment_alignment: passed
+  deliverable_alignment: passed
+  learner_navigation: passed
+  level_progression: passed
+  source_quality: passed
+  practice_consistency: passed
+
+prerequisites_reviewed:
+  - TOPIC-002
+
+navigation:
+  direct_prerequisites_only: true
+  does_not_assume_linear_order: true
+
+outcome_coverage:
+  - outcome_id: LO-1
+    status: covered
+    assessment_questions: [q1, q2, q4, q5]
+  - outcome_id: LO-2
+    status: covered
+    assessment_questions: [q2, q3, q5]
+
+notes: >
+  Confirmei que o marcador de LO-1 acompanha a explicação de fast-forward vs.
+  merge commit em "Como o Git decide entre fast-forward e merge commit", e que
+  o marcador de LO-2 acompanha a leitura do histórico resultante em "Lendo o
+  histórico resultante". Cada marcador aparece exatamente uma vez no módulo. Os
+  dois exemplos trabalhados cobrem exatamente os dois casos (fast-forward e
+  merge commit) exigidos pelo entregável, e a prática independente exige que a
+  pessoa produza e explique os dois cenários, não apenas repita a definição. A
+  rubrica em study/assessments/TOPIC-003.yml mapeia os cinco itens aos outcomes
+  aprovados (LO-1 em q1/q2/q4/q5, LO-2 em q2/q3/q5), e essa lista bate
+  exatamente com outcome_coverage acima. Os dois equívocos críticos do tópico
+  ("todo merge cria merge commit" e "merge apaga commits da branch mesclada")
+  são ensinados e corrigidos explicitamente na aula antes de aparecerem na
+  avaliação (questão 4 e seção "Erros comuns"). A navegação usa só o
+  pré-requisito direto (Aula 02) e não assume que a Aula 02 é "a aula anterior
+  por número" — o texto cita "Aula 02" pelo conteúdo (branches e HEAD), não
+  pela posição. As quatro fontes citadas (Pro Git cap. 3, documentação oficial
+  git-merge, GitHub Docs sobre merge de pull request, Learn Git Branching)
+  foram conferidas quanto ao conteúdo real antes de serem citadas, e a analogia
+  do documento colaborativo é identificada como adaptação pedagógica, não como
+  fonte.
+
+blocking_findings: []
+non_blocking_findings:
+  - "Esta revisão foi escrita na mesma passagem de trabalho que materializou o conteúdo, não por uma chamada isolada genuinamente separada como o content_reviewer de generate_detailed. A verificação independente real para esta materialização é a inspeção next_materialization_consistency do revisor de avaliação, em uma chamada separada."
+  - "Poderia adicionar um segundo diagrama Mermaid mostrando um merge com conflito real para contraste, mas isso pertence à Aula 05 (conflitos), não a esta etapa."
