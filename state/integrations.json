@@ -19,7 +19,7 @@
       "id": "diegomoura/open-study-path-agent-test-20260831211026",
       "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026",
       "sync_status": "success",
-      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+      "last_synced_at": "2026-09-02T22:53:42.474278Z"
     },
     {
       "capability": "task_manager",
@@ -30,7 +30,26 @@
       "canonical_state": "planned",
       "visible_state": "Planejado",
       "sync_status": "success",
-      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+      "last_synced_at": "2026-09-02T22:53:42.474278Z"
+    },
+    {
+      "capability": "task_manager",
+      "provider": "github_issues",
+      "type": "issue",
+      "id": "17",
+      "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/17",
+      "topic_id": "TOPIC-003",
+      "visible_lesson_number": 3,
+      "title": "Aula 03 · Merge: unindo histórias de trabalho",
+      "direct_prerequisite_ids": ["TOPIC-002"],
+      "content_version": 1,
+      "canonical_state": "ready",
+      "visible_state": "Planejado",
+      "visual_position": 2,
+      "managed_fields_version": 1,
+      "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
+      "sync_status": "success",
+      "last_synced_at": "2026-09-02T22:53:42.474278Z"
     },
     {
       "capability": "task_manager",
@@ -41,17 +60,15 @@
       "topic_id": "TOPIC-002",
       "visible_lesson_number": 2,
       "title": "Aula 02 · Branches e HEAD como ponteiros",
-      "direct_prerequisite_ids": [
-        "TOPIC-001"
-      ],
+      "direct_prerequisite_ids": ["TOPIC-001"],
       "content_version": 1,
       "canonical_state": "ready",
-      "visible_state": "Planejado",
+      "visible_state": "Próxima aula",
       "visual_position": 1,
       "managed_fields_version": 1,
       "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
       "sync_status": "success",
-      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+      "last_synced_at": "2026-09-02T22:53:42.474278Z"
     },
     {
       "capability": "task_manager",
@@ -64,26 +81,26 @@
       "title": "Aula 01 · Modelo interno do Git: objetos, snapshots e o .git",
       "direct_prerequisite_ids": [],
       "content_version": 1,
-      "canonical_state": "ready",
-      "visible_state": "Próxima aula",
+      "canonical_state": "completed",
+      "visible_state": "Concluído",
       "visual_position": 0,
       "managed_fields_version": 1,
       "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
       "sync_status": "success",
-      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+      "last_synced_at": "2026-09-02T22:53:42.474278Z"
     }
   ],
   "projection": {
     "provider": "github_issues",
     "container_id": "diegomoura/open-study-path-agent-test-20260831211026",
     "container_url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026",
-    "topic_count": 2,
+    "topic_count": 3,
     "managed_list_order": null,
     "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
     "readback": {
-      "verified_at": "2026-09-02T20:24:41.577726Z",
-      "lesson_card_count": 2,
-      "managed_card_count": 3,
+      "verified_at": "2026-09-02T22:53:42.474278Z",
+      "lesson_card_count": 3,
+      "managed_card_count": 4,
       "visible_internal_marker_count": 0,
       "external_read_count": 1
     }
@@ -94,16 +111,22 @@
       "provider": "github_issues",
       "updated_at": "2026-09-02T20:24:41.577687Z",
       "checkpoint_count": 9
+    },
+    "evaluate-20260902-topic001": {
+      "status": "success",
+      "provider": "github_issues",
+      "updated_at": "2026-09-02T22:53:42.474185Z",
+      "checkpoint_count": 10
     }
   },
   "resolution": {
     "status": "resolved",
     "unresolved_capabilities": [],
-    "validated_at": "2026-09-02T20:24:41.577726Z"
+    "validated_at": "2026-09-02T22:53:42.474278Z"
   },
   "sync": {
-    "last_attempt_at": "2026-09-02T20:24:41.577687Z",
-    "last_success_at": "2026-09-02T20:24:41.577726Z",
+    "last_attempt_at": "2026-09-02T22:53:42.474185Z",
+    "last_success_at": "2026-09-02T22:53:42.474278Z",
     "status": "success",
     "errors": []
   }

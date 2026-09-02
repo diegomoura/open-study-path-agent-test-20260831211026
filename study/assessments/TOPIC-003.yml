@@ -1,0 +1,51 @@
+version: 1
+topic_id: TOPIC-003
+title: "Merge: unindo histórias de trabalho"
+passing_score: 80
+critical_misconceptions:
+  - "Achar que todo merge cria um commit de merge, mesmo quando a branch de destino não avançou desde a separação (fast-forward)."
+  - "Achar que o Git combina os arquivos ignorando o ancestral comum, em vez de usá-lo como ponto de referência para decidir o que mudou de cada lado."
+questions:
+  - id: q1
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "compreensão conceitual — diferença entre fast-forward merge e merge commit"
+    full_credit: "Explica corretamente que fast-forward ocorre quando a branch de destino não avançou desde a separação (o Git só move o ponteiro), e que um merge commit é criado quando as duas branches divergiram, com um exemplo próprio coerente."
+    partial_credit: "Reconhece que existem dois comportamentos diferentes, mas confunde a condição que determina cada um, ou não explica por que nenhum commit novo é criado no fast-forward."
+    no_credit: "Descreve merge como uma única operação sempre igual, ou não distingue os dois cenários."
+  - id: q2
+    outcome_ids: [LO-1, LO-2]
+    max_points: 20
+    evaluates: "análise — prever o tipo de merge a partir de um cenário concreto"
+    full_credit: "Dado um cenário com duas branches e um histórico descrito, identifica corretamente onde está o ancestral comum, prevê se o merge será fast-forward ou vai gerar um merge commit, e justifica com base no que mudou (ou não) de cada lado desde o ancestral comum."
+    partial_credit: "Chega à previsão correta, mas erra ou omite a localização do ancestral comum, ou justifica de forma incompleta."
+    no_credit: "Não identifica o ancestral comum, ou a previsão está incorreta e sem justificativa coerente."
+  - id: q3
+    outcome_ids: [LO-2]
+    max_points: 20
+    evaluates: "aplicação — leitura de um histórico de merge via git log --graph"
+    full_credit: "Dada uma saída (ou descrição) de git log --graph mostrando um merge, descreve corretamente o que aconteceu (fast-forward ou merge commit), aponta o(s) ponto(s) de divergência e convergência, e explica o papel do ancestral comum na leitura."
+    partial_credit: "Interpreta corretamente parte da estrutura (por exemplo, identifica a convergência), mas erra a classificação fast-forward vs. merge commit ou não relaciona com o ancestral comum."
+    no_credit: "Não consegue relacionar a saída de git log --graph com o conceito de merge, ou a leitura proposta está incorreta."
+  - id: q4
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "detecção e correção de equívoco crítico"
+    full_credit: "Identifica corretamente por que a afirmação proposta sobre merge está errada e reformula com o modelo correto (dependência do ancestral comum e da divergência real entre as branches)."
+    partial_credit: "Percebe que a afirmação está incompleta ou imprecisa, mas não consegue reformular corretamente o modelo."
+    no_credit: "Concorda com a afirmação errada ou introduz outro equívoco crítico ao tentar corrigi-la."
+  - id: q5
+    outcome_ids: [LO-1, LO-2]
+    max_points: 20
+    evaluates: "evidência independente e reflexão"
+    full_credit: "Apresenta as duas saídas de git log --graph (fast-forward e merge commit) coerentes com a explicação escrita, identifica corretamente o ancestral comum em cada caso e avalia o próprio raciocínio contra os critérios da etapa."
+    partial_credit: "Apresenta evidência parcial (só um dos dois cenários, ou evidência incompleta), ou reflexão genérica pouco conectada aos critérios da etapa."
+    no_credit: "Não apresenta evidência utilizável, ou a evidência contradiz a explicação escrita sem nenhuma reflexão sobre isso."
+mastery_rules:
+  require_total_score: true
+  require_no_critical_misconception: true
+  recovery_when_not_mastered: true
+recovery:
+  create_focused_github_issue: true
+  create_trello_card: true
+  reassessment_required: true

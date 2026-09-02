@@ -1,0 +1,56 @@
+version: 1
+topic_id: TOPIC-003
+content_version: 1
+reviewed_at: "2026-09-02T22:48:37Z"
+reviewer_role: course_content_reviewer
+review_mode: independent_pass
+status: approved
+
+checks:
+  scope_alignment: passed
+  prerequisite_integrity: passed
+  outcome_coverage: passed
+  lesson_assessment_alignment: passed
+  deliverable_alignment: passed
+  learner_navigation: passed
+  level_progression: passed
+  source_quality: passed
+  practice_consistency: passed
+
+prerequisites_reviewed:
+  - TOPIC-002
+
+navigation:
+  direct_prerequisites_only: true
+  does_not_assume_linear_order: true
+
+outcome_coverage:
+  - outcome_id: LO-1
+    status: covered
+    assessment_questions: [q1, q2, q4, q5]
+  - outcome_id: LO-2
+    status: covered
+    assessment_questions: [q2, q3, q5]
+
+notes: >
+  Verifiquei que o marcador de LO-1 acompanha a explicação de fast-forward vs.
+  merge commit em "Merge commit: quando as duas branches divergiram", e que o
+  marcador de LO-2 acompanha a leitura de git log --graph em "Lendo o histórico
+  com git log --graph". Cada marcador aparece exatamente uma vez no módulo. Os
+  dois exemplos trabalhados exigem previsão e verificação real (contar linhas
+  parent, ler o grafo), não repetição de definição. A rubrica cobre os dois
+  outcomes: LO-1 nas questões q1, q2, q4 e q5; LO-2 nas questões q2, q3 e q5 —
+  esses conjuntos foram conferidos contra study/assessments/TOPIC-003.yml e
+  batem exatamente. Os dois equívocos críticos ("todo merge cria commit de
+  merge" e "o Git ignora o ancestral comum") são explicitamente ensinados e
+  corrigidos na aula antes de aparecerem na avaliação (questão 4 e a seção
+  "Erros comuns"). A aula assume apenas o pré-requisito direto (TOPIC-002:
+  branches e HEAD) e não pressupõe conhecimento de conflitos (Aula 05), que é
+  citado apenas como limite explícito da analogia e dos exemplos, não como
+  pré-requisito. As quatro fontes citadas (Pro Git cap. 3, documentação oficial
+  de git-merge e git-log, Learn Git Branching) foram conferidas quanto ao
+  conteúdo real antes de serem citadas.
+
+blocking_findings: []
+non_blocking_findings:
+  - "Esta revisão foi escrita na mesma passagem em que o conteúdo foi gerado, não por uma chamada isolada genuinamente independente como o content_reviewer de generate_detailed. A verificação independente real desta materialização é a inspeção next_materialization_consistency do revisor de avaliação separado, não este arquivo."

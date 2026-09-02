@@ -1,0 +1,77 @@
+name: "Avaliação — TOPIC-003 — Merge: unindo histórias de trabalho"
+description: Mostre como você compreendeu fast-forward merge, merge commit e o papel do ancestral comum.
+title: "[Avaliação] TOPIC-003 — Merge: unindo histórias de trabalho"
+labels:
+  - assessment
+  - assessment:submitted
+  - "topic:TOPIC-003"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:assessment topic_id=TOPIC-003 version=1 -->
+        ## Mostre o que você aprendeu
+
+        Responda com suas próprias palavras e use exemplos sempre que puder. Não buscamos respostas decoradas: queremos entender como você está pensando sobre fast-forward, merge commit e o ancestral comum.
+
+        Depois de enviar, volte ao chat e escreva:
+
+        `Terminei Merge: unindo histórias de trabalho. Avalie minhas respostas.`
+
+  - type: input
+    id: evidence
+    attributes:
+      label: Sua evidência (saída de terminal ou link)
+      description: Cole a saída relevante de git log --graph, ou um link para um gist com essa saída.
+      placeholder: "https://gist.github.com/... ou cole a saída diretamente na Questão 5"
+    validations:
+      required: false
+
+  - type: textarea
+    id: q1
+    attributes:
+      label: "Questão 1 — Qual a diferença entre fast-forward merge e merge commit?"
+      description: Explique com suas próprias palavras quando cada um acontece e por que o fast-forward não cria nenhum commit novo.
+      placeholder: Use um exemplo próprio para justificar.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q2
+    attributes:
+      label: "Questão 2 — Preveja o tipo de merge de um cenário"
+      description: Dado um cenário com duas branches (descreva o cenário na sua resposta ou use um que você mesmo criou), diga onde está o ancestral comum e preveja se o merge será fast-forward ou vai gerar um merge commit, justificando.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q3
+    attributes:
+      label: "Questão 3 — Leia um histórico de merge"
+      description: A partir de uma saída de git log --graph (sua ou descrita por você), explique o que aconteceu, indicando os pontos de divergência e convergência e o papel do ancestral comum.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q4
+    attributes:
+      label: "Questão 4 — Encontre e corrija o erro"
+      description: "Um colega disse: 'todo merge cria um commit de merge, é assim que o Git registra que duas branches se juntaram'. Por que essa afirmação está errada? Reformule corretamente."
+    validations:
+      required: true
+
+  - type: textarea
+    id: q5
+    attributes:
+      label: "Questão 5 — Mostre sua evidência e reflita"
+      description: Cole a saída de git log --graph dos seus dois cenários (fast-forward e merge commit) e diga se ela confirma exatamente o que você esperava encontrar.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Revisei minhas respostas e estou pronto para receber feedback.
+          required: true

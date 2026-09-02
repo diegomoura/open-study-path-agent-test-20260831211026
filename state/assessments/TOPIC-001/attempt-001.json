@@ -1,0 +1,57 @@
+{
+  "topic_id": "TOPIC-001",
+  "issue_number": 16,
+  "issue_url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/16",
+  "attempt": 1,
+  "evaluated_at": "2026-09-02T22:48:37Z",
+  "evaluator_method": "response_by_response_rubric_grading",
+  "rubric": "study/assessments/TOPIC-001.yml",
+  "responses": [
+    {
+      "question_id": "q1",
+      "points_earned": 20,
+      "max_points": 20,
+      "demonstrated": "Explica corretamente que o commit aponta para uma tree que reaproveita os blobs dos arquivos não alterados e cria um blob novo só para o arquivo alterado, e articula com clareza que o Git enxerga cada commit como uma foto completa, não uma instrução de 'aplique esta mudança'.",
+      "gap_or_misconception": "Nenhum equívoco identificado.",
+      "improvement_suggestion": "Poderia nomear explicitamente o objeto 'tree' ao descrever a estrutura de pastas reaproveitada, para deixar ainda mais preciso o vocabulário usado."
+    },
+    {
+      "question_id": "q2",
+      "points_earned": 20,
+      "max_points": 20,
+      "demonstrated": "Identifica corretamente que blobs de arquivos não alterados são reaproveitados via hash de conteúdo, que um blob novo é criado para o arquivo alterado, e explica com precisão o papel do índice como 'rascunho da próxima tree' que é montado com git add.",
+      "gap_or_misconception": "Nenhum equívoco identificado.",
+      "improvement_suggestion": "Poderia mencionar explicitamente que uma nova tree completa também é criada (não só o blob), para reforçar que a tree em si nunca é editada, sempre substituída."
+    },
+    {
+      "question_id": "q3",
+      "points_earned": 20,
+      "max_points": 20,
+      "demonstrated": "Propõe corretamente a sequência git log --oneline → git cat-file -p <hash> → git cat-file -p <hash-da-tree> → git cat-file -p <hash-do-blob> para comprovar o conteúdo exato de um arquivo em um commit específico.",
+      "gap_or_misconception": "Menciona git show <hash>:<caminho> como possível atalho, mas admite incerteza sobre seu funcionamento exato — não chega a ser um equívoco, apenas uma lacuna de confirmação.",
+      "improvement_suggestion": "Vale testar git show <hash>:<caminho-do-arquivo> no próprio terminal para confirmar que ele realmente combina os dois passos (localizar o blob na tree e imprimir seu conteúdo) em um só comando."
+    },
+    {
+      "question_id": "q4",
+      "points_earned": 20,
+      "max_points": 20,
+      "demonstrated": "Identifica corretamente por que a afirmação é falsa (Git não guarda diffs), explica que a economia de espaço vem da deduplicação de blobs por hash de conteúdo, e reformula corretamente a afirmação com o modelo de snapshot.",
+      "gap_or_misconception": "Nenhum equívoco identificado.",
+      "improvement_suggestion": "A reformulação proposta já está correta; poderia adicionar que o diff exibido por git diff é calculado comparando duas trees completas, para fechar o raciocínio de ponta a ponta (o que já aparece na resposta da Questão 1)."
+    },
+    {
+      "question_id": "q5",
+      "points_earned": 20,
+      "max_points": 20,
+      "demonstrated": "Apresenta saída de terminal real e coerente com a explicação escrita (git cat-file -p HEAD^{tree} e git cat-file -p do blob), confirma que blobs guardam conteúdo inteiro e trees são listas de referências, e traz uma reflexão genuína e não genérica: o hash do blob não tem relação com o nome do arquivo, o que implica que arquivos com nomes diferentes e mesmo conteúdo compartilhariam o mesmo blob.",
+      "gap_or_misconception": "Nenhum equívoco identificado.",
+      "improvement_suggestion": "Para fechar o ciclo de evidência com ainda mais força, poderia ter testado essa própria hipótese (dois arquivos com nomes diferentes e conteúdo idêntico) no terminal e mostrado que os blobs realmente coincidem."
+    }
+  ],
+  "total_score": 100,
+  "passing_score": 80,
+  "critical_misconceptions_found": [],
+  "deliverable_present": true,
+  "deliverable_usable": true,
+  "mastered": true
+}

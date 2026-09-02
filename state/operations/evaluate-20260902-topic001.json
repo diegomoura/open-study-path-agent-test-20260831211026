@@ -1,0 +1,31 @@
+{
+  "operation_id": "evaluate-20260902-topic001",
+  "provider": "github_issues",
+  "operation_type": "publication",
+  "status": "success",
+  "attempt": 1,
+  "checkpoints": [
+    {"name": "preflight_started", "at": "2026-09-02T22:53:40.069740Z"},
+    {"name": "preflight_matches_resolved", "at": "2026-09-02T22:53:40.610767Z"},
+    {"name": "container_ready", "at": "2026-09-02T22:53:40.610790Z", "container_id": "diegomoura/open-study-path-agent-test-20260831211026"},
+    {"name": "managed_sections_ready", "at": "2026-09-02T22:53:40.610795Z"},
+    {"name": "orientation_ready", "at": "2026-09-02T22:53:40.610819Z"},
+    {"name": "lesson_ready", "at": "2026-09-02T22:53:40.610845Z", "topic_id": "TOPIC-001", "visible_state": "Concluído"},
+    {"name": "lesson_ready", "at": "2026-09-02T22:53:41.207914Z", "topic_id": "TOPIC-002", "visible_state": "Próxima aula"},
+    {"name": "lesson_ready", "at": "2026-09-02T22:53:41.858886Z", "topic_id": "TOPIC-003", "visible_state": "Planejado"},
+    {"name": "readback_completed", "at": "2026-09-02T22:53:42.473328Z"},
+    {"name": "readback_validated", "at": "2026-09-02T22:53:42.474179Z"},
+    {"name": "durable_state_persisted", "at": "2026-09-02T22:53:42.474320Z"}
+  ],
+  "external_read_count": 1,
+  "external_write_count": 2,
+  "branch": null,
+  "pull_request": null,
+  "commit_budget": 1,
+  "warnings": [],
+  "errors": [],
+  "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
+  "started_at": "2026-09-02T22:53:40.069720Z",
+  "updated_at": "2026-09-02T22:53:42.474320Z",
+  "completed_at": "2026-09-02T22:53:42.474185Z"
+}

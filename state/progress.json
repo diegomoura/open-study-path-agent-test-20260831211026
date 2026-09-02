@@ -1,10 +1,98 @@
 {
   "version": 1,
-  "status": "not_started",
-  "started_at": null,
-  "updated_at": null,
-  "total_estimated_hours": 0,
-  "completed_hours": 0,
-  "topics": [],
-  "achievements": []
+  "status": "in_progress",
+  "started_at": "2026-09-02T22:48:37Z",
+  "updated_at": "2026-09-02T22:48:37Z",
+  "total_estimated_hours": 8.5,
+  "completed_hours": 1.1,
+  "topics": [
+    {
+      "topic_id": "TOPIC-001",
+      "title": "Modelo interno do Git: objetos, snapshots e o .git",
+      "canonical_state": "completed",
+      "mastered": true,
+      "mastered_at": "2026-09-02T22:48:37Z",
+      "attempts": 1,
+      "latest_attempt": "state/assessments/TOPIC-001/attempt-001.json",
+      "latest_score": 100,
+      "passing_score": 80,
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "12",
+        "last_synced_at": "2026-09-02T22:53:42.474278Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-002",
+      "title": "Branches e HEAD como ponteiros",
+      "canonical_state": "ready",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "13",
+        "last_synced_at": "2026-09-02T22:53:42.474278Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-003",
+      "title": "Merge: unindo histórias de trabalho",
+      "canonical_state": "ready",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": {
+        "provider": "github_issues",
+        "external_id": "17",
+        "last_synced_at": "2026-09-02T22:53:42.474278Z"
+      }
+    },
+    {
+      "topic_id": "TOPIC-004",
+      "title": "Rebase: reescrevendo o histórico com segurança",
+      "canonical_state": "planned",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-005",
+      "title": "Conflitos de merge: do simples ao multi-arquivo",
+      "canonical_state": "planned",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-006",
+      "title": "Fluxo de feature branch e pull requests",
+      "canonical_state": "planned",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-007",
+      "title": "Revisar pull requests e responder a mudanças",
+      "canonical_state": "planned",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": null
+    },
+    {
+      "topic_id": "TOPIC-008",
+      "title": "Projeto final: fluxo colaborativo com rebase",
+      "canonical_state": "planned",
+      "mastered": false,
+      "attempts": 0,
+      "external_task": null
+    }
+  ],
+  "achievements": [
+    {
+      "type": "topic_mastered",
+      "topic_id": "TOPIC-001",
+      "at": "2026-09-02T22:48:37Z",
+      "score": 100
+    }
+  ]
 }
