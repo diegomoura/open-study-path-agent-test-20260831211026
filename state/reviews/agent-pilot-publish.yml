@@ -1,0 +1,59 @@
+contract_version: 1
+
+operation_id: publish-20260902-001
+phase: publication
+reviewer_role: publication_reviewer
+independent_pass: true
+status: action_required
+reviewed_at: "2026-09-02T20:25:20Z"
+
+artifacts:
+  - path: state/integrations.json
+    change: current
+    sha256: f11424682783af925d3cb841235f7be03d9bce8b1345e02d0aca86cb478dd01c
+  - path: state/operations/publish-20260902-001.json
+    change: current
+    sha256: ecc9309e00513cd60a362e28040bc5189f1b112512cceeede76b391b7a07788c
+  - path: study/integrations.md
+    change: current
+    sha256: f28fa31ceb923d98dff80ca78392e5fcf789456d9da4acb14f50b7c79c783a98
+
+checks:
+  selected_capabilities_resolved: passed
+  external_projection_consistency: failed
+  idempotency_and_reuse: passed
+  learner_navigation: failed
+  privacy_cost_and_authority: passed
+  next_action_consistency: passed
+
+blocking_findings:
+  - |
+    Issue #13 (Aula 02 · TOPIC-002) has incomplete body structure. The actual GitHub 
+    issue body shows only the prerequisite message ("Os pré-requisitos diretos desta 
+    aula ainda precisam ser concluídos...") but is completely missing the resource 
+    section that should display lesson, practice, and assessment links. The task 
+    projection contract requires that every ready lesson (and even planned lessons 
+    that will become ready) include complete "Aula", optional "Prática", and 
+    "Avaliação" sections with working resource links. Issue #12 has this structure 
+    correctly; Issue #13 does not. The state/integrations.json records TOPIC-002 as 
+    canonical_state: "ready", but the actual GitHub body does not match the ready 
+    lesson contract. This blocks learner navigation: a learner viewing Issue #13 
+    cannot see what resources exist or when they will become available.
+  - |
+    The learner-visible next action is incomplete. While Issue #12 (Aula 01) correctly 
+    shows "Você pode começar por aqui" and full navigation to the session checklist 
+    and assessment template, the broader projected state does not show learners what 
+    a future ready card will look like. The integration summary in study/integrations.md 
+    correctly states "A trilha está organizada nas Issues", but it does not explain 
+    to the learner how to navigate or what they'll see when TOPIC-002 and later 
+    topics become ready. This is a navigation clarity issue stemming from the 
+    incomplete Issue #13 body structure.
+
+non_blocking_findings:
+  - |
+    study/integrations.md was substantially simplified from the previous proposed version. 
+    The new version is more concise and learner-friendly, but it loses some of the previous 
+    detail about how each tool was considered and why certain decisions were made (e.g., 
+    the careful reasoning about Consensus, email, and when optional tools might activate). 
+    This is a readability trade-off, not an error. If the learner wants to understand 
+    the integration rationale later, they can read the curriculum review or ask in chat.
