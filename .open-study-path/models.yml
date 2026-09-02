@@ -25,7 +25,7 @@ model_overrides:
   curriculum_reviewer: null
   content_author: sonnet
   content_reviewer: sonnet
-  publish: null
+  publish: sonnet
   integration_preflight: null
   evaluate: null
   track: null
