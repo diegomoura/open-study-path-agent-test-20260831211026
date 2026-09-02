@@ -1,0 +1,77 @@
+name: "Avaliação — TOPIC-001 — Modelo interno do Git: objetos, snapshots e o .git"
+description: Mostre como você compreendeu o modelo interno do Git (blobs, trees, commits) e a diferença entre snapshot e diff.
+title: "[Avaliação] TOPIC-001 — Modelo interno do Git: objetos, snapshots e o .git"
+labels:
+  - assessment
+  - assessment:submitted
+  - "topic:TOPIC-001"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:assessment topic_id=TOPIC-001 version=1 -->
+        ## Mostre o que você aprendeu
+
+        Responda com suas próprias palavras e use exemplos sempre que puder. Não buscamos respostas decoradas: queremos entender como você está pensando sobre blobs, trees, commits e a diferença entre snapshot e diff.
+
+        Depois de enviar, volte ao chat e escreva:
+
+        `Terminei Modelo interno do Git: objetos, snapshots e o .git. Avalie minhas respostas.`
+
+  - type: input
+    id: evidence
+    attributes:
+      label: Sua evidência (saída de terminal ou link)
+      description: Cole a saída relevante de git cat-file/git ls-tree, ou um link para um gist com essa saída.
+      placeholder: "https://gist.github.com/... ou cole a saída diretamente na Questão 5"
+    validations:
+      required: false
+
+  - type: textarea
+    id: q1
+    attributes:
+      label: "Questão 1 — Por que um commit é um snapshot, não um diff?"
+      description: Explique com suas palavras o que o Git armazena ao criar um commit (blob, tree, commit) e por que isso não é o mesmo que guardar uma diferença.
+      placeholder: Use um exemplo próprio para justificar.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q2
+    attributes:
+      label: "Questão 2 — Analise um cenário de dois commits"
+      description: Em um repositório com dois commits em que só um arquivo mudou, quais blobs foram reaproveitados e quais foram criados? Que papel o índice (staging area) teve nesse processo?
+    validations:
+      required: true
+
+  - type: textarea
+    id: q3
+    attributes:
+      label: "Questão 3 — Aplique a um cenário novo"
+      description: Descreva a sequência de comandos que você usaria para comprovar o conteúdo exato de um commit específico de um repositório que você nunca viu antes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q4
+    attributes:
+      label: "Questão 4 — Encontre e corrija o erro"
+      description: "Uma colega disse: 'o Git guarda só as diferenças entre um commit e o anterior, por isso ele economiza espaço'. Por que essa afirmação está errada? Reformule corretamente."
+    validations:
+      required: true
+
+  - type: textarea
+    id: q5
+    attributes:
+      label: "Questão 5 — Mostre sua evidência e reflita"
+      description: Cole a saída de terminal (git cat-file/git ls-tree) da sua prática independente e diga se ela confirma exatamente o que você esperava encontrar.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Revisei minhas respostas e estou pronto para receber feedback.
+          required: true

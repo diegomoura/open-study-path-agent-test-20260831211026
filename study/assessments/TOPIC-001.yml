@@ -1,0 +1,51 @@
+version: 1
+topic_id: TOPIC-001
+title: "Modelo interno do Git: objetos, snapshots e o .git"
+passing_score: 80
+critical_misconceptions:
+  - "Achar que um commit guarda apenas a diferença (diff) em relação ao commit anterior, em vez de um snapshot completo do projeto."
+  - "Achar que editar um arquivo já é suficiente para incluí-lo no próximo commit, sem passar pelo índice (staging area)."
+questions:
+  - id: q1
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "compreensão conceitual — commit como snapshot, não diff"
+    full_credit: "Explica corretamente que um commit aponta para uma tree que representa o projeto inteiro naquele momento, cita blob/tree/commit e usa um exemplo próprio coerente."
+    partial_credit: "Reconhece que o commit é mais do que só a mudança, mas confunde blob, tree ou commit, ou não explica o papel do hash."
+    no_credit: "Descreve o commit como um diff armazenado, ou repete os termos sem explicar a relação entre eles."
+  - id: q2
+    outcome_ids: [LO-1, LO-3]
+    max_points: 20
+    evaluates: "análise — relação entre blob, tree, commit e staging area em um cenário concreto"
+    full_credit: "Dado um cenário de dois commits, identifica corretamente quais blobs foram reaproveitados e quais foram criados, e explica o papel do índice nesse processo."
+    partial_credit: "Identifica corretamente alguns objetos reaproveitados/criados, mas erra a justificativa ou ignora o papel do índice."
+    no_credit: "Não distingue objetos reaproveitados de novos, ou ignora a staging area por completo."
+  - id: q3
+    outcome_ids: [LO-2]
+    max_points: 20
+    evaluates: "aplicação a uma situação nova — inspeção de objetos"
+    full_credit: "Descreve corretamente uma sequência de comandos (git cat-file, git ls-tree, git log) capaz de comprovar o conteúdo de um commit específico em um cenário novo proposto."
+    partial_credit: "Escolhe comandos majoritariamente corretos, mas com uso impreciso de parâmetros ou ordem que não comprova o que é pedido."
+    no_credit: "Propõe comandos que não inspecionam objetos internos, ou não propõe nenhum comando verificável."
+  - id: q4
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "detecção e correção de equívoco crítico"
+    full_credit: "Identifica corretamente por que a afirmação 'o Git guarda só as diferenças entre commits' é falsa e reformula com o modelo correto de snapshot."
+    partial_credit: "Percebe que a afirmação está incompleta ou imprecisa, mas não consegue reformular corretamente o modelo de snapshot."
+    no_credit: "Concorda com a afirmação ou introduz outro equívoco crítico ao tentar corrigi-la."
+  - id: q5
+    outcome_ids: [LO-2, LO-3]
+    max_points: 20
+    evaluates: "evidência independente e reflexão"
+    full_credit: "Apresenta saída de terminal real (cat-file/ls-tree) coerente com a explicação escrita, e avalia corretamente o próprio raciocínio contra os critérios da etapa."
+    partial_credit: "Apresenta evidência parcial ou incompleta, ou reflexão genérica pouco conectada aos critérios da etapa."
+    no_credit: "Não apresenta evidência utilizável ou a evidência contradiz a explicação escrita sem nenhuma reflexão sobre isso."
+mastery_rules:
+  require_total_score: true
+  require_no_critical_misconception: true
+  recovery_when_not_mastered: true
+recovery:
+  create_focused_github_issue: true
+  create_trello_card: true
+  reassessment_required: true

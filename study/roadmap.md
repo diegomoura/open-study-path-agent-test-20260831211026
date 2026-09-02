@@ -15,6 +15,14 @@ O curso é fortemente **prático**, do jeito que você pediu: cada aula tem exer
 - Termos técnicos aparecem com uma explicação curta em linguagem comum na primeira vez. Você não precisa já conhecer o vocabulário do curso para entender o que vai aprender.
 - `aula pronta` = já tem lição, prática e avaliação completas. `aula futura` = já está planejada e será preparada automaticamente quando você chegar perto dela.
 
+## Onde você está agora
+
+As duas primeiras aulas já estão **prontas** para estudo — lição completa, prática e avaliação. As demais são **aulas futuras**: a arquitetura e os critérios de cada uma já estão aprovados abaixo, e o conteúdo completo é preparado automaticamente conforme você avança pelos pré-requisitos.
+
+- **Aula 01 — Modelo interno do Git** → aula pronta.
+- **Aula 02 — Branches e HEAD como ponteiros** → aula pronta.
+- **Aulas 03 a 08** → aulas futuras, liberadas conforme os pré-requisitos diretos de cada uma forem concluídos.
+
 ## Grafo de dependências das aulas
 
 Este é o grafo real da trilha. Cada seta significa "esta aula assume que a anterior já foi dominada".
@@ -55,9 +63,9 @@ Observação sobre paralelismo: assim que a Aula 02 estiver concluída, as Aulas
 
 ## Aulas da trilha
 
-Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso importa para o seu objetivo, os pré-requisitos diretos, a evidência esperada e o esforço estimado. Nenhuma lição foi materializada ainda — isto é a arquitetura aprovada da trilha.
+Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso importa para o seu objetivo, os pré-requisitos diretos, a evidência esperada e o esforço estimado.
 
-### Aula 01 · TOPIC-001 — Modelo interno do Git: objetos, snapshots e o `.git`
+### Aula 01 · TOPIC-001 — Modelo interno do Git: objetos, snapshots e o `.git` (aula pronta)
 
 - **Pré-requisitos diretos:** nenhum (raiz da trilha).
 - **O que você vai conseguir fazer:** explicar o que o Git guarda quando você faz um commit (objetos: *blob* = conteúdo de um arquivo, *tree* = uma pasta, *commit* = um snapshot com metadados), e inspecionar esses objetos dentro da pasta `.git`.
@@ -65,8 +73,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *repositório*, *objeto*, *blob*, *tree*, *commit* (como snapshot), *hash SHA*, *staging area* / *index*.
 - **Evidência esperada:** exercícios em que você cria commits e usa comandos de inspeção (`git cat-file`, `git ls-tree`, `git log`) para descrever o que o Git armazenou; explicar, com suas palavras, por que um commit é um snapshot e não um "diff".
 - **Esforço estimado:** ~60–75 min (3–4 atividades).
+- **Aula:** [study/modules/TOPIC-001.md](modules/TOPIC-001.md).
 
-### Aula 02 · TOPIC-002 — Branches e HEAD como ponteiros
+### Aula 02 · TOPIC-002 — Branches e HEAD como ponteiros (aula pronta)
 
 - **Pré-requisitos diretos:** Aula 01.
 - **O que você vai conseguir fazer:** descrever tecnicamente o que é uma branch (uma referência leve que aponta para um commit) e o que é o `HEAD` (onde você está agora), e prever o que muda ao criar, trocar e apagar branches.
@@ -74,8 +83,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *referência* / *ref*, *HEAD*, *fast-forward*, *detached HEAD*.
 - **Evidência esperada:** exercícios em que você inspeciona para onde branches e HEAD apontam (`git log --oneline --graph`, `.git/refs`), cria/troca branches e explica o efeito de cada operação nos ponteiros.
 - **Esforço estimado:** ~45–60 min (3–4 atividades).
+- **Aula:** [study/modules/TOPIC-002.md](modules/TOPIC-002.md).
 
-### Aula 03 · TOPIC-003 — Merge: unindo histórias de trabalho
+### Aula 03 · TOPIC-003 — Merge: unindo histórias de trabalho (aula futura)
 
 - **Pré-requisitos diretos:** Aula 02.
 - **O que você vai conseguir fazer:** executar um merge, distinguir *fast-forward* de *merge com commit de merge*, e ler o histórico resultante para entender o que aconteceu.
@@ -83,8 +93,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *merge*, *merge commit*, *fast-forward merge*, *ancestral comum (merge base)*.
 - **Evidência esperada:** exercícios criando cenários de merge (fast-forward e não-fast-forward) e explicando, a partir do grafo de commits, por que cada um se comportou daquele jeito.
 - **Esforço estimado:** ~60–75 min (3–4 atividades).
+- **Aula:** será preparada automaticamente quando a Aula 02 estiver concluída.
 
-### Aula 04 · TOPIC-004 — Rebase: reescrevendo o histórico com segurança
+### Aula 04 · TOPIC-004 — Rebase: reescrevendo o histórico com segurança (aula futura)
 
 - **Pré-requisitos diretos:** Aula 02.
 - **O que você vai conseguir fazer:** usar `git rebase` para reaplicar seus commits sobre outra base, entender por que isso reescreve o histórico (gera novos commits/hashes) e saber quando usar e quando **não** usar rebase.
@@ -92,8 +103,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *rebase*, *reescrever histórico*, *rebase interativo* (visão inicial), *golden rule do rebase* (não reescrever histórico já compartilhado).
 - **Evidência esperada:** exercícios em que você rebaseia uma branch de feature sobre uma branch atualizada, compara o histórico antes/depois e justifica quando o rebase é apropriado ou perigoso.
 - **Esforço estimado:** ~75–90 min (4–5 atividades).
+- **Aula:** será preparada automaticamente quando a Aula 02 estiver concluída.
 
-### Aula 05 · TOPIC-005 — Conflitos de merge: do simples ao multi-arquivo
+### Aula 05 · TOPIC-005 — Conflitos de merge: do simples ao multi-arquivo (aula futura)
 
 - **Pré-requisitos diretos:** Aula 03, Aula 04.
 - **O que você vai conseguir fazer:** resolver conflitos com método — ler os marcadores `<<<<<<< ======= >>>>>>>`, entender qual lado é qual, resolver conflitos em **múltiplos arquivos ao mesmo tempo**, tanto em merge quanto em rebase, e verificar o resultado antes de finalizar.
@@ -101,8 +113,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *marcadores de conflito*, *ours* vs *theirs*, *abortar* (`--abort`) vs *continuar* (`--continue`), *rerere* (menção introdutória).
 - **Evidência esperada:** um laboratório com conflito multi-arquivo (em merge e em rebase) que você resolve, verifica e explica; descrever um procedimento pessoal de "como não entrar em pânico" quando aparece um conflito.
 - **Esforço estimado:** ~75–90 min (4–5 atividades).
+- **Aula:** será preparada automaticamente quando as Aulas 03 e 04 estiverem concluídas.
 
-### Aula 06 · TOPIC-006 — Fluxo de feature branch e pull requests
+### Aula 06 · TOPIC-006 — Fluxo de feature branch e pull requests (aula futura)
 
 - **Pré-requisitos diretos:** Aula 03, Aula 04.
 - **O que você vai conseguir fazer:** trabalhar num fluxo de *feature branch* (branch dedicada por tarefa), manter sua branch atualizada com a principal usando merge ou rebase, e abrir pull requests bem descritos no GitHub.
@@ -110,8 +123,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *feature branch*, *branch principal* (`main`), *pull request*, *branch protegida*, *atualizar a branch* (merge vs rebase da main).
 - **Evidência esperada:** exercícios criando uma feature branch, mantendo-a atualizada com a `main` e abrindo um pull request com boa descrição; explicar a diferença entre atualizar a branch por merge e por rebase.
 - **Esforço estimado:** ~60–75 min (3–4 atividades).
+- **Aula:** será preparada automaticamente quando as Aulas 03 e 04 estiverem concluídas.
 
-### Aula 07 · TOPIC-007 — Revisar pull requests e responder a mudanças
+### Aula 07 · TOPIC-007 — Revisar pull requests e responder a mudanças (aula futura)
 
 - **Pré-requisitos diretos:** Aula 06.
 - **O que você vai conseguir fazer:** revisar o PR de outra pessoa (ler o diff, comentar linha a linha, aprovar ou pedir mudanças) e, do outro lado, responder a comentários e atualizar seu próprio PR de forma limpa.
@@ -119,8 +133,9 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** *code review*, *diff*, *comentário em linha*, *approve* / *request changes*, *push de correções após revisão*.
 - **Evidência esperada:** um exercício de revisão (comentar e decidir sobre um PR de exemplo) e um de resposta (aplicar mudanças pedidas e atualizar o PR); explicar como dar feedback útil e respeitoso.
 - **Esforço estimado:** ~60–75 min (3–4 atividades).
+- **Aula:** será preparada automaticamente quando a Aula 06 estiver concluída.
 
-### Aula 08 · TOPIC-008 — Projeto final: fluxo colaborativo com rebase
+### Aula 08 · TOPIC-008 — Projeto final: fluxo colaborativo com rebase (aula futura)
 
 - **Pré-requisitos diretos:** Aula 05, Aula 07.
 - **O que você vai conseguir fazer:** conduzir, de ponta a ponta, um cenário realista de time: criar feature branches, manter-se atualizado com rebase, abrir e revisar PRs, e resolver um conflito complexo que surge no caminho — sem entrar em pânico.
@@ -128,6 +143,7 @@ Abaixo, o contrato de cada aula: o que você vai conseguir fazer, por que isso i
 - **Vocabulário novo apresentado aqui:** consolidação; nenhum termo novo — integração dos anteriores.
 - **Evidência esperada:** um projeto guiado (repositório de simulação) em que você executa o ciclo completo e documenta as decisões (quando rebaseou, como resolveu o conflito, que feedback deu na revisão).
 - **Esforço estimado:** ~90 min (projeto integrador; pode ser dividido em sessões).
+- **Aula:** será preparada automaticamente quando as Aulas 05 e 07 estiverem concluídas.
 
 ## Esforço total estimado
 
@@ -141,4 +157,4 @@ Somando as aulas, a trilha leva aproximadamente **8h30 a 10h30 de estudo ativo**
 
 ## Status atual
 
-Arquitetura da trilha aprovada. Nenhuma aula, avaliação ou tarefa externa foi criada ainda — isso acontece na próxima etapa.
+As Aulas 01 e 02 estão prontas: lição completa, prática e avaliação disponíveis agora em `study/modules/`. As Aulas 03 a 08 têm a arquitetura da trilha aprovada (contrato, pré-requisitos, evidência e critérios de conclusão), e cada uma será preparada automaticamente assim que você concluir os pré-requisitos diretos listados acima — você não precisa pedir a geração manualmente. A organização das aulas em uma ferramenta de tarefas ainda não foi feita; isso acontece na próxima etapa.
