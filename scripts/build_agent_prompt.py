@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -977,6 +978,23 @@ def _read(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
+def current_utc_timestamp() -> str:
+    """Real current UTC time, ISO 8601 with a Z suffix (matches every other
+    real timestamp already written by this codebase, e.g.
+    state/agent-pilot-usage.jsonl's recorded_at).
+
+    Real dispatch finding (Etapa 12/14 validation session): nothing told
+    the author/reviewer model what the actual current date/time is, so
+    every model-authored timestamp field (reviewed_at, materialized_at,
+    etc.) was pure guesswork -- confirmed by two independent reviews
+    landing on the exact same wrong date over a year off, and two others
+    guessing dates out of real chronological order, which broke
+    scripts/refresh_review_fingerprints.py's latest-owner resolution.
+    """
+
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _diff_against(base_sha: str) -> str:
     result = subprocess.run(
         ["git", "diff", f"{base_sha}...HEAD"],
@@ -1012,6 +1030,11 @@ def build_author_prompts(phase: str, target_repo: str, extra_context: str) -> tu
     system_prompt = "\n\n---\n\n".join(sections)
 
     user_prompt = (
+        f"Current UTC date and time: {current_utc_timestamp()}\n"
+        "Use this exact value (or a value you compute relative to it) for any "
+        "timestamp field you write -- reviewed_at, materialized_at, or any other "
+        "date/time field this phase's contract calls for. Never guess or copy an "
+        "example date from an instructions file.\n\n"
         f"Target repository: {target_repo}\n"
         f"Phase: {phase}\n\n"
         f"{extra_context}\n\n"
@@ -1046,6 +1069,10 @@ def build_reviewer_prompts(phase: str, target_repo: str, base_sha: str, author_s
     review_profile = PHASE_REVIEW_PROFILE.get(phase, "setup")
     diff = _diff_against(base_sha)
     user_prompt = (
+        f"Current UTC date and time: {current_utc_timestamp()}\n"
+        "Use this exact value for reviewed_at (or any other timestamp field this "
+        "phase's contract calls for). Never guess or copy an example date from an "
+        "instructions file.\n\n"
         f"Target repository: {target_repo}\n"
         f"Phase under review: {phase}\n"
         f"Review profile: {review_profile}\n\n"

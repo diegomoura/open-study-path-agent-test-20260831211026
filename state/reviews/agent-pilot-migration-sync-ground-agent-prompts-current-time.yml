@@ -1,0 +1,26 @@
+contract_version: 1
+operation_id: sync-ground-agent-prompts-with-real-current-time
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T12:38:53Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/build_agent_prompt.py + new scripts/test_build_agent_prompt.py from
+  template PR #132 (main@05453b5): author/reviewer prompts now open with the real
+  current UTC date/time plus an explicit instruction not to guess. Root cause of two
+  real findings already data-corrected on this instance directly: bootstrap_instance/intake''s
+  colliding guessed reviewed_at dates (fed87b6), and diagnostic/generate_proposal''s
+  out-of-order guessed dates (same commit). No workflows, instructions, templates,
+  or schemas touched; no instance state or content touched by this sync.'
