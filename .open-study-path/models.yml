@@ -27,6 +27,6 @@ model_overrides:
   content_reviewer: sonnet
   publish: sonnet
   integration_preflight: null
-  evaluate: null
+  evaluate: sonnet
   track: null
   replan: null
