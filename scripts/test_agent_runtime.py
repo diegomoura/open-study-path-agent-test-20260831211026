@@ -9,15 +9,19 @@ without spending a token.
 
 from __future__ import annotations
 
+import http.client
 import os
 import tempfile
+import urllib.error
 from pathlib import Path
+from unittest.mock import patch
 
 import json
 
 from agent_runtime import (
     AgentBudgetExceeded,
     AllowlistViolation,
+    ANTHROPIC_TRANSPORT_MAX_ATTEMPTS,
     DEFAULT_MAX_TOKENS,
     INTAKE_AUTHOR_ALLOWED_LABEL,
     MAX_TOOL_ITERATIONS,
@@ -25,6 +29,7 @@ from agent_runtime import (
     PHASE_ALLOWLISTS,
     PHASES_WITH_GITHUB_ISSUES,
     RepoTools,
+    anthropic_transport,
     author_tools,
     is_write_allowed,
     max_tokens_for,
@@ -62,6 +67,93 @@ def make_scripted_transport(responses: list[list[dict]]):
 
     transport.calls = calls  # type: ignore[attr-defined]
     return transport
+
+
+def test_anthropic_transport_retries_transient_network_failure() -> None:
+    # Regression for a real dispatch finding (Etapa 12/14 validation session,
+    # generate_detailed): a long reviewer call hit
+    # http.client.RemoteDisconnected with no retry, wasting an
+    # already-paid author dispatch and forcing a full re-dispatch.
+    calls = {"count": 0}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return b'{"ok": true}'
+
+    def fake_urlopen(request, timeout=None):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise http.client.RemoteDisconnected("Remote end closed connection without response")
+        return FakeResponse()
+
+    with patch("agent_runtime.urllib.request.urlopen", fake_urlopen), patch("agent_runtime.time.sleep"):
+        result = anthropic_transport({"model": "x"}, "fake-key")
+    assert result == {"ok": True}
+    assert calls["count"] == 2
+
+
+def test_anthropic_transport_retries_retryable_http_status() -> None:
+    calls = {"count": 0}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return b'{"ok": true}'
+
+    def fake_urlopen(request, timeout=None):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise urllib.error.HTTPError("url", 503, "Service Unavailable", {}, None)
+        return FakeResponse()
+
+    with patch("agent_runtime.urllib.request.urlopen", fake_urlopen), patch("agent_runtime.time.sleep"):
+        result = anthropic_transport({"model": "x"}, "fake-key")
+    assert result == {"ok": True}
+    assert calls["count"] == 2
+
+
+def test_anthropic_transport_does_not_retry_client_error() -> None:
+    calls = {"count": 0}
+    import io
+
+    def fake_urlopen(request, timeout=None):
+        calls["count"] += 1
+        raise urllib.error.HTTPError("url", 400, "Bad Request", {}, io.BytesIO(b"bad payload"))
+
+    with patch("agent_runtime.urllib.request.urlopen", fake_urlopen), patch("agent_runtime.time.sleep"):
+        try:
+            anthropic_transport({"model": "x"}, "fake-key")
+            assert False, "expected RuntimeError for a non-retryable client error"
+        except RuntimeError as exc:
+            assert "400" in str(exc)
+    assert calls["count"] == 1  # never retried
+
+
+def test_anthropic_transport_gives_up_after_max_attempts() -> None:
+    calls = {"count": 0}
+
+    def fake_urlopen(request, timeout=None):
+        calls["count"] += 1
+        raise http.client.RemoteDisconnected("still down")
+
+    with patch("agent_runtime.urllib.request.urlopen", fake_urlopen), patch("agent_runtime.time.sleep"):
+        try:
+            anthropic_transport({"model": "x"}, "fake-key")
+            assert False, "expected RuntimeError after exhausting retries"
+        except RuntimeError as exc:
+            assert "after" in str(exc) or "failed" in str(exc)
+    assert calls["count"] == ANTHROPIC_TRANSPORT_MAX_ATTEMPTS
 
 
 def test_write_allowlist_matches_setup_execution_contract() -> None:
@@ -1415,6 +1507,10 @@ def test_generate_proposal_gets_a_higher_tool_iteration_and_token_budget() -> No
 def main() -> None:
     tests = [
         test_write_allowlist_matches_setup_execution_contract,
+        test_anthropic_transport_retries_transient_network_failure,
+        test_anthropic_transport_retries_retryable_http_status,
+        test_anthropic_transport_does_not_retry_client_error,
+        test_anthropic_transport_gives_up_after_max_attempts,
         test_author_cannot_write_its_own_review_artifact,
         test_normalize_relative_path_rejects_escapes,
         test_resolve_phase_reviewer_model_inherits_author_tier,

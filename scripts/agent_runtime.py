@@ -44,9 +44,11 @@ newest-issue heuristics").
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -1910,25 +1912,56 @@ def reviewer_tools(phase: str | None = None) -> list[dict[str, Any]]:
     return tools
 
 
+ANTHROPIC_TRANSPORT_MAX_ATTEMPTS = 4
+ANTHROPIC_TRANSPORT_BASE_DELAY_SECONDS = 2.0
+ANTHROPIC_TRANSPORT_TIMEOUT_SECONDS = 600
+# HTTP statuses worth retrying: rate limiting and transient server-side
+# failures. Never retry a genuine 4xx client error (bad request, auth,
+# not found) -- those fail the same way on every attempt and just waste
+# time before surfacing the real problem.
+ANTHROPIC_TRANSPORT_RETRYABLE_STATUSES = frozenset({429, 500, 502, 503, 504})
+
+
 def anthropic_transport(payload: Mapping[str, Any], api_key: str) -> dict[str, Any]:
-    """Real HTTP transport. Kept dependency-free (urllib) like the rest of the repo's scripts."""
+    """Real HTTP transport. Kept dependency-free (urllib) like the rest of the repo's scripts.
+
+    Retries transient network failures and retryable HTTP statuses with
+    exponential backoff (real dispatch finding, Etapa 12/14 validation
+    session: a long-running reviewer call reviewing substantial generated
+    content hit a dropped connection with no retry, wasting an
+    already-paid author dispatch). A genuine 4xx client error is never
+    retried -- it fails immediately, same as before this existed.
+    """
+
     body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        API_URL,
-        data=body,
-        method="POST",
-        headers={
-            "content-type": "application/json",
-            "x-api-key": api_key,
-            "anthropic-version": API_VERSION,
-        },
-    )
-    try:
-        with urllib.request.urlopen(request) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as error:
-        detail = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Anthropic API error {error.code}: {detail}") from error
+    last_error: Exception | None = None
+    for attempt in range(1, ANTHROPIC_TRANSPORT_MAX_ATTEMPTS + 1):
+        request = urllib.request.Request(
+            API_URL,
+            data=body,
+            method="POST",
+            headers={
+                "content-type": "application/json",
+                "x-api-key": api_key,
+                "anthropic-version": API_VERSION,
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=ANTHROPIC_TRANSPORT_TIMEOUT_SECONDS) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as error:
+            if error.code not in ANTHROPIC_TRANSPORT_RETRYABLE_STATUSES or attempt == ANTHROPIC_TRANSPORT_MAX_ATTEMPTS:
+                detail = error.read().decode("utf-8", errors="replace")
+                raise RuntimeError(f"Anthropic API error {error.code}: {detail}") from error
+            last_error = error
+        except (urllib.error.URLError, http.client.HTTPException, ConnectionError, TimeoutError) as error:
+            if attempt == ANTHROPIC_TRANSPORT_MAX_ATTEMPTS:
+                raise RuntimeError(
+                    f"Anthropic API transport failed after {ANTHROPIC_TRANSPORT_MAX_ATTEMPTS} attempts: {error}"
+                ) from error
+            last_error = error
+        time.sleep(ANTHROPIC_TRANSPORT_BASE_DELAY_SECONDS * (2 ** (attempt - 1)))
+    raise RuntimeError(f"Anthropic API transport failed: {last_error}")  # pragma: no cover -- loop always returns/raises above
 
 
 def _describe_tool_call(block: Mapping[str, Any]) -> str:

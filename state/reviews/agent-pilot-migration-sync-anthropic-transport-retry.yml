@@ -1,0 +1,26 @@
+contract_version: 1
+operation_id: sync-anthropic-transport-retry-with-backoff
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T00:43:53Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/agent_runtime.py + scripts/test_agent_runtime.py fix from template
+  PR #131 (main@1d5312f): anthropic_transport now retries transient network failures
+  and retryable HTTP statuses with exponential backoff, and has an explicit 600s per-attempt
+  timeout. Found via a real dispatch on this instance: generate_detailed''s reviewer
+  call hit http.client.RemoteDisconnected after ~6 minutes with no retry, wasting
+  an already-paid author dispatch and forcing a full re-dispatch. No workflows, instructions,
+  templates, or schemas touched; no instance state or content touched by this sync.'
