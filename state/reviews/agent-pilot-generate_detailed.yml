@@ -1,0 +1,116 @@
+contract_version: 1
+operation_id: curriculum-generate-detailed-v1
+phase: curriculum
+reviewer_role: curriculum_reviewer
+independent_pass: true
+status: approved
+reviewed_at: "2026-09-02T02:15:00Z"
+
+artifacts:
+  - path: .open-study-path/instance.yml
+    change: current
+    sha256: 15a1b20dcf13330d564422ff26840140c007fc31f0f8bd775abff44343333a89
+  - path: .github/ISSUE_TEMPLATE/assessment-topic-001.yml
+    change: current
+    sha256: 7b2805a41cddba7272eb9da1d6b9bc678ed8068a84d5fbcf83d54d1438df2f3c
+  - path: .github/ISSUE_TEMPLATE/assessment-topic-002.yml
+    change: current
+    sha256: 46c1317eecf42bbcb15f47928850037a1a76a29aacf4032b9d1ccce42d96f6ec
+  - path: study/assessments/TOPIC-001.yml
+    change: current
+    sha256: 5eef1e278edd2504bc0c0f351afb130b8069f3837bc9905f8951ff97e3972d91
+  - path: study/assessments/TOPIC-002.yml
+    change: current
+    sha256: 50479636b18fed90aea73643ce13f44efa61c35160ba9766b7394d5990921809
+  - path: study/integrations.md
+    change: current
+    sha256: b3e1a7a2c025aa1100b7355b77bc95f089aeb53a0b33aa177d8601b867e87071
+  - path: study/modules/TOPIC-001.md
+    change: current
+    sha256: a65e69ffcc881d3f8ec326d2cd9a280a90fefda0e276d13522f9898daca11a6c
+  - path: study/modules/TOPIC-002.md
+    change: current
+    sha256: e52c96da25a766194f8757169a2c3b25381b0126ac2e58670c47d919b22b1089
+  - path: study/roadmap.md
+    change: current
+    sha256: 69fc00a1be13bb461de557af572b044505bbfdb556eaa6d805db936d52267e3f
+  - path: study/topics/TOPIC-001.md
+    change: current
+    sha256: 5214e8a36505f63caac53ec0a0504b76fccb401697c7cbfc45119f28d2708ac8
+  - path: study/topics/TOPIC-002.md
+    change: current
+    sha256: 41c55f5c93ce2a984d0f51eb8bfb67def5204591f2e96d7838193652702ef2ef
+  - path: study/topics/TOPIC-003.md
+    change: current
+    sha256: 40a89f7748cd81d447add819c19a99d12a3b508c65f35946c192518d2fa1a67c
+  - path: study/topics/TOPIC-004.md
+    change: current
+    sha256: 4910532e295918ad3a8540a0e131e02ea44b04839fdb584b2b788f48312718f1
+  - path: study/topics/TOPIC-005.md
+    change: current
+    sha256: 17ba040d3c076d6283ec1548b9482b3db57f58a365c6c9c30e770af5c84fdcf1
+  - path: study/topics/TOPIC-006.md
+    change: current
+    sha256: ca363a4e859c0c51b1b6cffdd89bf19b55ce0e11cf2fdcb1d732160bd5bcfc1b
+  - path: study/topics/TOPIC-007.md
+    change: current
+    sha256: 7a35b3a929a68dea4b94926159f6ee3c767ab898dc5d37e9ee421933e7887c0f
+  - path: study/topics/TOPIC-008.md
+    change: current
+    sha256: fc9481f699d35804d12c5225ce08a3a50765877ed76558ec6cdfce7826fa8b26
+
+checks:
+  scope_alignment: passed
+  dependency_integrity: passed
+  effort_feasibility: passed
+  learner_language: passed
+  content_review_complete: passed
+  assessment_alignment: passed
+  source_and_integration_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - "study/assessments/TOPIC-001.yml and TOPIC-002.yml both set recovery.create_trello_card: true even though the learner's approved single authoritative task backend for this instance is github_issues (study.config.yml integrations.task_manager.provider: github_issues; study/integrations.md never mentions Trello as an active or considered tool). This mirrors the generic 'preferred: trello' architecture default rather than the actual per-instance selection, and instructions/55-evaluate-topic.md governs recovery task creation through 'the authoritative task backend' rather than this static field, so it does not currently cause an unwanted external write. Recommend removing or conditioning create_trello_card on the actually selected task_manager provider so the rubric file does not misrepresent the approved integration plan for this course."
+  - "curriculum_proposal.materialized_topics and curriculum_generation.materialized_topics in .open-study-path/instance.yml now duplicate the same list (TOPIC-001, TOPIC-002). Not incorrect, but consider consolidating to a single field in a future replan/migration to avoid the two lists silently diverging later."
+  - "TOPIC-001 content review suggests an optional second Mermaid diagram (packfile/compression) for learners who want to go further; genuinely optional and does not affect the approved outcomes."
+
+verification_notes: >
+  Independently reconstructed evidence rather than trusting the author's summary. Cross-checked
+  state/intake-summary.json and state/diagnostic-summary.json against study.config.yml, study/roadmap.md
+  and the two materialized topics to confirm the declared beginner level, confirmed competencies and
+  knowledge gaps (blobs/trees/commits, branch/HEAD mechanics, never-used rebase, fear of multi-file
+  conflicts, first-time formal PR review) are reflected without treating daily add/commit/push/pull
+  fluency as internals mastery. Verified the 8-topic dependency graph (TOPIC-001 root; TOPIC-002 depends
+  on TOPIC-001; TOPIC-003/TOPIC-004 both depend only on TOPIC-002 and can run in parallel; TOPIC-005 and
+  TOPIC-006 converge from TOPIC-003+TOPIC-004; TOPIC-007 depends on TOPIC-006; TOPIC-008 converges from
+  TOPIC-005+TOPIC-007) is acyclic and identical across study/roadmap.md's Mermaid graph, its prose
+  "Pré-requisitos diretos" bullets, and every study/topics/TOPIC-00N.md front-matter `prerequisites` list;
+  no topic contract or lesson infers a prerequisite from numeric adjacency instead of the declared direct
+  prerequisite list. Confirmed the adaptive_rolling_window/lookahead_topics:2 configuration was honored:
+  exactly TOPIC-001 and TOPIC-002 (the only currently eligible topics, since TOPIC-003/004 require
+  TOPIC-002) were materialized, within full_upfront_max_topics:4 and full_upfront_max_hours:4, and total
+  roadmap effort (~9.5h summed from topic estimated_hours) stays inside the previously approved 8.5-10.5h
+  band. For both materialized topics, independently re-derived outcome traceability instead of trusting
+  state/content-reviews/*: verified each approved learning_outcomes ID (LO-1..LO-3 per topic) has exactly
+  one `<!-- open-study-path:outcome LO-n -->` marker placed beside content that actually teaches it (e.g.
+  TOPIC-001 LO-1 beside "O que o commit realmente guarda", LO-2 beside "Inspecionando objetos de verdade",
+  LO-3 beside "Da pasta de trabalho ao commit"; TOPIC-002 LO-1/LO-2/LO-3 beside the matching sections),
+  that every study/assessments/TOPIC-00N.yml question's outcome_ids match the content review's recorded
+  mapping, and that every rubric critical_misconception (commit-as-diff, add-without-staging,
+  branch-as-copy, HEAD-is-always-main) is explicitly taught and corrected in "Erros comuns e como
+  corrigir" before it appears in assessment question 4. Confirmed each materialized module contains
+  exactly one explained Mermaid diagram, a bounded analogy with both "onde ajuda" and "onde deixa de
+  funcionar" stated, two labeled worked examples, guided and independent practice, an unaided "Confira
+  sem consultar" recall section, "Como este conteúdo foi construído" provenance disclosure identifying
+  which analogies/examples are pedagogical adaptations, and a 3-7 row source table including a primary
+  source (Pro Git), official reference docs, an explanatory GitHub Docs source and one interactive
+  resource, each with a real chapter/section locator. Confirmed each assessment Issue Form's hidden
+  marker, labels and completion command match instructions/55's deterministic resolution signals, and
+  that both assessment forms' direct URLs match the actual repository slug and template filenames.
+  Confirmed study/integrations.md correctly reflects the learner's minimal/GitHub-only preference and
+  decide_later routine choice, that no external resource was created in this phase, and that
+  study/roadmap.md's "Status atual" section no longer claims no lesson was materialized. No network
+  access was available in this harness to re-fetch the cited external URLs; source accuracy was checked
+  for internal consistency (chapter/section numbers matching the well-known Pro Git table of contents)
+  rather than a live fetch.
