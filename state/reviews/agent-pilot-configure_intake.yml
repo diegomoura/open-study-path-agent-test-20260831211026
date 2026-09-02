@@ -10,7 +10,7 @@ independent_pass: true
 
 status: approved
 
-reviewed_at: 2025-08-31T21:15:00Z
+reviewed_at: 2026-09-01T19:48:09Z
 
 artifacts:
   - path: .open-study-path/instance.yml
