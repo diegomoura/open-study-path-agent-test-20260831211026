@@ -1,6 +1,6 @@
 # Structural model-tier warning
 
-Phase: `generate_detailed`. Configuration source: `.open-study-path/models.yml`.
+Phase: `publish`. Configuration source: `.open-study-path/models.yml`.
 
 One or more agents classified as structural (`scripts/agent_model_resolution.py`, `STRUCTURAL_AGENTS`) are configured below their recommended tier. This is not blocking -- it may be a deliberate cost/quality trade-off -- but it is recorded here so it is visible on this dispatch's pull request rather than silent.
 
