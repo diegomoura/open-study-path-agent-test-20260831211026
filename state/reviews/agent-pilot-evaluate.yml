@@ -1,0 +1,55 @@
+contract_version: 1
+
+operation_id: assessment-topic-001-attempt-01
+phase: assessment
+reviewer_role: assessment_reviewer
+independent_pass: true
+
+status: approved
+reviewed_at: "2026-09-02T23:26:54Z"
+
+artifacts:
+  - path: .github/ISSUE_TEMPLATE/assessment-topic-003.yml
+    change: current
+    sha256: 8daf22297c6c3119703fde2322e0c4532aab40703d28e7adce717705a0df56f7
+  - path: state/assessments/TOPIC-001/attempt-001.json
+    change: current
+    sha256: 48772472548a37e08f68132a7eab7becfe1718d2ba389af99c06f53bdd9d95c0
+  - path: state/integrations.json
+    change: current
+    sha256: ddcc5152e01b00ee2d39b401260946957304e4060bec6234e39b1d0dd941c709
+  - path: state/operations/evaluate-20260902-topic001.json
+    change: current
+    sha256: 1eac14d659bb1f6276443f4facefd878f888eba5fdc0f1764847195125066ab0
+  - path: state/progress.json
+    change: current
+    sha256: 6188291704c1c685f90ece455ebc112a33944aadeeaa5909f0f147ec3d0a433e
+  - path: study/assessments/TOPIC-003.yml
+    change: current
+    sha256: f9af44dbafd855d99b97518a4e3a477986b36429dd92a49a465590b4953eef71
+  - path: study/modules/merge-unindo-historias-de-trabalho.md
+    change: current
+    sha256: ecc1452d6d9008ecf6194acfb4113759067624f515d6dc8b7165301e3940173b
+  - path: study/roadmap.md
+    change: current
+    sha256: ffa287cd233608aac72b651b1b6315c1302aea210081305c54b874475ece1b69
+  - path: study/topics/TOPIC-003.md
+    change: current
+    sha256: 2f79b7895774f7393e56267517252e4b64ba2a155bbc422890230ceb92055a3a
+
+checks:
+  submission_resolution: passed
+  rubric_fidelity: passed
+  independent_scoring: passed
+  feedback_alignment: passed
+  progress_update: passed
+  next_materialization_consistency: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - "The author's self-reported summary claims study/integrations.md was updated as part of this operation, but the pull-request diff contains no change to that file. Its content remains generic and accurate (no per-topic counts that would go stale), so there is no functional impact, but the summary overstates what was actually changed."
+  - "The LO-1 outcome marker in the newly materialized TOPIC-003 module sits between the 'Caso 1 — Fast-forward' and 'Caso 2 — Merge commit' explanations, i.e. before the merge-commit half of what LO-1 asks the learner to distinguish. This exact placement pattern (marker after the first of two paired sub-concepts, before the second) already exists, unchanged by this operation, in the previously approved TOPIC-001 and TOPIC-002 modules and their approved state/content-reviews/TOPIC-001.yml and TOPIC-002.yml, so it is treated as an established, previously accepted authoring convention rather than a new defect introduced here. A future revision could tighten placement to sit after the complete two-case explanation."
+  - "study/modules/merge-unindo-historias-de-trabalho.md breaks the sibling file-naming convention study/modules/TOPIC-00N.md used by TOPIC-001 and TOPIC-002. All references (topic contract 'module:' field, roadmap links, lesson body) are updated consistently and no link is broken, but the inconsistency is worth normalizing in a later pass."
+  - "study/roadmap.md's Mermaid dependency graph direction was changed from 'flowchart TD' to 'flowchart LR' in this diff, a cosmetic change unrelated to the assessment/materialization work of this operation. Harmless, but out of the operation's stated scope."
+  - "Feedback posted as a comment on issue #16 could not be independently re-read with the tools available to this review (only issue body/labels/title are exposed, not comments). feedback_alignment was corroborated indirectly via the structured per-question what_was_correct/gap_or_misconception/improvement_suggestion fields in the persisted attempt file and via the real label transition on issue #16 from assessment:submitted to assessment:graded, rather than via direct inspection of the posted comment text."
