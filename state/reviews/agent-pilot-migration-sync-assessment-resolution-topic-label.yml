@@ -1,0 +1,28 @@
+contract_version: 1
+operation_id: sync-assessment-resolution-real-form-topic-label
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T21:05:09Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/assessment_resolution.py, scripts/test_assessment_resolution.py,
+  instructions/55-evaluate-topic.md fix from template PR #135 (main@1bb49ac): classify_issue''s
+  rule 3 now accepts the topic:TOPIC-000 label every real assessment form applies,
+  since the body marker it lived in (a type: markdown block) is never actually submitted
+  by GitHub -- confirmed against GitHub''s own form-schema documentation. Without
+  this fix, evaluate could never resolve any genuine learner submission through the
+  documented assessment form -- this instance''s own real assessment issue #12 submission
+  would have been permanently rejected. No workflows, templates, or schemas touched;
+  no instance state or content touched by this sync.'

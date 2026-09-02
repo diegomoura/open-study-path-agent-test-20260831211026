@@ -70,6 +70,31 @@ def main() -> None:
     if "missing_topic_marker" not in rejected.rejected[0].reasons:
         raise SystemExit("wrong topic marker was not rejected")
 
+    # Real dispatch finding (Etapa 12/14 validation session): GitHub's own
+    # documentation confirms a type:markdown block -- where topic_marker()
+    # lives inside the form's instructional text -- is "not submitted"
+    # with the issue. A genuine learner submission through the documented
+    # assessment form therefore NEVER has the marker in its body; it only
+    # has the topic:TOPIC-000 label the form's `labels:` key applies. This
+    # is the actual real-world shape, and rule 3 must accept it.
+    real_form_submission = issue(
+        9,
+        labels=("assessment", "assessment:submitted", "topic:TOPIC-002"),
+        body="Minhas respostas.\n\n(sem marcador nenhum, exatamente como um formulário real do GitHub produz)",
+    )
+    resolved = assert_state("unique", real_form_submission)
+    if resolved.accepted[0].issue_number != 9:
+        raise SystemExit("real-shaped form submission (label only, no marker) was not accepted")
+
+    wrong_topic_label = issue(
+        10,
+        labels=("assessment", "assessment:submitted", "topic:TOPIC-999"),
+        body="Minhas respostas.",
+    )
+    rejected = assert_state("none", wrong_topic_label)
+    if "missing_topic_marker" not in rejected.rejected[0].reasons:
+        raise SystemExit("wrong topic label was not rejected")
+
     # Title is a "preferred consistency signal", never a rejection reason --
     # an edited title must still resolve if the marker/labels are correct.
     edited_title = issue(5, title="respostas da aula 2!!")

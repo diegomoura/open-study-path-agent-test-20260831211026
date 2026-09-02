@@ -18,7 +18,7 @@ When no issue number is provided, search the instance repository for candidate i
 
 1. label `assessment`;
 2. label `assessment:submitted`;
-3. body containing `open-study-path:assessment topic_id=TOPIC-000`;
+3. label `topic:TOPIC-000`, or (for a hand-authored or migrated issue outside the standard form) body containing `open-study-path:assessment topic_id=TOPIC-000`;
 4. not already recorded as an evaluated attempt under `state/assessments/TOPIC-000/`;
 5. not labeled `assessment:graded`;
 6. created after the last recorded attempt when an earlier attempt exists.

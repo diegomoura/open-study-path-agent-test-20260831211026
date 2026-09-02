@@ -63,6 +63,21 @@ def topic_marker(topic_id: str) -> str:
     return f"open-study-path:assessment topic_id={topic_id}"
 
 
+def topic_label(topic_id: str) -> str:
+    """The `topic:TOPIC-000` label every real assessment issue form already
+    applies (see .github/ISSUE_TEMPLATE/assessment-topic-*.yml's `labels:`
+    key). This is the reliable signal: GitHub's own documentation confirms
+    a `type: markdown` block -- where topic_marker() lives, inside the
+    form's instructional text -- is "not submitted" with the issue, so
+    _has_topic_marker() alone could never match a real, genuine learner
+    submission through the documented form. classify_issue accepts either
+    signal so a hand-authored body marker (e.g. a migrated or manually
+    filed issue) still works too.
+    """
+
+    return f"topic:{topic_id}"
+
+
 def _has_topic_marker(body: str, topic_id: str) -> bool:
     return topic_marker(topic_id) in body
 
@@ -108,7 +123,7 @@ def classify_issue(
         reasons.append("missing_assessment_label")
     if SUBMITTED_LABEL not in labels:  # rule 2
         reasons.append("missing_submitted_label")
-    if not _has_topic_marker(issue.body, topic_id):  # rule 3
+    if topic_label(topic_id).lower() not in labels and not _has_topic_marker(issue.body, topic_id):  # rule 3
         reasons.append("missing_topic_marker")
     if issue.number in recorded:  # rule 4
         reasons.append("already_recorded_attempt")
