@@ -22,6 +22,7 @@ from agent_runtime import (
     AgentBudgetExceeded,
     AllowlistViolation,
     ANTHROPIC_TRANSPORT_MAX_ATTEMPTS,
+    ApiError,
     DEFAULT_MAX_TOKENS,
     INTAKE_AUTHOR_ALLOWED_LABEL,
     MAX_TOOL_ITERATIONS,
@@ -1248,6 +1249,37 @@ def test_track_allowlist_matches_progress_review_profile() -> None:
     assert not is_write_allowed("track", "state/assessments/TOPIC-001/attempt-001.json")
 
 
+def test_read_github_issue_404_raises_api_error() -> None:
+    # Real dispatch finding (Etapa 12/14 validation session, evaluate): a
+    # reviewer's read_github_issue call for a stale/wrong issue number hit
+    # a real HTTP 404, which propagated as an uncaught exception and
+    # crashed the whole reviewer process -- wasting an already-paid author
+    # dispatch. ApiError is now imported and caught in the same except
+    # clause as AllowlistViolation/KeyError (see run_agent), converting
+    # this into a recoverable tool_result the model can react to within
+    # its own turn. This test only confirms the exception type read_github_issue
+    # actually raises for a 404 matches what that except clause catches;
+    # the full in-turn-recovery path is exercised by the run_agent-level
+    # tests elsewhere in this file.
+    def failing_transport(method: str, path: str, payload):
+        raise ApiError(404, '{"message": "Not Found"}')
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        tools = RepoTools(
+            root=root,
+            phase="track",
+            role="author",
+            github_request=failing_transport,
+            github_repository="o/r",
+        )
+        try:
+            tools.read_github_issue(999)
+            assert False, "expected ApiError"
+        except ApiError as exc:
+            assert exc.status == 404
+
+
 def test_track_gets_only_the_narrow_read_github_issue_tool() -> None:
     author_tool_names = {t["name"] for t in author_tools("track")}
     reviewer_tool_names = {t["name"] for t in reviewer_tools("track")}
@@ -1511,6 +1543,7 @@ def main() -> None:
         test_anthropic_transport_retries_retryable_http_status,
         test_anthropic_transport_does_not_retry_client_error,
         test_anthropic_transport_gives_up_after_max_attempts,
+        test_read_github_issue_404_raises_api_error,
         test_author_cannot_write_its_own_review_artifact,
         test_normalize_relative_path_rejects_escapes,
         test_resolve_phase_reviewer_model_inherits_author_tier,

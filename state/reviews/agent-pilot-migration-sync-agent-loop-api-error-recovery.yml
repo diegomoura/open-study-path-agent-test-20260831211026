@@ -1,0 +1,26 @@
+contract_version: 1
+operation_id: sync-agent-loop-recovers-from-github-api-errors
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T21:34:37Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/agent_runtime.py + scripts/test_agent_runtime.py fix from template
+  PR #136 (main@8db0269): ApiError from a GitHub API failure (e.g. 404 on a stale/wrong
+  issue number) is now caught in the tool-dispatch loop''s except clause alongside
+  AllowlistViolation/KeyError, becoming a recoverable tool_result instead of crashing
+  the whole process. Root cause of the real evaluate reviewer dispatch failure on
+  this instance. No workflows, instructions, templates, or schemas touched; no instance
+  state or content touched by this sync.'

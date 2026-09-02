@@ -61,7 +61,7 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from agent_model_resolution import AGENT_CATALOG, resolve_effective_models
-from ensure_repository_labels import github_request_factory
+from ensure_repository_labels import ApiError, github_request_factory
 from github_issues_backend import GitHubIssuesBackend
 from intake_resolution import DISCOVERY_LABEL, IMPORTED_LABEL, IntakeIssue, resolve_candidates
 from assessment_resolution import (
@@ -2091,7 +2091,7 @@ def run_agent(
                         "content": result_text,
                     }
                 )
-            except (AllowlistViolation, KeyError) as error:
+            except (AllowlistViolation, KeyError, ApiError) as error:
                 tool_results.append(
                     {
                         "type": "tool_result",
