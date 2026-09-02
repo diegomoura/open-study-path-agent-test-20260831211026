@@ -23,8 +23,8 @@ model_overrides:
   diagnostic: null
   curriculum_architect: null
   curriculum_reviewer: null
-  content_author: null
-  content_reviewer: null
+  content_author: sonnet
+  content_reviewer: sonnet
   publish: null
   integration_preflight: null
   evaluate: null
