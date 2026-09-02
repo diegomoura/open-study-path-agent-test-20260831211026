@@ -262,6 +262,37 @@ class TaskProjectionEngineTests(unittest.TestCase):
         errors = validate_visible_fields(fields, own_topic_id="TOPIC-001")
         self.assertEqual([], errors)
 
+    def test_own_topic_id_inside_bare_relative_resource_path_is_not_a_leak(self):
+        # Real dispatch finding (Etapa 12/14 validation session, publish):
+        # every real generated topic's module/assessment fields, and
+        # run_publish_projection's own tool description, use a bare
+        # relative path like "study/modules/TOPIC-001.md" -- never wrapped
+        # in an absolute https://github.com/.../blob/main/ URL the way
+        # both tests above happen to. _URL_SPAN_PATTERN only recognized
+        # absolute http(s) URLs, so the exemption above never actually
+        # applied to the real, documented input shape: two real dispatches
+        # (haiku, then sonnet) both hit "description contains internal
+        # topic id" on this exact bare-path shape and could not resolve it
+        # -- an engine bug, not a model reasoning gap.
+        fields = VisibleFields(
+            title="Aula 01",
+            description=(
+                "**Recursos**\n\n"
+                "- **Aula:** study/modules/TOPIC-001.md\n"
+                "- **Avaliação:** study/assessments/TOPIC-001.yml"
+            ),
+        )
+        errors = validate_visible_fields(fields, own_topic_id="TOPIC-001")
+        self.assertEqual([], errors)
+
+    def test_other_topic_id_inside_a_bare_relative_path_is_still_a_leak(self):
+        fields = VisibleFields(
+            title="Aula 01",
+            description="- **Aula:** study/modules/TOPIC-002.md",
+        )
+        errors = validate_visible_fields(fields, own_topic_id="TOPIC-001")
+        self.assertTrue(any("internal topic id" in error for error in errors))
+
     def test_other_topic_id_inside_a_url_is_still_a_leak(self):
         # The exemption above must stay narrow: a URL containing a
         # *different* topic's internal ID inside another topic's card is
@@ -318,6 +349,48 @@ class TaskProjectionEngineTests(unittest.TestCase):
         backend = FakeBackend("github_issues")
         result = publish_projection(
             topics=(real_shaped_topic,), backend=backend, operation_id="topic-id-url-v1"
+        )
+        self.assertEqual("success", result.journal["status"])
+        managed = [
+            item
+            for item in result.normalized_snapshot["resources"]
+            if item.get("managed") and item.get("kind") == "lesson"
+        ]
+        body = managed[0]["visible"]["description"]
+        self.assertIn("study/modules/TOPIC-001.md", body)
+        self.assertIn("study/assessments/TOPIC-001.yml", body)
+
+    def test_publish_succeeds_with_bare_relative_path_shaped_urls(self):
+        # End-to-end version of test_own_topic_id_inside_bare_relative_resource_path_is_not_a_leak
+        # above, through the real publish_projection() -> validate_readback()
+        # path -- the actual real dispatch scenario this fix resolves
+        # (every real generated topic uses this exact bare relative-path
+        # shape, not an absolute github.com/.../blob/main/ URL).
+        real_shaped_topic = TopicProjection(
+            topic_id="TOPIC-001",
+            lesson_number=1,
+            title="Primeiro programa em Go",
+            direct_prerequisite_ids=(),
+            content_version=1,
+            canonical_state="in_progress",
+            materialized=True,
+            external_id=None,
+            lesson_url="study/modules/TOPIC-001.md",
+            assessment_url="study/assessments/TOPIC-001.yml",
+            learning_summary="Explicar a diferença entre rodar e compilar um programa em Go.",
+            estimated_minutes=60,
+            deliverable_summary="Um programa que compila e roda.",
+            completion_criterion="Responder corretamente as questões da avaliação.",
+            session_checklist=(
+                "Instalar o Go e criar um módulo",
+                "Escrever e rodar um primeiro programa",
+                "Compilar e executar o binário",
+                "Enviar a avaliação",
+            ),
+        )
+        backend = FakeBackend("github_issues")
+        result = publish_projection(
+            topics=(real_shaped_topic,), backend=backend, operation_id="topic-id-bare-path-v1"
         )
         self.assertEqual("success", result.journal["status"])
         managed = [

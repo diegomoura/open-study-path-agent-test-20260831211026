@@ -545,7 +545,7 @@ def sanitize_known_marker(value: str) -> str:
     return KNOWN_HTML_MARKER.sub("", value).strip()
 
 
-_URL_SPAN_PATTERN = re.compile(r"https?://\S+")
+_URL_SPAN_PATTERN = re.compile(r"https?://\S+|(?:\.\./|\./)?[\w.-]+(?:/[\w.-]+)+\.\w+")
 
 
 def validate_visible_fields(

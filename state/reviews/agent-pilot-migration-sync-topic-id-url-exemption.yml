@@ -1,0 +1,27 @@
+contract_version: 1
+operation_id: sync-topic-id-url-exemption-relative-paths
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T13:54:44Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/task_projection_engine.py + tests/test_task_projection_engine.py
+  fix from template PR #133 (main@68c2af8): own-topic-id URL exemption now recognizes
+  bare relative resource paths (study/modules/TOPIC-001.md), not just absolute https
+  URLs. Root cause of two real dispatch failures on this instance (haiku and sonnet
+  both hit ''description contains internal topic id'' on publish), reproduced and
+  confirmed fixed directly against this instance''s live GitHub Issues backend before
+  the template fix was even written. No workflows, instructions, templates, or schemas
+  touched; no instance state or content touched by this sync.'
