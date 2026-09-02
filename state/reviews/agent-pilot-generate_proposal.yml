@@ -4,7 +4,7 @@ phase: curriculum
 reviewer_role: curriculum_reviewer
 independent_pass: true
 status: approved
-reviewed_at: 2026-09-01T20:15:00Z
+reviewed_at: 2026-09-01T22:00:11Z
 
 artifacts:
   - path: study/roadmap.md

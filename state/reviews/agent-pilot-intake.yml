@@ -4,7 +4,7 @@ phase: intake
 reviewer_role: intake_reviewer
 independent_pass: true
 status: approved
-reviewed_at: '2025-08-31T21:10:26Z'
+reviewed_at: '2026-09-01T20:33:02Z'
 artifacts:
   - path: .open-study-path/instance.yml
     change: current
