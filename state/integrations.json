@@ -4,19 +4,107 @@
     "provider": "github",
     "repository": "diegomoura/open-study-path-agent-test-20260831211026"
   },
-  "selected_capabilities": {},
-  "resources": [],
-  "projection": null,
-  "operations": {},
+  "selected_capabilities": {
+    "task_manager": {
+      "provider": "github_issues",
+      "status": "success",
+      "resolution_status": "resolved"
+    }
+  },
+  "resources": [
+    {
+      "capability": "task_manager",
+      "provider": "github_issues",
+      "type": "project",
+      "id": "diegomoura/open-study-path-agent-test-20260831211026",
+      "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026",
+      "sync_status": "success",
+      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+    },
+    {
+      "capability": "task_manager",
+      "provider": "github_issues",
+      "type": "orientation",
+      "id": "11",
+      "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/11",
+      "canonical_state": "planned",
+      "visible_state": "Planejado",
+      "sync_status": "success",
+      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+    },
+    {
+      "capability": "task_manager",
+      "provider": "github_issues",
+      "type": "issue",
+      "id": "13",
+      "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/13",
+      "topic_id": "TOPIC-002",
+      "visible_lesson_number": 2,
+      "title": "Aula 02 · Branches e HEAD como ponteiros",
+      "direct_prerequisite_ids": [
+        "TOPIC-001"
+      ],
+      "content_version": 1,
+      "canonical_state": "ready",
+      "visible_state": "Planejado",
+      "visual_position": 1,
+      "managed_fields_version": 1,
+      "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
+      "sync_status": "success",
+      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+    },
+    {
+      "capability": "task_manager",
+      "provider": "github_issues",
+      "type": "issue",
+      "id": "12",
+      "url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026/issues/12",
+      "topic_id": "TOPIC-001",
+      "visible_lesson_number": 1,
+      "title": "Aula 01 · Modelo interno do Git: objetos, snapshots e o .git",
+      "direct_prerequisite_ids": [],
+      "content_version": 1,
+      "canonical_state": "ready",
+      "visible_state": "Próxima aula",
+      "visual_position": 0,
+      "managed_fields_version": 1,
+      "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
+      "sync_status": "success",
+      "last_synced_at": "2026-09-02T20:24:41.577726Z"
+    }
+  ],
+  "projection": {
+    "provider": "github_issues",
+    "container_id": "diegomoura/open-study-path-agent-test-20260831211026",
+    "container_url": "https://github.com/diegomoura/open-study-path-agent-test-20260831211026",
+    "topic_count": 2,
+    "managed_list_order": null,
+    "roadmap_fingerprint": "5b834ae03e608cb912a1a31a1be8dabd452b937ae0c3d6688d210830e540ad71",
+    "readback": {
+      "verified_at": "2026-09-02T20:24:41.577726Z",
+      "lesson_card_count": 2,
+      "managed_card_count": 3,
+      "visible_internal_marker_count": 0,
+      "external_read_count": 1
+    }
+  },
+  "operations": {
+    "publish-20260902-001": {
+      "status": "success",
+      "provider": "github_issues",
+      "updated_at": "2026-09-02T20:24:41.577687Z",
+      "checkpoint_count": 9
+    }
+  },
   "resolution": {
-    "status": "not_started",
+    "status": "resolved",
     "unresolved_capabilities": [],
-    "validated_at": null
+    "validated_at": "2026-09-02T20:24:41.577726Z"
   },
   "sync": {
-    "last_attempt_at": null,
-    "last_success_at": null,
-    "status": "not_started",
+    "last_attempt_at": "2026-09-02T20:24:41.577687Z",
+    "last_success_at": "2026-09-02T20:24:41.577726Z",
+    "status": "success",
     "errors": []
   }
 }
