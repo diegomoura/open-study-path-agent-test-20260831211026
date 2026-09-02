@@ -1,0 +1,25 @@
+contract_version: 1
+operation_id: sync-publication-review-exact-check-names
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T14:09:46Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced instructions/41-task-backend-projection.md fix from template PR #134 (main@808c78c):
+  embeds the publication review profile''s six exact required check names verbatim,
+  removing the failure mode of a reviewer transcribing plausible-but-wrong names from
+  scripts/review_framework.py. Root cause of the third real publish dispatch failure
+  on this instance. No scripts, workflows, templates, or schemas touched; no instance
+  state or content touched by this sync.'

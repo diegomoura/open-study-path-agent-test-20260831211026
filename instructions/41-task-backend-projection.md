@@ -110,3 +110,14 @@ Migration is idempotent. Reuse the current container, create or reorder only man
 ## Branch convergence
 
 Build and validate the complete local or temporary tree before opening the PR. Use one logical commit per operation, or deterministically rebuild/squash the same operation branch before opening or updating the same PR. Check the commit budget before PR creation, keep the same `operation_id`, and never create several recovery branches manually.
+
+## Publication review: exact required check names
+
+`instructions/04-review-generated-artifacts.md` says to read `scripts/review_framework.py` for the `publication` profile's exact check names. A real dispatch (Etapa 12/14 validation session) submitted a review with six plausible-sounding but not-exactly-matching names instead (e.g. `idempotency_and_matching` instead of `idempotency_and_reuse`) -- `validate_review_framework.py`'s check is an exact string match, so a paraphrase fails CI the same way a missing check would, after the reviewer has already spent real tokens producing an otherwise-complete review. To remove that failure mode, the `checks:` section of a `publication` review must use exactly these six keys, verbatim:
+
+- `selected_capabilities_resolved` -- the operation resolved the right provider/capability for this instance's configuration, not an assumed default.
+- `external_projection_consistency` -- the real GitHub Issues state (read back independently, not trusted from the author's summary) matches what the roadmap and topic contracts say it should be.
+- `idempotency_and_reuse` -- re-running the same operation would update the same resources via their `external_id`, never create duplicates.
+- `learner_navigation` -- the rendered cards give the learner exactly one unambiguous next action, with no exposed internal metadata.
+- `privacy_cost_and_authority` -- only necessary, non-sensitive information reached the external provider, and the operation stayed within its authorized scope.
+- `next_action_consistency` -- the projected "próxima aula"/next-eligible state matches the real prerequisite graph, not just what the author claimed.
