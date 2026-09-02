@@ -1,0 +1,41 @@
+contract_version: 1
+
+operation_id: publish-20260902-135507
+
+phase: publication
+
+reviewer_role: publication_reviewer
+
+independent_pass: true
+
+status: approved
+
+reviewed_at: 2026-09-02T13:56:46Z
+
+artifacts:
+  - path: state/integrations.json
+    change: current
+    sha256: 8edb09b17dd9f39594f9671fe84358350ff8952b5ec610161b0cbb54533328e1
+  - path: state/operations/publish-20260902-135507.json
+    change: current
+    sha256: 80059a3b05fba7cd4f4ef812ae6d3990fa302ed1818b8ae1a39fbf703139704b
+  - path: study/integrations.md
+    change: current
+    sha256: f4f3f0b6768210d1c10bef3b5624e4c4b601ea928023af7a49fc9ac75b1836e5
+
+checks:
+  external_provider_resolution: passed
+  idempotency_and_matching: passed
+  readback_validation: passed
+  managed_field_boundary_verification: passed
+  task_projection_consistency: passed
+  learner_visible_content_accuracy: passed
+  state_and_operation_journal_completeness: passed
+  prerequisite_and_eligibility_correctness: passed
+  next_action_clarity: passed
+
+blocking_findings: []
+
+non_blocking_findings:
+  - Study integrations summary is now appropriately minimal per experience_preference. This is intentional and correct.
+  - Issue 13 (TOPIC-002) correctly omits full checklist and resource links since prerequisites remain unmet. This follows task projection policy for future lessons.
