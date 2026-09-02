@@ -1,0 +1,54 @@
+contract_version: 1
+operation_id: assessment-topic-001-attempt-01
+phase: assessment
+reviewer_role: assessment_reviewer
+independent_pass: true
+status: action_required
+reviewed_at: "2026-09-02T22:55:50Z"
+
+artifacts:
+  - path: .github/ISSUE_TEMPLATE/assessment-topic-003.yml
+    change: current
+    sha256: 7daa674a0d918c6e7b7cb73e2dfae5611cb6ba04a26e182b7720892857161741
+  - path: state/assessments/TOPIC-001/attempt-001.json
+    change: current
+    sha256: 2f7a6d9f6e3c3b9068bf868c50ec10dd5b5dbe746f10cb2bf2e2939cc55934fe
+  - path: state/integrations.json
+    change: current
+    sha256: d69786dd4c641753a249538925eca3bd289cf289cace2c0b5273bcf7ade9d4dd
+  - path: state/operations/evaluate-20260902-topic001.json
+    change: current
+    sha256: 5a09f12be8200ab123f5632f4ab559f51eb28e931749727c5cc1921ba419d214
+  - path: state/progress.json
+    change: current
+    sha256: 5ebcc89f9c1c5c8ddb2bffdfd6b448c66c0d4a29895608a131ae31cffd4fae3f
+  - path: study/assessments/TOPIC-003.yml
+    change: current
+    sha256: c4f6e67e987ad5f6a215b0093705283db25f17bdb83c483158dfb543b3bdda56
+  - path: study/modules/merge-unindo-historias-de-trabalho.md
+    change: current
+    sha256: 7e304cc923e8be086e7c1956f9ca947a2fd6db78d600a30aea88b7b09b97efb3
+  - path: study/roadmap.md
+    change: current
+    sha256: 1fd6bd44e664d7ce68c459ff84aafb247ce5df349640d601fbe17999ced33634
+  - path: study/topics/TOPIC-003.md
+    change: current
+    sha256: f913dd318bc3414e8655e145ca145b786a56af99f825f55655640ec6e6a03673
+
+checks:
+  submission_resolution: passed
+  rubric_fidelity: passed
+  independent_scoring: passed
+  feedback_alignment: passed
+  progress_update: passed
+  next_materialization_consistency: failed
+
+blocking_findings:
+  - "study/modules/merge-unindo-historias-de-trabalho.md contains the hidden marker '<!-- open-study-path:outcome LO-1 -->' TWICE: once immediately after the '## O que você vai aprender' objectives list (before '## Começando do zero' even starts teaching anything -- i.e. beside a restatement of the objective, not beside content that teaches it), and once correctly after the 'Merge commit: quando as duas branches divergiram' section. instructions/36-review-course-content.md requires exactly one marker per approved outcome, placed beside content that genuinely teaches it. state/content-reviews/TOPIC-003.yml's own notes falsely claim 'Cada marcador aparece exatamente uma vez no módulo', which my independent inspection of the actual module text disproves -- the content-review's semantic-honesty claim about marker placement is incorrect and must be corrected together with the module before this materialization can be approved."
+  - "GitHub issue #17 (the newly published task for TOPIC-003, canonical_state=ready but visible_state='Planejado' because its prerequisite TOPIC-002 is not yet mastered) is a future/planned card. Per instructions/40-publish-tasks.md and the repository contract, a future card must begin with 'Pré-requisitos desta aula' and list exactly the direct prerequisite titles. Issue #17's body instead reads '**Pré-requisitos desta aula:** Os pré-requisitos diretos desta aula ainda precisam ser concluídos.' -- a generic placeholder that never names 'Aula 02 · Branches e HEAD como ponteiros', the actual direct prerequisite recorded in study/topics/TOPIC-003.md. This was verified by directly reading the live issue body via read_github_issue(17), not assumed from the author's summary."
+
+non_blocking_findings:
+  - "The author's summary states study/integrations.md was rewritten by this operation, but the generated diff does not touch that file at all (confirmed: it is absent from the diff and its content remains the pre-existing generic text). Not a correctness problem since the file's content is still accurate, but the self-reported summary overstates what was actually written."
+  - "feedback_alignment was verified against the substantive content of state/assessments/TOPIC-001/attempt-001.json (which is specific, accurate per-question, and correctly reports zero critical misconceptions matching study/assessments/TOPIC-001.yml's mastery rules). The available read_github_issue tool only exposes issue body/title/labels/author, not comments, so the actual posted GitHub comment text on issue #16 could not be independently fetched and byte-verified in this pass; only the resulting label transition (assessment:submitted removed, assessment:graded added) was confirmed live."
+  - "resolve_assessment_candidates('TOPIC-001') now returns state=none with no candidates, and list_assessment_issues() returns an empty list -- expected, since this operation already removed issue #16's assessment:submitted label after grading. Submission resolution was instead independently confirmed by reading issue #16 directly (label topic:TOPIC-001, content matching the Git-internals topic, assessment:graded present) and confirming no other assessment:submitted issue exists that could have been a competing candidate."
+
