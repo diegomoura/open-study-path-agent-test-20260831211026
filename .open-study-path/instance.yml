@@ -70,7 +70,23 @@ curriculum_proposal:
     - TOPIC-006
     - TOPIC-008
   scope: focused_practical_fundamentals
-  materialized_topics: []
+  materialized_topics:
+    - TOPIC-001
+    - TOPIC-002
+
+curriculum_generation:
+  generated_at: 2026-09-02T00:00:00Z
+  content_version: 1
+  materialized_topics:
+    - TOPIC-001
+    - TOPIC-002
+  planned_topics:
+    - TOPIC-003
+    - TOPIC-004
+    - TOPIC-005
+    - TOPIC-006
+    - TOPIC-007
+    - TOPIC-008
 
 status:
   setup_complete: true
@@ -80,4 +96,4 @@ status:
   diagnostic_complete: true
   curriculum_proposed: true
   curriculum_approved: true
-  curriculum_generated: false
+  curriculum_generated: true

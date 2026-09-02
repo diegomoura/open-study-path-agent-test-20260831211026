@@ -1,0 +1,76 @@
+name: "Avaliação — TOPIC-002 — Branches e HEAD como ponteiros"
+description: Mostre como você compreendeu branches e HEAD como referências, e o efeito de criar, trocar e apagar branches.
+title: "[Avaliação] TOPIC-002 — Branches e HEAD como ponteiros"
+labels:
+  - assessment
+  - assessment:submitted
+  - "topic:TOPIC-002"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        <!-- open-study-path:assessment topic_id=TOPIC-002 version=1 -->
+        ## Mostre o que você aprendeu
+
+        Responda com suas próprias palavras e use exemplos sempre que puder. Não buscamos respostas decoradas: queremos entender como você está pensando sobre branches, HEAD e referências.
+
+        Depois de enviar, volte ao chat e escreva:
+
+        `Terminei Branches e HEAD como ponteiros. Avalie minhas respostas.`
+
+  - type: input
+    id: evidence
+    attributes:
+      label: Sua evidência (saída de terminal ou link)
+      description: Cole a saída relevante de git log --oneline --graph --all ou de .git/refs, ou um link para um gist com essa saída.
+      placeholder: "https://gist.github.com/... ou cole a saída diretamente na Questão 5"
+    validations:
+      required: false
+
+  - type: textarea
+    id: q1
+    attributes:
+      label: "Questão 1 — O que é uma branch e o que é HEAD?"
+      description: Explique com suas próprias palavras a diferença entre branch e HEAD, usando um exemplo próprio.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q2
+    attributes:
+      label: "Questão 2 — Analise um cenário com duas branches"
+      description: Em um cenário com main e uma branch de feature que divergiram, descreva o que acontece com cada referência (e com HEAD) ao trocar de branch e ao fazer um novo commit.
+    validations:
+      required: true
+
+  - type: textarea
+    id: q3
+    attributes:
+      label: "Questão 3 — Aplique a uma situação nova"
+      description: Se você apagar uma branch cujo último commit não existe em nenhuma outra branch, o que acontece com esse commit imediatamente? E se ele também existir em outra branch?
+    validations:
+      required: true
+
+  - type: textarea
+    id: q4
+    attributes:
+      label: "Questão 4 — Encontre e corrija o erro"
+      description: "Um colega disse: 'criar uma branch nova é uma operação pesada, porque copia todos os arquivos do projeto para uma pasta separada'. Por que essa afirmação está errada? Reformule corretamente."
+    validations:
+      required: true
+
+  - type: textarea
+    id: q5
+    attributes:
+      label: "Questão 5 — Mostre sua evidência e reflita"
+      description: Cole a saída de terminal da sua prática independente (antes/depois) e diga se sua previsão inicial estava certa, incompleta ou errada.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Revisei minhas respostas e estou pronto para receber feedback.
+          required: true

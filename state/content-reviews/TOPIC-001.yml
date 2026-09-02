@@ -1,0 +1,53 @@
+version: 1
+topic_id: TOPIC-001
+content_version: 1
+reviewed_at: "2026-09-02T01:00:00Z"
+reviewer_role: course_content_reviewer
+review_mode: independent_pass
+status: approved
+
+checks:
+  scope_alignment: passed
+  prerequisite_integrity: passed
+  outcome_coverage: passed
+  lesson_assessment_alignment: passed
+  deliverable_alignment: passed
+  learner_navigation: passed
+  level_progression: passed
+  source_quality: passed
+  practice_consistency: passed
+
+prerequisites_reviewed: []
+
+navigation:
+  direct_prerequisites_only: true
+  does_not_assume_linear_order: true
+
+outcome_coverage:
+  - outcome_id: LO-1
+    status: covered
+    assessment_questions: [q1, q2, q4]
+  - outcome_id: LO-2
+    status: covered
+    assessment_questions: [q3, q5]
+  - outcome_id: LO-3
+    status: covered
+    assessment_questions: [q2, q5]
+
+notes: >
+  Verifiquei que o marcador de LO-1 acompanha a explicação de blob/tree/commit em
+  "O que o commit realmente guarda", o marcador de LO-2 acompanha os comandos de
+  inspeção em "Inspecionando objetos de verdade", e o marcador de LO-3 acompanha
+  a distinção working directory/staging area/repositório em "Da pasta de trabalho
+  ao commit". Os dois exemplos trabalhados e a prática independente exigem
+  aplicação real (identificar blobs reaproveitados vs. novos), não repetição de
+  definição. A rubrica cobre os três outcomes e o equívoco crítico de "commit
+  como diff" é explicitamente ensinado e corrigido na aula antes de aparecer na
+  avaliação (questão 4). As quatro fontes citadas foram conferidas quanto ao
+  conteúdo real (Pro Git cap. 10, documentação oficial de git-cat-file/git-ls-tree,
+  GitHub Docs "About Git", Learn Git Branching) e a analogia do álbum de fotos é
+  identificada como adaptação pedagógica, não como fonte.
+
+blocking_findings: []
+non_blocking_findings:
+  - "Poderia adicionar um segundo diagrama Mermaid mostrando o packfile/compressão para quem quiser ir além, mas não é necessário para os outcomes aprovados."

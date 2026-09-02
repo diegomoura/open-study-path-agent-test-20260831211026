@@ -1,0 +1,51 @@
+version: 1
+topic_id: TOPIC-002
+title: "Branches e HEAD como ponteiros"
+passing_score: 80
+critical_misconceptions:
+  - "Achar que uma branch é uma cópia completa dos arquivos do projeto, em vez de uma referência leve para um commit."
+  - "Achar que HEAD é sempre a branch main, em vez de um marcador de 'onde você está agora' que pode apontar para qualquer branch ou diretamente para um commit."
+questions:
+  - id: q1
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "compreensão conceitual — branch e HEAD como referências"
+    full_credit: "Explica corretamente que uma branch é uma referência leve para um commit e que HEAD marca onde você está agora, com um exemplo próprio coerente."
+    partial_credit: "Reconhece que branch é um ponteiro, mas confunde o papel de HEAD ou descreve a relação de forma imprecisa."
+    no_credit: "Descreve branch como uma cópia de arquivos ou não distingue branch de HEAD."
+  - id: q2
+    outcome_ids: [LO-1, LO-2]
+    max_points: 20
+    evaluates: "análise — efeito de criar e trocar de branch em um cenário concreto"
+    full_credit: "Dado um cenário com duas branches divergentes, descreve corretamente qual referência se move a cada commit e o que acontece com HEAD ao trocar de branch."
+    partial_credit: "Identifica corretamente parte do cenário (por exemplo, qual branch avança), mas erra o comportamento de HEAD ou de uma das branches."
+    no_credit: "Não consegue descrever corretamente o que acontece com as referências no cenário proposto."
+  - id: q3
+    outcome_ids: [LO-2]
+    max_points: 20
+    evaluates: "aplicação a uma situação nova — previsão de efeito de operações em branch"
+    full_credit: "Prevê corretamente o efeito de apagar uma branch (ou entrar em detached HEAD) sobre um commit específico, incluindo se ele permanece acessível por outra referência."
+    partial_credit: "Prevê parcialmente o efeito correto, mas erra um detalhe importante (por exemplo, confunde 'sem nome' com 'apagado imediatamente')."
+    no_credit: "Prevê um efeito incorreto, como achar que o commit é apagado imediatamente ao apagar a branch."
+  - id: q4
+    outcome_ids: [LO-1]
+    max_points: 20
+    evaluates: "detecção e correção de equívoco crítico"
+    full_credit: "Identifica corretamente por que 'branch é uma cópia dos arquivos' é falso e reformula com o modelo correto de referência/ponteiro."
+    partial_credit: "Percebe que a afirmação está incompleta, mas não reformula corretamente o modelo de referência."
+    no_credit: "Concorda com a afirmação ou introduz outro equívoco crítico ao tentar corrigi-la."
+  - id: q5
+    outcome_ids: [LO-3]
+    max_points: 20
+    evaluates: "evidência independente e reflexão"
+    full_credit: "Apresenta saída de terminal real (.git/refs, git log --oneline --graph --all) coerente com a previsão escrita, e avalia corretamente se a previsão estava certa, incompleta ou errada."
+    partial_credit: "Apresenta evidência parcial, ou reflexão genérica pouco conectada à previsão original."
+    no_credit: "Não apresenta evidência utilizável ou a evidência contradiz a previsão sem nenhuma reflexão sobre isso."
+mastery_rules:
+  require_total_score: true
+  require_no_critical_misconception: true
+  recovery_when_not_mastered: true
+recovery:
+  create_focused_github_issue: true
+  create_trello_card: true
+  reassessment_required: true
