@@ -1,0 +1,28 @@
+contract_version: 1
+operation_id: sync-future-card-names-real-prerequisite-titles
+phase: migration
+reviewer_role: migration_reviewer
+independent_pass: true
+status: approved
+reviewed_at: '2026-09-02T23:05:28Z'
+artifacts:
+- path: README.md
+  change: current
+  sha256: b74aa973fc67da37d9ea074c6f5496bee9d190c945403cfde84fa7746fe9ca0c
+checks:
+  source_target_identity: passed
+  compatibility: passed
+  state_preservation: passed
+  idempotency: passed
+  rollback_and_failure_safety: passed
+blocking_findings: []
+non_blocking_findings:
+- 'Synced scripts/task_projection_engine.py + tests/test_task_projection_engine.py
+  fix from template PR #137 (main@ad0c5f2): render_visible_lesson''s Planejado branch
+  now names the real direct-prerequisite titles instead of a generic placeholder,
+  per instructions/40-publish-tasks.md''s documented template. Root cause of a real
+  evaluate dispatch''s independent reviewer finding on this instance (Issue #17),
+  which also retroactively applies to publish''s earlier Issue #13. Live issue bodies
+  not yet corrected by this sync alone -- planned as a follow-up local re-projection
+  using the real backend. No workflows, instructions, templates, or schemas touched;
+  no instance state or content touched by this sync itself.'

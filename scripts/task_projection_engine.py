@@ -672,7 +672,9 @@ def _rich_lesson_body(topic: TopicProjection, *, intro: str) -> str:
     )
 
 
-def render_visible_lesson(topic: TopicProjection, visible_state: str) -> VisibleFields:
+def render_visible_lesson(
+    topic: TopicProjection, visible_state: str, titles_by_id: dict[str, str] | None = None
+) -> VisibleFields:
     title = f"Aula {topic.lesson_number:02d} · {topic.title}"
     if visible_state in {"Próxima aula", "Disponível em paralelo"}:
         intro = (
@@ -684,9 +686,26 @@ def render_visible_lesson(topic: TopicProjection, visible_state: str) -> Visible
         checklist = _session_checklist_or_default(topic)
     elif visible_state == "Planejado":
         if topic.direct_prerequisite_ids:
-            prerequisite_copy = (
-                "Os pré-requisitos diretos desta aula ainda precisam ser concluídos."
-            )
+            lookup = titles_by_id or {}
+            named_titles = [
+                lookup[prerequisite_id]
+                for prerequisite_id in topic.direct_prerequisite_ids
+                if prerequisite_id in lookup
+            ]
+            if named_titles:
+                prerequisite_copy = "; ".join(
+                    f"{position}. {prerequisite_title}"
+                    for position, prerequisite_title in enumerate(named_titles, start=1)
+                )
+            else:
+                # Fallback for a caller that doesn't have (or hasn't been
+                # given) every topic's title -- e.g. an existing test or
+                # integration calling this function directly with only the
+                # one topic it cares about. Non-empty and still accurate,
+                # just not as specific as the documented template asks for.
+                prerequisite_copy = (
+                    "Os pré-requisitos diretos desta aula ainda precisam ser concluídos."
+                )
         else:
             prerequisite_copy = (
                 "A aula completa será preparada quando entrar na janela ativa."
@@ -760,6 +779,7 @@ def build_projection_plan(
     ]
     primary_id = ready_candidates[0].topic_id if ready_candidates else None
     fingerprint = roadmap_fingerprint(ordered_all)
+    titles_by_id = {topic.topic_id: topic.title for topic in ordered_all}
     lessons: list[ProjectedLesson] = []
 
     for position, topic in enumerate(projected):
@@ -782,7 +802,7 @@ def build_projection_plan(
             visual_position=position,
             roadmap_fingerprint=fingerprint,
         )
-        visible = render_visible_lesson(normalized_topic, visible_state)
+        visible = render_visible_lesson(normalized_topic, visible_state, titles_by_id)
         internal_metadata = {
             "topic_id": topic.topic_id,
             "visible_lesson_number": topic.lesson_number,

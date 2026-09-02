@@ -612,6 +612,72 @@ class TaskProjectionEngineTests(unittest.TestCase):
         checklist = managed[0]["visible"]["checklist"]
         self.assertEqual(list(rich_topic.session_checklist), checklist)
 
+    def test_future_card_names_the_real_prerequisite_titles(self):
+        # Real dispatch finding (Etapa 12/14 validation session): the
+        # generic placeholder ("Os pré-requisitos diretos desta aula ainda
+        # precisam ser concluídos.") was used unconditionally whenever a
+        # topic had any prerequisites, never actually naming them --
+        # despite instructions/40-publish-tasks.md's documented template
+        # explicitly requiring "<títulos numerados dos pré-requisitos
+        # diretos em linguagem simples>". Confirmed by evaluate's
+        # independent reviewer directly reading a live GitHub issue body
+        # rather than trusting the author's summary.
+        future_topic = TopicProjection(
+            topic_id="TOPIC-003",
+            lesson_number=3,
+            title="Merge: unindo histórias de trabalho",
+            direct_prerequisite_ids=("TOPIC-002",),
+            content_version=0,
+            canonical_state="planned",
+            materialized=False,
+        )
+        titles_by_id = {
+            "TOPIC-001": "Modelo interno do Git: objetos, snapshots e o .git",
+            "TOPIC-002": "Branches e HEAD como ponteiros",
+            "TOPIC-003": "Merge: unindo histórias de trabalho",
+        }
+        visible = render_visible_lesson(future_topic, "Planejado", titles_by_id)
+        self.assertIn(
+            "**Pré-requisitos desta aula:** 1. Branches e HEAD como ponteiros",
+            visible.description,
+        )
+        self.assertNotIn("ainda precisam ser concluídos", visible.description)
+
+    def test_future_card_names_every_direct_prerequisite_when_there_are_several(self):
+        future_topic = TopicProjection(
+            topic_id="TOPIC-005",
+            lesson_number=5,
+            title="Conflitos de merge: do simples ao multi-arquivo",
+            direct_prerequisite_ids=("TOPIC-003", "TOPIC-004"),
+            content_version=0,
+            canonical_state="planned",
+            materialized=False,
+        )
+        titles_by_id = {
+            "TOPIC-003": "Merge: unindo histórias de trabalho",
+            "TOPIC-004": "Rebase: reescrevendo o histórico com segurança",
+        }
+        visible = render_visible_lesson(future_topic, "Planejado", titles_by_id)
+        self.assertIn("1. Merge: unindo histórias de trabalho", visible.description)
+        self.assertIn("2. Rebase: reescrevendo o histórico com segurança", visible.description)
+
+    def test_future_card_falls_back_to_generic_copy_without_a_titles_lookup(self):
+        # Backward compatibility: a caller with no titles_by_id (existing
+        # tests, or a future integration that only has the one topic in
+        # scope) still gets non-empty, accurate copy -- just not as
+        # specific as the documented template ideally wants.
+        future_topic = TopicProjection(
+            topic_id="TOPIC-002",
+            lesson_number=2,
+            title="Funções de ordem superior",
+            direct_prerequisite_ids=("TOPIC-001",),
+            content_version=0,
+            canonical_state="planned",
+            materialized=False,
+        )
+        visible = render_visible_lesson(future_topic, "Planejado")
+        self.assertIn("ainda precisam ser concluídos", visible.description)
+
     def test_future_card_includes_learning_time_and_deliverable(self):
         # Same instructions/40-publish-tasks.md gap as the ready-card test
         # above, but for the "Future lesson card" section, which also
