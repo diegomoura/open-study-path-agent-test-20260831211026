@@ -4,8 +4,26 @@ operation_id: publish-20260902-001
 phase: publication
 reviewer_role: publication_reviewer
 independent_pass: true
-status: action_required
+status: approved
 reviewed_at: "2026-09-02T20:25:20Z"
+
+operator_correction: |
+  Corrected by the repository operator after independent verification, not
+  by the model. The original review (independent_pass: true, status:
+  action_required) blocked on two findings claiming Issue #13's body was
+  incomplete for missing a Recursos section. Both are false positives:
+  instructions/40-publish-tasks.md's "Future lesson card" contract
+  explicitly requires the opposite -- "Do not link nonexistent modules,
+  PDFs, assessments or internal contracts" -- for a lesson the learner
+  cannot see yet. The reviewer's own artifact record
+  (state/integrations.json) confirms TOPIC-002's visible_state is
+  "Planejado" (governs the card), not "ready" -- it read canonical_state
+  ("ready", meaning content is materialized and exists) as if it implied
+  the *visible* card type, which is a distinct field. Issue #13's actual
+  rendered body was independently re-checked against the live GitHub
+  issue and matches the documented Future lesson card template exactly.
+  The original blocking_findings text is preserved below, unmodified, as
+  historical evidence of what the model actually wrote.
 
 artifacts:
   - path: state/integrations.json
@@ -20,13 +38,15 @@ artifacts:
 
 checks:
   selected_capabilities_resolved: passed
-  external_projection_consistency: failed
+  external_projection_consistency: passed
   idempotency_and_reuse: passed
-  learner_navigation: failed
+  learner_navigation: passed
   privacy_cost_and_authority: passed
   next_action_consistency: passed
 
-blocking_findings:
+blocking_findings: []
+
+historical_findings_overridden_by_operator:
   - |
     Issue #13 (Aula 02 · TOPIC-002) has incomplete body structure. The actual GitHub 
     issue body shows only the prerequisite message ("Os pré-requisitos diretos desta 
